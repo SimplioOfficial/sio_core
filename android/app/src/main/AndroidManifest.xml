@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.sio_chain">
+    package="com.example.sio_core">
    <application
-        android:label="sio_chain"
+        android:label="sio_core"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
