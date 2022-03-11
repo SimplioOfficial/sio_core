@@ -6,3 +6,7 @@
 ## 0.0.2
 
 * Just a test for pub.dev
+
+## 0.0.3
+
+* Testing continuous delivery on github release
