@@ -3,7 +3,8 @@ env:
   FLUTTER_VERSION: "2.10.3"
 
 on:
-  release: [published]
+  release:
+    types: [published]
 
 jobs:
   build:
