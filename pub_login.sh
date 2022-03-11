@@ -29,6 +29,9 @@ if [ -z "${PUB_DEV_PUBLISH_EXPIRATION}" ]; then
 fi
 
 # Create pub-credentials.json file.
+mkdir ~/.config
+mkdir ~/.config/dart
+
 cat <<EOF > ~/.config/dart/pub-credentials.json
 {
   "accessToken": "${PUB_DEV_PUBLISH_ACCESS_TOKEN}",
