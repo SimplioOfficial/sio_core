@@ -10,16 +10,25 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: $FLUTTER_VERSION
+
       - name: Install app dependencies
         run: flutter pub get
       - name: Analyze files
         run: flutter analyze
       - name: Verify formatting
         run: flutter format --output=none --set-exit-if-changed .
+
+      - name: Android Emulator Runner
+        uses: ReactiveCircus/android-emulator-runner@v2.23.0
+        with:
+          api-level: 31
+          script: ./gradlew connectedCheck
+
       - name: Test app
         run: flutter test integration_test --coverage
       - name: Upload coverage to Codecov
