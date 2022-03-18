@@ -23,13 +23,12 @@ jobs:
       - name: Verify formatting
         run: flutter format --output=none --set-exit-if-changed .
 
-      - name: Android Emulator Runner
+      - name: Run Integration Tests Under Android Emulator Runner
         uses: ReactiveCircus/android-emulator-runner@v2.23.0
         with:
           api-level: 28
+          script: flutter test integration_test --coverage
 
-      - name: Test app
-        run: flutter test integration_test --coverage
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
