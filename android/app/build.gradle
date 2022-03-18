@@ -82,7 +82,7 @@ android {
         //     }
         // }
             flatDir {
-                dirs project(':trust_wallet_core').file('libs')
+                dirs project(':trust_wallet_core_lib').file('libs')
         }
     }
 }

@@ -15,8 +15,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  trust_wallet_core: ^0.0.4
+  trust_wallet_core_lib: ^0.0.2
 
 dev_dependencies:
   # The "flutter_lints" package below contains a set of recommended lints to
