@@ -21,7 +21,7 @@ jobs:
       - name: Analyze
         run: flutter analyze
       - name: Run tests
-        run: flutter test
+        run: flutter test integration_test
       - name: Setup Pub Credentials
         shell: bash
         env:
