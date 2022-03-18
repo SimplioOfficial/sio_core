@@ -21,7 +21,7 @@ jobs:
       - name: Verify formatting
         run: flutter format --output=none --set-exit-if-changed .
       - name: Test app
-        run: flutter test --coverage
+        run: flutter test integration-test --coverage
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
