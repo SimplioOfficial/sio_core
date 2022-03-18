@@ -27,7 +27,6 @@ jobs:
         uses: ReactiveCircus/android-emulator-runner@v2.23.0
         with:
           api-level: 28
-          script: ./gradlew connectedCheck
 
       - name: Test app
         run: flutter test integration_test --coverage
