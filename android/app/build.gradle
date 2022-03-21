@@ -66,20 +66,23 @@ android {
 
     /****GitHubPackages Path and credentials***/
     repositories {
-        maven {
-            name = "wallet-core"
-            /*  Configure path to the library hosted on GitHub Packages Registry
-             *  Replace UserID with package owner userID and REPOSITORY with the repository name
-             *  e.g. "https://maven.pkg.github.com/enefce/AndroidLibraryForGitHubPackagesDemo"
-             */
-            //url = uri("https://maven.pkg.github.com/UserID/REPOSITORY")
-            url = uri("https://maven.pkg.github.com/trustwallet/wallet-core")
+        // maven {
+        //     name = "wallet-core"
+        //     /*  Configure path to the library hosted on GitHub Packages Registry
+        //      *  Replace UserID with package owner userID and REPOSITORY with the repository name
+        //      *  e.g. "https://maven.pkg.github.com/enefce/AndroidLibraryForGitHubPackagesDemo"
+        //      */
+        //     //url = uri("https://maven.pkg.github.com/UserID/REPOSITORY")
+        //     url = uri("https://maven.pkg.github.com/trustwallet/wallet-core")
 
-            credentials {
-                /**Create github.properties in root project folder file with gpr.usr=GITHUB_USER_ID  & gpr.key =PERSONAL_ACCESS_TOKEN**/
-                username = System.getenv("GPR_USER") ?: githubProperties['gpr.usr']
-                password = System.getenv("GPR_API_KEY") ?: githubProperties['gpr.key']
-            }
+        //     credentials {
+        //         /**Create github.properties in root project folder file with gpr.usr=GITHUB_USER_ID  & gpr.key =PERSONAL_ACCESS_TOKEN**/
+        //         username = System.getenv("GPR_USER") ?: githubProperties['gpr.usr']
+        //         password = System.getenv("GPR_API_KEY") ?: githubProperties['gpr.key']
+        //     }
+        // }
+            flatDir {
+                dirs project(':trust_wallet_core_lib').file('libs')
         }
     }
 }
@@ -90,5 +93,5 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.trustwallet:wallet-core:2.6.25'
+    implementation(name: 'trustwalletcore', ext: 'aar')
 }
