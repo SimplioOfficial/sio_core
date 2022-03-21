@@ -19,6 +19,9 @@ jobs:
         with:
           flutter-version: $FLUTTER_VERSION
 
+      - name: Install lcov
+        run: brew install lcov
+
       - name: Install app dependencies
         run: flutter pub get
       - name: Analyze files
