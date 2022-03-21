@@ -48,7 +48,7 @@ jobs:
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
 
-      - name: Run Integration Tests Under Android Emulator Runner
+      - name: Run Unit Tests Under Android Emulator Runner
         uses: ReactiveCircus/android-emulator-runner@v2.23.0
         with:
           api-level: ${{ matrix.api-level }}
@@ -57,7 +57,22 @@ jobs:
           disable-animations: true
           script: flutter test integration_test --coverage
 
-      - name: Upload coverage to Codecov
+      - name: Adjusting coverage info to consider only emulator tests
+        run: lcov -r coverage/lcov.info 'lib/src/broadcast.dart' -o coverage/lcov.info
+
+      - name: Upload emulator tests coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage/lcov.info
+
+      - name: Run unit tests directly with flutter test
+        run: flutter test --coverage
+
+      - name: Adjusting coverage info to exclude emulator tests
+        run: lcov -r coverage/lcov.info 'lib/src/mnemonic.dart' -o coverage/lcov.info
+
+      - name: Upload unit tests coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
