@@ -67,7 +67,7 @@ jobs:
           file: coverage/lcov.info
 
       - name: Run unit tests directly with flutter test
-        run: flutter test --coverage
+        run: flutter test test --coverage
 
       - name: Adjusting coverage info to exclude emulator tests
         run: lcov -r coverage/lcov.info 'lib/src/mnemonic.dart' -o coverage/lcov.info
