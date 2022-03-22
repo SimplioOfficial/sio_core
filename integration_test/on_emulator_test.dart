@@ -23,16 +23,12 @@ void main() {
     });
 
     test('Import 12 seed mnemonic', () {
-      expect(
-          Mnemonic.import(mnemonic: mnemonic12Words).mnemonic(),
-          equals(trust_core.HDWallet.createWithMnemonic(mnemonic12Words)
-              .mnemonic()));
+      expect(Mnemonic.import(mnemonic: mnemonic12Words).mnemonic(),
+          equals(mnemonic12Words));
     });
     test('Import 24 seed mnemonic', () {
-      expect(
-          Mnemonic.import(mnemonic: mnemonic24Words).mnemonic(),
-          equals(trust_core.HDWallet.createWithMnemonic(mnemonic24Words)
-              .mnemonic()));
+      expect(Mnemonic.import(mnemonic: mnemonic24Words).mnemonic(),
+          equals(mnemonic24Words));
     });
   });
 }
