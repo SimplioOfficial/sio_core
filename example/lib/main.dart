@@ -53,25 +53,21 @@ class _MyHomePageState extends State<MyHomePage> {
     const toAddress = '3fTR8GGL2mniGyHtd3Qy2KDVhZ9LHbW59rCc7A3RtBWk';
     const tokenMintAddress = 'SioTkQxHyAs98ouRiyi1YDv3gLMSrX3eNBg61GH7NrM';
     const amount = '2000';
-    BuildTransaction()
-        .solana(
-          recipient: toAddress,
-          amount: amount,
-          wallet: wallet,
-          apiEndpoint: 'https://api.devnet.solana.com',
-        )
-        .then((value) => {print(value)});
+    BuildTransaction.solana(
+      recipient: toAddress,
+      amount: amount,
+      wallet: wallet,
+      apiEndpoint: 'https://api.devnet.solana.com',
+    ).then((value) => {print(value)});
 
-    BuildTransaction()
-        .solanaToken(
-          amount: amount,
-          decimals: 8,
-          tokenMintAddress: tokenMintAddress,
-          recipientSolanaAddress: toAddress,
-          wallet: wallet,
-          apiEndpoint: 'https://api.devnet.solana.com',
-        )
-        .then((value) => {print(value)});
+    BuildTransaction.solanaToken(
+      amount: amount,
+      decimals: 8,
+      tokenMintAddress: tokenMintAddress,
+      recipientSolanaAddress: toAddress,
+      wallet: wallet,
+      apiEndpoint: 'https://api.devnet.solana.com',
+    ).then((value) => {print(value)});
   }
 
   @override

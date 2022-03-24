@@ -7,16 +7,6 @@ void main() {
   // Read documentation on https://github.com/dart-lang/test/blob/master/pkgs/test/README.md for more info about testing in dart.
   //
 
-  test('broadcast bitcoin', () {
-    expect(Broadcast(txHash: 'inputTxHashHere').bitcoin,
-        equals('inputTxHashHere'));
-  });
-
-  test('broadcast solana', () {
-    expect(
-        Broadcast(txHash: 'inputTxHashHere').solana, equals('inputTxHashHere'));
-  });
-
   // Following tests are just an example to be used as model
   // group('String', () {
   //   test('.split() splits the string on the delimiter', () {

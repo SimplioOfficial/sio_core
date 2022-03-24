@@ -7,7 +7,7 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:trust_wallet_core_lib/protobuf/Solana.pb.dart' as solana_pb;
 
 class BuildTransaction {
-  Future<String> solana({
+  static Future<String> solana({
     required String recipient,
     required String amount,
     required HDWallet wallet,
@@ -35,7 +35,7 @@ class BuildTransaction {
     return signingOutput.encoded;
   }
 
-  Future<String> solanaToken({
+  static Future<String> solanaToken({
     required String amount,
     required int decimals,
     required String tokenMintAddress,
