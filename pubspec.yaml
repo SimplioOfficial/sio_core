@@ -16,6 +16,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.4
+  meta: ^1.7.0
   trust_wallet_core_lib: ^0.0.2
 
 dev_dependencies:

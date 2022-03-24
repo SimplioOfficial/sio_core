@@ -1,38 +1,10 @@
 import 'dart:convert';
 
+import 'utils.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_lib.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_ffi.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:trust_wallet_core_lib/protobuf/Solana.pb.dart' as solana_pb;
-import 'package:http/http.dart' as http;
-
-Future<http.Response> createRequest(
-    String apiEndpoint, Map<String, String> data) async {
-  return http.post(
-    Uri.parse(apiEndpoint),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(data),
-  );
-}
-
-Future<http.Response> _recentBlockHashRequest(
-    {required String apiEndpoint}) async {
-  return http.post(
-    Uri.parse(apiEndpoint),
-    headers: <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    },
-    body: jsonEncode(
-      {
-        "jsonrpc": "2.0",
-        "id": "1",
-        "method": "getRecentBlockhash",
-      },
-    ),
-  );
-}
 
 class BuildTransaction {
   Future<String> solana({
@@ -42,7 +14,7 @@ class BuildTransaction {
     required String apiEndpoint,
   }) async {
     final secretPrivateKey = wallet.getKeyForCoin(TWCoinType.TWCoinTypeSolana);
-    final response = await _recentBlockHashRequest(apiEndpoint: apiEndpoint);
+    final response = await recentBlockHashRequest(apiEndpoint: apiEndpoint);
     final String recentBlockHash =
         jsonDecode(response.body)["result"]["value"]["blockhash"];
     final tx = solana_pb.Transfer(
@@ -72,7 +44,7 @@ class BuildTransaction {
     required String apiEndpoint,
   }) async {
     final secretPrivateKey = wallet.getKeyForCoin(TWCoinType.TWCoinTypeSolana);
-    final _response = await _recentBlockHashRequest(apiEndpoint: apiEndpoint);
+    final _response = await recentBlockHashRequest(apiEndpoint: apiEndpoint);
     final String _recentBlockHash =
         jsonDecode(_response.body)["result"]["value"]["blockhash"];
 
