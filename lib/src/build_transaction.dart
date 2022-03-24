@@ -6,7 +6,9 @@ import 'package:trust_wallet_core_lib/trust_wallet_core_ffi.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:trust_wallet_core_lib/protobuf/Solana.pb.dart' as solana_pb;
 
+/// Class that builds transactions and return OutputTx ready for broadcasting.
 class BuildTransaction {
+  /// Solana native transaction
   static Future<String> solana({
     required String recipient,
     required String amount,
@@ -35,6 +37,7 @@ class BuildTransaction {
     return signingOutput.encoded;
   }
 
+  /// Solana token transaction
   static Future<String> solanaToken({
     required String amount,
     required int decimals,
