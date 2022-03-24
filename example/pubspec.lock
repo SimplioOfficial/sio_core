@@ -199,12 +199,12 @@ packages:
     source: hosted
     version: "0.4.8"
   trust_wallet_core_lib:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: trust_wallet_core_lib
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.2"
+    version: "0.0.3+2.7.2"
   typed_data:
     dependency: transitive
     description:
