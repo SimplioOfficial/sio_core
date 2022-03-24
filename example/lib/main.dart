@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:sio_core/sio_core.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_lib.dart' as trust_core;
