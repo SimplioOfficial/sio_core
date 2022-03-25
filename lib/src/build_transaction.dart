@@ -10,26 +10,34 @@ import 'package:trust_wallet_core_lib/protobuf/Solana.pb.dart' as solana_pb;
 class BuildTransaction {
   /// Solana native transaction
   static Future<String> solana({
+    required HDWallet wallet,
     required String recipient,
     required String amount,
-    required HDWallet wallet,
     required String apiEndpoint,
+    String? recentBlockHash, // needed for tests
   }) async {
     final secretPrivateKey = wallet.getKeyForCoin(TWCoinType.TWCoinTypeSolana);
-    final response = await recentBlockHashRequest(apiEndpoint: apiEndpoint);
-    final String recentBlockHash =
-        jsonDecode(response.body)["result"]["value"]["blockhash"];
+
+    String _recentBlockHash;
+    if (recentBlockHash == null) {
+      final response = await recentBlockHashRequest(apiEndpoint: apiEndpoint);
+      _recentBlockHash =
+          jsonDecode(response.body)["result"]["value"]["blockhash"];
+    } else {
+      _recentBlockHash = recentBlockHash;
+    }
+
     final tx = solana_pb.Transfer(
       recipient: recipient,
       value: $fixnum.Int64.parseInt(amount),
     );
-    final _signingInput = solana_pb.SigningInput(
+    final signingInput = solana_pb.SigningInput(
       privateKey: secretPrivateKey.data().toList(),
-      recentBlockhash: recentBlockHash,
+      recentBlockhash: _recentBlockHash,
       transferTransaction: tx,
     );
     final sign = AnySigner.sign(
-      _signingInput.writeToBuffer(),
+      signingInput.writeToBuffer(),
       TWCoinType.TWCoinTypeSolana,
     );
     final signingOutput = solana_pb.SigningOutput.fromBuffer(sign);
@@ -39,17 +47,24 @@ class BuildTransaction {
 
   /// Solana token transaction
   static Future<String> solanaToken({
+    required HDWallet wallet,
+    required String recipientSolanaAddress,
+    required String tokenMintAddress,
     required String amount,
     required int decimals,
-    required String tokenMintAddress,
-    required String recipientSolanaAddress,
-    required HDWallet wallet,
     required String apiEndpoint,
+    String? recentBlockHash, // needed for tests
   }) async {
     final secretPrivateKey = wallet.getKeyForCoin(TWCoinType.TWCoinTypeSolana);
-    final _response = await recentBlockHashRequest(apiEndpoint: apiEndpoint);
-    final String _recentBlockHash =
-        jsonDecode(_response.body)["result"]["value"]["blockhash"];
+
+    String _recentBlockHash;
+    if (recentBlockHash == null) {
+      final response = await recentBlockHashRequest(apiEndpoint: apiEndpoint);
+      _recentBlockHash =
+          jsonDecode(response.body)["result"]["value"]["blockhash"];
+    } else {
+      _recentBlockHash = recentBlockHash;
+    }
 
     final solanaAddress = SolanaAddress.createWithString(
         wallet.getAddressForCoin(TWCoinType.TWCoinTypeSolana));
