@@ -81,8 +81,8 @@ android {
         //         password = System.getenv("GPR_API_KEY") ?: githubProperties['gpr.key']
         //     }
         // }
-            flatDir {
-                dirs project(':trust_wallet_core_lib').file('libs')
+        flatDir {
+            dirs project(':trust_wallet_core_lib').file('libs')
         }
     }
 }

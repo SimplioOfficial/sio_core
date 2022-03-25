@@ -1,6 +1,6 @@
 import 'package:trust_wallet_core_lib/trust_wallet_core_lib.dart' as trust_core;
 
-///Class that manipulates BIP39 English mnemonics
+/// Class that manipulates BIP39 English mnemonics
 class Mnemonic {
   final _wallet = trust_core.HDWallet(strength: 256);
 

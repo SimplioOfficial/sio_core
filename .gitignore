@@ -47,3 +47,6 @@ app.*.map.json
 
 # Code coverage
 /coverage/
+
+# Example
+/example/
