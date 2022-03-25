@@ -21,12 +21,6 @@ if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
 
-/**Create github.properties in root project folder file with gpr.usr=GITHUB_USER_ID  & gpr.key=PERSONAL_ACCESS_TOKEN**/
-def githubPropertiesFile = rootProject.file("github.properties");
-def githubProperties = new Properties()
-githubProperties.load(new FileInputStream(githubPropertiesFile))
-
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -49,7 +43,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.sio_core"
+        applicationId "com.example.example"
         minSdkVersion 23
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
@@ -63,8 +57,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
-
-    /****GitHubPackages Path and credentials***/
+        /****GitHubPackages Path and credentials***/
     repositories {
         // maven {
         //     name = "wallet-core"
