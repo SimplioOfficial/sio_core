@@ -1,7 +1,5 @@
 // ignore_for_file: avoid_print
 
-// import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:sio_core/sio_core.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_lib.dart' as trust_core;
@@ -50,40 +48,37 @@ class _MyHomePageState extends State<MyHomePage> {
     // ignore: unused_local_variable
     final solAddress = wallet.getAddressForCoin(TWCoinType.TWCoinTypeSolana);
 
-    // These methods do not exist until 0.0.5 so were commented out to
-    // allow CI to succeed.
+    const toAddress = '3fTR8GGL2mniGyHtd3Qy2KDVhZ9LHbW59rCc7A3RtBWk';
+    const tokenMintAddress = 'SioTkQxHyAs98ouRiyi1YDv3gLMSrX3eNBg61GH7NrM';
+    const amount = '2000';
 
-    // const toAddress = '3fTR8GGL2mniGyHtd3Qy2KDVhZ9LHbW59rCc7A3RtBWk';
-    // const tokenMintAddress = 'SioTkQxHyAs98ouRiyi1YDv3gLMSrX3eNBg61GH7NrM';
-    // const amount = '2000';
+    final signedSolanaTx = await BuildTransaction.solana(
+      recipient: toAddress,
+      amount: amount,
+      wallet: wallet,
+      apiEndpoint: 'https://api.devnet.solana.com',
+    );
+    print(signedSolanaTx);
+    final broadcastSolanaTx = await Broadcast.solana(
+      signedTxEncoded: signedSolanaTx,
+      apiEndpoint: 'https://api.devnet.solana.com',
+    );
+    print(broadcastSolanaTx);
 
-    // final signedSolanaTx = await BuildTransaction.solana(
-    //   recipient: toAddress,
-    //   amount: amount,
-    //   wallet: wallet,
-    //   apiEndpoint: 'https://api.devnet.solana.com',
-    // );
-    // print(signedSolanaTx);
-    // final broadcastSolanaTx = await Broadcast.solana(
-    //   signedTxEncoded: signedSolanaTx,
-    //   apiEndpoint: 'https://api.devnet.solana.com',
-    // );
-    // print(broadcastSolanaTx);
-
-    // final signedSolanaTokenTx = await BuildTransaction.solanaToken(
-    //   amount: amount,
-    //   decimals: 8,
-    //   tokenMintAddress: tokenMintAddress,
-    //   recipientSolanaAddress: toAddress,
-    //   wallet: wallet,
-    //   apiEndpoint: 'https://api.devnet.solana.com',
-    // );
-    // print(signedSolanaTokenTx);
-    // final broadcastSolanaTokenTx = await Broadcast.solana(
-    //   signedTxEncoded: signedSolanaTx,
-    //   apiEndpoint: 'https://api.devnet.solana.com',
-    // );
-    // print(broadcastSolanaTokenTx);
+    final signedSolanaTokenTx = await BuildTransaction.solanaToken(
+      amount: amount,
+      decimals: 8,
+      tokenMintAddress: tokenMintAddress,
+      recipientSolanaAddress: toAddress,
+      wallet: wallet,
+      apiEndpoint: 'https://api.devnet.solana.com',
+    );
+    print(signedSolanaTokenTx);
+    final broadcastSolanaTokenTx = await Broadcast.solana(
+      signedTxEncoded: signedSolanaTx,
+      apiEndpoint: 'https://api.devnet.solana.com',
+    );
+    print(broadcastSolanaTokenTx);
 
     return 'Success';
   }
