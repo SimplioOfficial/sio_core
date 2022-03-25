@@ -49,5 +49,4 @@ app.*.map.json
 /coverage/
 
 # Example
-example/pubspec.lock
-example/pubspec.yaml
+/example/
