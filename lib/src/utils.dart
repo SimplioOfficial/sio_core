@@ -14,7 +14,9 @@ Future<Response> createRequest(String apiEndpoint, data) async {
 }
 
 @internal
-Future<Response> recentBlockHashRequest({required String apiEndpoint}) async {
+Future<String> recentBlockHashRequest({
+  required String apiEndpoint,
+}) async {
   final request = await createRequest(apiEndpoint, {
     "jsonrpc": "2.0",
     "id": "1",
@@ -25,24 +27,5 @@ Future<Response> recentBlockHashRequest({required String apiEndpoint}) async {
       }
     ]
   });
-  return request;
-
-  // post(
-  //   Uri.parse(apiEndpoint),
-  //   headers: <String, String>{
-  //     'Content-Type': 'application/json; charset=UTF-8',
-  //   },
-  //   body: jsonEncode(
-  // {
-  //   "jsonrpc": "2.0",
-  //   "id": "1",
-  //   "method": "getRecentBlockhash",
-  //   "params": [
-  //     {
-  //       "commitment": "confirmed",
-  //     }
-  //   ]
-  // },
-  //   ),
-  // );
+  return request.body;
 }

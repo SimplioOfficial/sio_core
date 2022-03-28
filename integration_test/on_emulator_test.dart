@@ -1,3 +1,4 @@
+import 'package:bs58/bs58.dart';
 import 'package:test/test.dart';
 import 'package:sio_core/sio_core.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_lib.dart' as trust_core;
@@ -49,7 +50,17 @@ void main() {
     const decimals = 8;
     const apiEndpoint = 'https://api.devnet.solana.com';
 
-    test('Solana native transaction test', () async {
+    test('Solana native transaction length', () async {
+      final signedSolanaTx = await BuildTransaction.solana(
+        wallet: wallet,
+        recipient: toAddress,
+        amount: amount,
+        apiEndpoint: apiEndpoint,
+      );
+      expect(base58.decode(signedSolanaTx).length, 215);
+    });
+
+    test('Solana native transaction hash', () async {
       final signedSolanaTx = await BuildTransaction.solana(
         wallet: wallet,
         recipient: toAddress,
@@ -63,8 +74,20 @@ void main() {
               '5kk72sm2ZR1BZAEy2ZFxLMEDS51is5GmNsxWa4NfiDUrWoWN6xTQLWp2ggjryhF5NCxeZK26QpmgH9a1iKucSXKsqV41W6ag3nek5nfDoybC9JFY3m4RSz3czwBZvtrpaCmC9Hk741Z8vW9iPNAQonZarcjfgYGkUb77SgsQTx5j42Pc7SmGcfePeEL31r5oHyp8zTFLK3HhxKcHE8SSQdsPy3adUoyA64fgPrgo6ysSZRwUipwMrH7zwLxcvz8ZLPXVktsBoLFWyRyFiptXxPgm8gWiDS2UVqm9Z'));
     });
 
-    test('Solana token transaction test', () async {
-      final signedSolanaTx = await BuildTransaction.solanaToken(
+    test('Solana token transaction length', () async {
+      final signedSolanaTokenTx = await BuildTransaction.solanaToken(
+        wallet: wallet,
+        recipientSolanaAddress: toAddress,
+        tokenMintAddress: tokenMintAddress,
+        amount: amount,
+        decimals: decimals,
+        apiEndpoint: apiEndpoint,
+      );
+      expect(base58.decode(signedSolanaTokenTx).length, 279);
+    });
+
+    test('Solana token transaction hash', () async {
+      final signedSolanaTokenTx = await BuildTransaction.solanaToken(
         wallet: wallet,
         recipientSolanaAddress: toAddress,
         tokenMintAddress: tokenMintAddress,
@@ -74,7 +97,7 @@ void main() {
         recentBlockHash: '11111111111111111111111111111111',
       );
       expect(
-          signedSolanaTx,
+          signedSolanaTokenTx,
           equals(
               'UjrxQHLaUPAfYxKH1h3CzQEELRAPtpBUhW7Z9D3cSkHP8MMHZsP2evQ7ERsYsxDTKPeoZgUmvsurMEeKuNG1YqZ48VYvohpj326V9P4mHZCrWvx5UJY8sKsaRoMfKTepacUhYo41fsPASy2qgfzXXTaFJZsFrPPoaxjaWEcWqm9WbRU9BnCt8WxxhPusphGP9c4VYkM6YLqQLicxuHQSxfWfACkD7TDcuSfC9kejqGA8LCyb4db4mqB112spfJmkjQgPQELhaxGkTY1rYBphRLbtv2YCVUDeRazHaSmvadgnBXKgo9a2VLXqvH4UCsvy7YB96Y5qgoAC63PUGNSVTCEPE7Ebqfee2JR9CMbuGLezs9TRWsAakvwSHRAF'));
     });
