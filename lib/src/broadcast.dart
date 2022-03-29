@@ -8,7 +8,7 @@ class Broadcast {
     required String signedTxEncoded,
     required String apiEndpoint,
   }) async {
-    final broadcast = await createRequest(apiEndpoint, {
+    final broadcast = await postRequest(apiEndpoint, {
       "jsonrpc": "2.0",
       "id": "1",
       "method": "sendTransaction",

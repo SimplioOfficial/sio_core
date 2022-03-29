@@ -3,7 +3,17 @@ import 'package:meta/meta.dart';
 import 'package:http/http.dart';
 
 @internal
-Future<Response> createRequest(String apiEndpoint, data) async {
+Future<Response> getRequest(String apiEndpoint) async {
+  return get(
+    Uri.parse(apiEndpoint),
+    headers: <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    },
+  );
+}
+
+@internal
+Future<Response> postRequest(String apiEndpoint, data) async {
   return post(
     Uri.parse(apiEndpoint),
     headers: <String, String>{
@@ -17,7 +27,7 @@ Future<Response> createRequest(String apiEndpoint, data) async {
 Future<String> recentBlockHashRequest({
   required String apiEndpoint,
 }) async {
-  final request = await createRequest(apiEndpoint, {
+  final request = await postRequest(apiEndpoint, {
     "jsonrpc": "2.0",
     "id": "1",
     "method": "getRecentBlockhash",
@@ -27,5 +37,13 @@ Future<String> recentBlockHashRequest({
       }
     ]
   });
+  return request.body;
+}
+
+@internal
+Future<String> getUtxo({
+  required String apiEndpoint,
+}) async {
+  final request = await getRequest(apiEndpoint);
   return request.body;
 }

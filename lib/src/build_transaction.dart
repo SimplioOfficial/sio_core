@@ -1,13 +1,97 @@
 import 'dart:convert';
-
 import 'utils.dart';
+
+import 'package:convert/convert.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_lib.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_ffi.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:trust_wallet_core_lib/protobuf/Solana.pb.dart' as solana_pb;
+import 'package:trust_wallet_core_lib/protobuf/Bitcoin.pb.dart' as bitcoin_pb;
 
 /// Class that builds transactions and return OutputTx ready for broadcasting.
 class BuildTransaction {
+  /// Utxo coins transaction
+  static Future<String> utxoCoin({
+    required HDWallet wallet,
+    required int coin,
+    required String toAddress,
+    required String amount,
+    required String byteFee,
+    required String apiEndpoint,
+  }) async {
+    final changeAddress = wallet.getAddressForCoin(coin);
+    final utxoString =
+        await (getUtxo(apiEndpoint: apiEndpoint + 'api/utxo/' + changeAddress));
+    List<dynamic> utxo = jsonDecode(utxoString);
+    if (utxo.isEmpty) {
+      throw Exception(['There are no utxo available']);
+    }
+    utxo.sort((map1, map2) => map1['satoshis'].compareTo(map2['satoshis']));
+
+    var totalAmount = 0;
+    const theConsideredFeeInSats = 10000;
+    for (var tx in utxo) {
+      totalAmount += tx['satoshis'] as int;
+      if (totalAmount > int.parse(amount) + theConsideredFeeInSats * 10) break;
+    }
+    if (totalAmount < int.parse(amount)) {
+      throw Exception(['Total amount is lower than amount']);
+    }
+
+    var minUtxoNeed = 0;
+    var minUtxoAmountNeed = 0;
+    if (totalAmount < int.parse(amount) + theConsideredFeeInSats) {
+      throw Exception(
+          ['Can\'t send lower than ' + theConsideredFeeInSats.toString()]);
+    }
+    for (var tx in utxo) {
+      if (minUtxoAmountNeed < int.parse(amount) + theConsideredFeeInSats) {
+        minUtxoNeed++;
+        minUtxoAmountNeed += tx['satoshis'] as int;
+      }
+    }
+    utxo = utxo.take(minUtxoNeed).toList();
+    List<bitcoin_pb.UnspentTransaction> utxoParsed = [];
+    for (int index = 0; index <= utxo.length - 1; index++) {
+      final txParsed = bitcoin_pb.UnspentTransaction(
+        amount: $fixnum.Int64(utxo[index]['satoshis']),
+        outPoint: bitcoin_pb.OutPoint(
+          hash: hex.decode(utxo[index]['txid']).reversed.toList(),
+          index: utxo[index]['vout'],
+        ),
+        script: BitcoinScript.lockScriptForAddress(
+                wallet.getAddressForCoin(coin), coin)
+            .data()
+            .toList(),
+      );
+      utxoParsed.add(txParsed);
+    }
+
+    final signingInput = bitcoin_pb.SigningInput(
+      amount: $fixnum.Int64.parseInt(amount),
+      hashType: BitcoinScript.hashTypeForCoin(coin),
+      toAddress: toAddress,
+      changeAddress: changeAddress,
+      byteFee: $fixnum.Int64.parseInt(byteFee),
+      coinType: coin,
+      utxo: utxoParsed,
+      privateKey: [wallet.getKeyForCoin(coin).data().toList()],
+    );
+    final transactionPlan = bitcoin_pb.TransactionPlan.fromBuffer(
+      AnySigner.signerPlan(signingInput.writeToBuffer(), coin).toList(),
+    );
+    if (totalAmount - transactionPlan.fee.toInt() < int.parse(amount)) {
+      throw Exception(['Total amount is lower than amount + fee']);
+    }
+    signingInput.plan = transactionPlan;
+    signingInput.amount = transactionPlan.amount;
+
+    final sign = AnySigner.sign(signingInput.writeToBuffer(), coin);
+    final signingOutput = bitcoin_pb.SigningOutput.fromBuffer(sign);
+
+    return hex.encode(signingOutput.encoded);
+  }
+
   /// Solana native transaction
   static Future<String> solana({
     required HDWallet wallet,

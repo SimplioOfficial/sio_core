@@ -6,13 +6,19 @@
     "fixnum",
     "gradlew",
     "lcov",
+    "Litecoin",
     "noaudio",
     "protobuf",
     "Riyi",
+    "satoshis",
+    "Sats",
     "Simplio",
     "solana",
     "subosito",
     "swiftshader",
-    "trustdart"
+    "trustdart",
+    "txid",
+    "utxo",
+    "vout"
   ]
 }

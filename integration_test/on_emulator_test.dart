@@ -1,6 +1,7 @@
 import 'package:bs58/bs58.dart';
 import 'package:test/test.dart';
 import 'package:sio_core/sio_core.dart';
+// import 'package:trust_wallet_core_lib/trust_wallet_core_ffi.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_lib.dart' as trust_core;
 
 void main() {
@@ -42,6 +43,21 @@ void main() {
           equals(mnemonic24Words));
     });
   });
+
+  // test('UtxoCoin transaction test', () {
+  //   const coin = TWCoinType.TWCoinTypeBitcoinTestnet;
+  //   const toAddress = 'mvcJcHN3ZhELVVhncfjARUMtfRELwhGXgL';
+  //   const amount = '10000';
+  //   const apiEndpoint = 'https://btc1_testnet.simplio.io/';
+
+  //   final signedUtxoCoinTx = BuildTransaction.utxoCoin(
+  //     wallet: wallet,
+  //     coin: coin,
+  //     toAddress: toAddress,
+  //     amount: amount,
+  //     apiEndpoint: apiEndpoint,
+  //   );
+  // });
 
   group('Solana transactions tests', () {
     const toAddress = '3fTR8GGL2mniGyHtd3Qy2KDVhZ9LHbW59rCc7A3RtBWk';
