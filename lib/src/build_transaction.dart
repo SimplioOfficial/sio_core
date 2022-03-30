@@ -21,18 +21,19 @@ class BuildTransaction {
     required String apiEndpoint,
   }) async {
     final changeAddress = wallet.getAddressForCoin(coin);
-    final utxoString =
-        await (getUtxo(apiEndpoint: apiEndpoint + 'api/utxo/' + changeAddress));
+    final utxoString = await (getUtxo(
+        apiEndpoint: apiEndpoint + 'api/v2/utxo/' + changeAddress));
     List<dynamic> utxo = jsonDecode(utxoString);
     if (utxo.isEmpty) {
       throw NoUtxoAvailableException();
     }
-    utxo.sort((map1, map2) => map1['satoshis'].compareTo(map2['satoshis']));
+    utxo.sort((map1, map2) =>
+        int.parse(map1['value']).compareTo(int.parse(map2['value'])));
 
     var totalAmount = 0;
     const theConsideredFeeInSats = 10000;
     for (var tx in utxo) {
-      totalAmount += tx['satoshis'] as int;
+      totalAmount += int.parse(tx['value']);
       if (totalAmount > int.parse(amount) + theConsideredFeeInSats * 10) break;
     }
     if (totalAmount < int.parse(amount)) {
@@ -47,14 +48,14 @@ class BuildTransaction {
     for (var tx in utxo) {
       if (minUtxoAmountNeed < int.parse(amount) + theConsideredFeeInSats) {
         minUtxoNeed++;
-        minUtxoAmountNeed += tx['satoshis'] as int;
+        minUtxoAmountNeed += int.parse(tx['value']);
       }
     }
     utxo = utxo.take(minUtxoNeed).toList();
     List<bitcoin_pb.UnspentTransaction> utxoParsed = [];
     for (var index = 0; index <= utxo.length - 1; index++) {
       final txParsed = bitcoin_pb.UnspentTransaction(
-        amount: $fixnum.Int64(utxo[index]['satoshis']),
+        amount: $fixnum.Int64.parseInt(utxo[index]['value']),
         outPoint: bitcoin_pb.OutPoint(
           hash: hex.decode(utxo[index]['txid']).reversed.toList(),
           index: utxo[index]['vout'],
