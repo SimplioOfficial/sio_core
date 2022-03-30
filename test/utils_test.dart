@@ -24,4 +24,10 @@ void main() {
         jsonDecode(response)['result']['value']['blockhash'];
     expect(base58.decode(blockHash).length, 32);
   });
+
+  test('Create get utxo request', () async {
+    final response = await getUtxo(
+        apiEndpoint: 'https://jsonplaceholder.typicode.com/todos/1');
+    expect(jsonDecode(response)['id'], 1);
+  });
 }
