@@ -13,7 +13,15 @@ Future<Response> getRequest(String apiEndpoint) async {
 }
 
 @internal
-Future<Response> postRequest(String apiEndpoint, data) async {
+Future<Response> postRequest(String apiEndpoint, String data) async {
+  return post(
+    Uri.parse(apiEndpoint),
+    body: data,
+  );
+}
+
+@internal
+Future<Response> postEncodedRequest(String apiEndpoint, data) async {
   return post(
     Uri.parse(apiEndpoint),
     headers: <String, String>{
@@ -27,7 +35,7 @@ Future<Response> postRequest(String apiEndpoint, data) async {
 Future<String> recentBlockHashRequest({
   required String apiEndpoint,
 }) async {
-  final request = await postRequest(apiEndpoint, {
+  final request = await postEncodedRequest(apiEndpoint, {
     "jsonrpc": "2.0",
     "id": "1",
     "method": "getRecentBlockhash",

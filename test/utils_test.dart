@@ -13,8 +13,8 @@ void main() {
   });
 
   test('Create post request', () async {
-    final response =
-        await postRequest('https://jsonplaceholder.typicode.com/todos', {});
+    final response = await postEncodedRequest(
+        'https://jsonplaceholder.typicode.com/todos', {});
     expect(jsonDecode(response.body)['id'], 201);
   });
   test('Create recent block hash request', () async {

@@ -82,7 +82,7 @@ void main() {
     test('Total amount < amount + estimated fee (1000 sats)', () async {
       const coin = TWCoinType.TWCoinTypeLitecoin;
       const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
-      const amount = '1530001';
+      const amount = '30000';
       const apiEndpoint = 'https://ltc1.simplio.io/';
 
       final signedUtxoCoinTx = BuildTransaction.utxoCoin(
@@ -99,7 +99,7 @@ void main() {
     test('Valid utxoCoin transaction', () async {
       const coin = TWCoinType.TWCoinTypeLitecoin;
       const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
-      const amount = '1005000';
+      const amount = '25000';
       const apiEndpoint = 'https://ltc1.simplio.io/';
 
       final signedUtxoCoinTx = await BuildTransaction.utxoCoin(
@@ -110,7 +110,7 @@ void main() {
         byteFee: '10',
         apiEndpoint: apiEndpoint,
       );
-      expect(hex.decode(signedUtxoCoinTx).length, 372);
+      expect(hex.decode(signedUtxoCoinTx).length, 223);
     });
   });
 
