@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'utils.dart';
+import 'exceptions.dart';
 
 import 'package:convert/convert.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_lib.dart';
@@ -7,23 +8,6 @@ import 'package:trust_wallet_core_lib/trust_wallet_core_ffi.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:trust_wallet_core_lib/protobuf/Solana.pb.dart' as solana_pb;
 import 'package:trust_wallet_core_lib/protobuf/Bitcoin.pb.dart' as bitcoin_pb;
-
-/// Current address has no utxo available
-class NoUtxoAvailableException implements Exception {
-  NoUtxoAvailableException();
-}
-
-/// Total amount in the address is lower than the amount
-/// that is wanted to be send
-class LowTotalAmountException implements Exception {
-  LowTotalAmountException();
-}
-
-/// Total amount that remains in the address after this transaction
-/// is lower than 10000 satoshis. Try to send lower amount.
-class Under10kTotalAmountException implements Exception {
-  Under10kTotalAmountException();
-}
 
 /// Class that builds transactions and return OutputTx ready for broadcasting.
 class BuildTransaction {
@@ -96,10 +80,8 @@ class BuildTransaction {
     final transactionPlan = bitcoin_pb.TransactionPlan.fromBuffer(
       AnySigner.signerPlan(signingInput.writeToBuffer(), coin).toList(),
     );
-
     signingInput.plan = transactionPlan;
     signingInput.amount = transactionPlan.amount;
-
     final sign = AnySigner.sign(signingInput.writeToBuffer(), coin);
     final signingOutput = bitcoin_pb.SigningOutput.fromBuffer(sign);
 
