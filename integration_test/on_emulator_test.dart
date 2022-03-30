@@ -45,22 +45,73 @@ void main() {
     });
   });
 
-  group('UtxoCoin transaction tests - ', () {});
-  test('Valid utxoCoin transaction', () async {
-    const coin = TWCoinType.TWCoinTypeLitecoin;
-    const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
-    const amount = '1005000';
-    const apiEndpoint = 'https://ltc1.simplio.io/';
+  group('UtxoCoin transaction tests - ', () {
+    test('No utxo available', () async {
+      const coin = TWCoinType.TWCoinTypeDogecoin;
+      const toAddress = 'DK3AhJvD57AfUqFCp5MUV62GE6K4enGxSw';
+      const amount = '1005000';
+      const apiEndpoint = 'https://doge1.simplio.io/';
 
-    final signedUtxoCoinTx = await BuildTransaction.utxoCoin(
-      wallet: wallet,
-      coin: coin,
-      toAddress: toAddress,
-      amount: amount,
-      byteFee: '10',
-      apiEndpoint: apiEndpoint,
-    );
-    expect(hex.decode(signedUtxoCoinTx).length, 372);
+      final signedUtxoCoinTx = BuildTransaction.utxoCoin(
+        wallet: wallet,
+        coin: coin,
+        toAddress: toAddress,
+        amount: amount,
+        byteFee: '10',
+        apiEndpoint: apiEndpoint,
+      );
+      await expectLater(signedUtxoCoinTx, throwsException);
+    });
+
+    test('Total amount < amount', () async {
+      const coin = TWCoinType.TWCoinTypeLitecoin;
+      const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
+      const amount = '1550000';
+      const apiEndpoint = 'https://ltc1.simplio.io/';
+      final signedUtxoCoinTx = BuildTransaction.utxoCoin(
+        wallet: wallet,
+        coin: coin,
+        toAddress: toAddress,
+        amount: amount,
+        byteFee: '10',
+        apiEndpoint: apiEndpoint,
+      );
+      await expectLater(signedUtxoCoinTx, throwsException);
+    });
+
+    test('Total amount < amount + estimated fee (1000 sats)', () async {
+      const coin = TWCoinType.TWCoinTypeLitecoin;
+      const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
+      const amount = '1530001';
+      const apiEndpoint = 'https://ltc1.simplio.io/';
+
+      final signedUtxoCoinTx = BuildTransaction.utxoCoin(
+        wallet: wallet,
+        coin: coin,
+        toAddress: toAddress,
+        amount: amount,
+        byteFee: '10',
+        apiEndpoint: apiEndpoint,
+      );
+      await expectLater(signedUtxoCoinTx, throwsException);
+    });
+
+    test('Valid utxoCoin transaction', () async {
+      const coin = TWCoinType.TWCoinTypeLitecoin;
+      const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
+      const amount = '1005000';
+      const apiEndpoint = 'https://ltc1.simplio.io/';
+
+      final signedUtxoCoinTx = await BuildTransaction.utxoCoin(
+        wallet: wallet,
+        coin: coin,
+        toAddress: toAddress,
+        amount: amount,
+        byteFee: '10',
+        apiEndpoint: apiEndpoint,
+      );
+      expect(hex.decode(signedUtxoCoinTx).length, 372);
+    });
   });
 
   group('Solana transactions tests - ', () {

@@ -8,6 +8,23 @@ import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:trust_wallet_core_lib/protobuf/Solana.pb.dart' as solana_pb;
 import 'package:trust_wallet_core_lib/protobuf/Bitcoin.pb.dart' as bitcoin_pb;
 
+/// Current address has no utxo available
+class NoUtxoAvailableException implements Exception {
+  NoUtxoAvailableException();
+}
+
+/// Total amount in the address is lower than the amount
+/// that is wanted to be send
+class LowTotalAmountException implements Exception {
+  LowTotalAmountException();
+}
+
+/// Total amount that remains in the address after this transaction
+/// is lower than 10000 satoshis. Try to send lower amount.
+class Under10kTotalAmountException implements Exception {
+  Under10kTotalAmountException();
+}
+
 /// Class that builds transactions and return OutputTx ready for broadcasting.
 class BuildTransaction {
   /// Utxo coins transaction
@@ -24,7 +41,7 @@ class BuildTransaction {
         await (getUtxo(apiEndpoint: apiEndpoint + 'api/utxo/' + changeAddress));
     List<dynamic> utxo = jsonDecode(utxoString);
     if (utxo.isEmpty) {
-      throw Exception(['There are no utxo available']);
+      throw NoUtxoAvailableException();
     }
     utxo.sort((map1, map2) => map1['satoshis'].compareTo(map2['satoshis']));
 
@@ -35,14 +52,13 @@ class BuildTransaction {
       if (totalAmount > int.parse(amount) + theConsideredFeeInSats * 10) break;
     }
     if (totalAmount < int.parse(amount)) {
-      throw Exception(['Total amount is lower than amount']);
+      throw LowTotalAmountException();
     }
 
     var minUtxoNeed = 0;
     var minUtxoAmountNeed = 0;
     if (totalAmount < int.parse(amount) + theConsideredFeeInSats) {
-      throw Exception(
-          ['Can\'t send lower than ' + theConsideredFeeInSats.toString()]);
+      throw Under10kTotalAmountException();
     }
     for (var tx in utxo) {
       if (minUtxoAmountNeed < int.parse(amount) + theConsideredFeeInSats) {
@@ -52,7 +68,7 @@ class BuildTransaction {
     }
     utxo = utxo.take(minUtxoNeed).toList();
     List<bitcoin_pb.UnspentTransaction> utxoParsed = [];
-    for (int index = 0; index <= utxo.length - 1; index++) {
+    for (var index = 0; index <= utxo.length - 1; index++) {
       final txParsed = bitcoin_pb.UnspentTransaction(
         amount: $fixnum.Int64(utxo[index]['satoshis']),
         outPoint: bitcoin_pb.OutPoint(
@@ -80,9 +96,7 @@ class BuildTransaction {
     final transactionPlan = bitcoin_pb.TransactionPlan.fromBuffer(
       AnySigner.signerPlan(signingInput.writeToBuffer(), coin).toList(),
     );
-    if (totalAmount - transactionPlan.fee.toInt() < int.parse(amount)) {
-      throw Exception(['Total amount is lower than amount + fee']);
-    }
+
     signingInput.plan = transactionPlan;
     signingInput.amount = transactionPlan.amount;
 
