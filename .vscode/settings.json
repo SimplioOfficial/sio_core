@@ -1,18 +1,26 @@
 {
   "cSpell.words": [
+    "Blockbook",
     "Blockhash",
     "codecov",
     "devnet",
     "fixnum",
     "gradlew",
     "lcov",
+    "Litecoin",
     "noaudio",
     "protobuf",
     "Riyi",
+    "satoshis",
+    "Sats",
+    "sendtx",
     "Simplio",
     "solana",
     "subosito",
     "swiftshader",
-    "trustdart"
+    "trustdart",
+    "txid",
+    "utxo",
+    "vout"
   ]
 }

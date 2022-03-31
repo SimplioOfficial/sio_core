@@ -1,6 +1,8 @@
 import 'package:bs58/bs58.dart';
+import 'package:convert/convert.dart';
 import 'package:test/test.dart';
 import 'package:sio_core/sio_core.dart';
+import 'package:trust_wallet_core_lib/trust_wallet_core_ffi.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_lib.dart' as trust_core;
 
 void main() {
@@ -8,7 +10,7 @@ void main() {
   trust_core.HDWallet wallet;
 
   const mnemonic =
-      'rent craft script crucial item someone dream federal notice page shrug pipe young hover duty';
+      'horror select baby exile convince sunset outside vehicle write decade powder energy';
 
   if (Mnemonic.isValid(mnemonic: mnemonic)) {
     wallet = Mnemonic.import(mnemonic: mnemonic);
@@ -16,7 +18,7 @@ void main() {
     throw Exception(['Mnemonic is not valid!']);
   }
 
-  group('Mnemonic tests', () {
+  group('Mnemonic tests - ', () {
     const mnemonic12Words =
         'rent craft script crucial item someone dream federal notice page shrug pipe young hover duty';
     const mnemonic24Words =
@@ -43,7 +45,76 @@ void main() {
     });
   });
 
-  group('Solana transactions tests', () {
+  group('UtxoCoin transaction tests - ', () {
+    test('No utxo available', () async {
+      const coin = TWCoinType.TWCoinTypeDogecoin;
+      const toAddress = 'DK3AhJvD57AfUqFCp5MUV62GE6K4enGxSw';
+      const amount = '1005000';
+      const apiEndpoint = 'https://doge1.simplio.io/';
+
+      final signedUtxoCoinTx = BuildTransaction.utxoCoin(
+        wallet: wallet,
+        coin: coin,
+        toAddress: toAddress,
+        amount: amount,
+        byteFee: '10',
+        apiEndpoint: apiEndpoint,
+      );
+      await expectLater(signedUtxoCoinTx, throwsException);
+    });
+
+    test('Total amount < amount', () async {
+      const coin = TWCoinType.TWCoinTypeLitecoin;
+      const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
+      const amount = '1550000';
+      const apiEndpoint = 'https://ltc1.simplio.io/';
+      final signedUtxoCoinTx = BuildTransaction.utxoCoin(
+        wallet: wallet,
+        coin: coin,
+        toAddress: toAddress,
+        amount: amount,
+        byteFee: '10',
+        apiEndpoint: apiEndpoint,
+      );
+      await expectLater(signedUtxoCoinTx, throwsException);
+    });
+
+    test('Total amount < amount + estimated fee (1000 sats)', () async {
+      const coin = TWCoinType.TWCoinTypeLitecoin;
+      const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
+      const amount = '30000';
+      const apiEndpoint = 'https://ltc1.simplio.io/';
+
+      final signedUtxoCoinTx = BuildTransaction.utxoCoin(
+        wallet: wallet,
+        coin: coin,
+        toAddress: toAddress,
+        amount: amount,
+        byteFee: '10',
+        apiEndpoint: apiEndpoint,
+      );
+      await expectLater(signedUtxoCoinTx, throwsException);
+    });
+
+    test('Valid utxoCoin transaction', () async {
+      const coin = TWCoinType.TWCoinTypeLitecoin;
+      const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
+      const amount = '25000';
+      const apiEndpoint = 'https://ltc1.simplio.io/';
+
+      final signedUtxoCoinTx = await BuildTransaction.utxoCoin(
+        wallet: wallet,
+        coin: coin,
+        toAddress: toAddress,
+        amount: amount,
+        byteFee: '10',
+        apiEndpoint: apiEndpoint,
+      );
+      expect(hex.decode(signedUtxoCoinTx).length, 223);
+    });
+  });
+
+  group('Solana transactions tests - ', () {
     const toAddress = '3fTR8GGL2mniGyHtd3Qy2KDVhZ9LHbW59rCc7A3RtBWk';
     const tokenMintAddress = 'SioTkQxHyAs98ouRiyi1YDv3gLMSrX3eNBg61GH7NrM';
     const amount = '4000';
@@ -71,7 +142,7 @@ void main() {
       expect(
           signedSolanaTx,
           equals(
-              '5kk72sm2ZR1BZAEy2ZFxLMEDS51is5GmNsxWa4NfiDUrWoWN6xTQLWp2ggjryhF5NCxeZK26QpmgH9a1iKucSXKsqV41W6ag3nek5nfDoybC9JFY3m4RSz3czwBZvtrpaCmC9Hk741Z8vW9iPNAQonZarcjfgYGkUb77SgsQTx5j42Pc7SmGcfePeEL31r5oHyp8zTFLK3HhxKcHE8SSQdsPy3adUoyA64fgPrgo6ysSZRwUipwMrH7zwLxcvz8ZLPXVktsBoLFWyRyFiptXxPgm8gWiDS2UVqm9Z'));
+              '3zWUJPKRuoYY39TFcezbAxEgnYQ6vdhxHrKR9AfHBwe1jqVeAEREwoSWC1JyuyayggHvMjBjpBzR4EGyAFeR4cYTDB2ivdKmRM56P2vEgZkmEAt57LTxwtVM1isG88Fo9fqkT14vnrkke1tRbD8ivG6BEwhDvYURy1Z9RyKe3QozAKcP28mUyaCeBdjd4LgvmyDNCvstDmT2DADeD6qYoZZHxVNGxpjnR7rQfuG8UgfNWcixZFJkQB7k5SkDE5GuTxZqnHy4M87QdvCc7qKWrGGnmD9j8sQeycJk7'));
     });
 
     test('Solana token transaction length', () async {
@@ -99,7 +170,7 @@ void main() {
       expect(
           signedSolanaTokenTx,
           equals(
-              'UjrxQHLaUPAfYxKH1h3CzQEELRAPtpBUhW7Z9D3cSkHP8MMHZsP2evQ7ERsYsxDTKPeoZgUmvsurMEeKuNG1YqZ48VYvohpj326V9P4mHZCrWvx5UJY8sKsaRoMfKTepacUhYo41fsPASy2qgfzXXTaFJZsFrPPoaxjaWEcWqm9WbRU9BnCt8WxxhPusphGP9c4VYkM6YLqQLicxuHQSxfWfACkD7TDcuSfC9kejqGA8LCyb4db4mqB112spfJmkjQgPQELhaxGkTY1rYBphRLbtv2YCVUDeRazHaSmvadgnBXKgo9a2VLXqvH4UCsvy7YB96Y5qgoAC63PUGNSVTCEPE7Ebqfee2JR9CMbuGLezs9TRWsAakvwSHRAF'));
+              'LMcrASBJnPkjYi5VWC4kjDSDUQ3yPruwqD3EQRH1o1nEEZUYvAvzfF2ZB8E1yL78zJPPCCMQUe9BpJpGR4YJ8Y7ZZ7x7N9KtJEQb9MbtgFaL3GdXvA41suG3KCckRXKwXikZhxgjUCASruE79H1bWZ5rqCCwAhv54SUobj1GvnFXtPaQu9iQG4mGJjEyy44ctBFJatbwBfXwZSKJBVXaYwkpdN2fZy3wZNPt9pFK9BF72n5C3s99Vc9CzrzM9tfE2TKjKE6CopYATdeb1qmVDYVxnj3ZdaJGp7RHP61sGhY21iHQt47E7naMtCSTkjxohUfcirTahTYAcbmZD3iwAKcYRmuCk5PaeSCnL42MYhEE5WsG97sWL5Gk9Nrj'));
     });
   });
 }

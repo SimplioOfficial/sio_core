@@ -6,10 +6,16 @@ import 'package:bs58/bs58.dart';
 import '../lib/src/utils.dart';
 
 void main() {
-  test('Create request', () async {
+  test('Create get request', () async {
     final response =
-        await createRequest('https://jsonplaceholder.typicode.com/todos/1', {});
-    expect(response.body, '{}');
+        await getRequest('https://jsonplaceholder.typicode.com/todos/1');
+    expect(jsonDecode(response.body)['id'], 1);
+  });
+
+  test('Create post request', () async {
+    final response = await postEncodedRequest(
+        'https://jsonplaceholder.typicode.com/todos', {});
+    expect(jsonDecode(response.body)['id'], 201);
   });
   test('Create recent block hash request', () async {
     final response = await recentBlockHashRequest(
@@ -17,5 +23,11 @@ void main() {
     final String blockHash =
         jsonDecode(response)['result']['value']['blockhash'];
     expect(base58.decode(blockHash).length, 32);
+  });
+
+  test('Create get utxo request', () async {
+    final response = await getUtxo(
+        apiEndpoint: 'https://jsonplaceholder.typicode.com/todos/1');
+    expect(jsonDecode(response)['id'], 1);
   });
 }
