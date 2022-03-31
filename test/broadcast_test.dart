@@ -55,6 +55,15 @@ void main() {
       expect(jsonDecode(response)['error'], contains('-22'));
     });
 
+    test('Flux', () async {
+      const signedTxEncoded =
+          '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
+      final response = await Broadcast.flux(
+          signedTxEncoded: signedTxEncoded,
+          apiEndpoint: 'https://explorer.runonflux.io/');
+      expect(response, 'TX decode failed. Code:-22');
+    });
+
     test('Litecoin', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';

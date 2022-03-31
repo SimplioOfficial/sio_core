@@ -62,6 +62,19 @@ class Broadcast {
     return broadcast.body;
   }
 
+  /// Send Flux on mainnet
+  /// Works with Insight
+  static Future<String> flux({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postEncodedRequest(apiEndpoint + 'api/tx/send/', {
+      "rawtx": signedTxEncoded,
+    });
+
+    return broadcast.body;
+  }
+
   /// Send Litecoin on mainnet
   /// Works with Blockbook
   static Future<String> litecoin({
