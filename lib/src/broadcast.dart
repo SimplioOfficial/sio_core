@@ -14,6 +14,18 @@ class Broadcast {
     return broadcast.body;
   }
 
+  /// Send Bitcoin Cash on mainnet
+  /// Works with Blockbook
+  static Future<String> bitcoinCash({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast =
+        await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
+
+    return broadcast.body;
+  }
+
   /// Send Dash on mainnet
   /// Works with Blockbook
   static Future<String> dash({

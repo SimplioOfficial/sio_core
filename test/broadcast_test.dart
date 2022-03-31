@@ -15,6 +15,16 @@ void main() {
       expect(jsonDecode(response)['error'], contains('-22'));
     });
 
+    test('Bitcoin Cash', () async {
+      const signedTxEncoded =
+          '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
+      final response = await Broadcast.bitcoinCash(
+          signedTxEncoded: signedTxEncoded,
+          apiEndpoint: 'https://bch1.simplio.io/');
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)['error'], contains('-22'));
+    });
+
     test('Dash', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
