@@ -32,13 +32,13 @@ Future<Response> postEncodedRequest(String apiEndpoint, data) async {
 }
 
 @internal
-Future<String> recentBlockHashRequest({
+Future<String> latestBlockHashRequest({
   required String apiEndpoint,
 }) async {
   final request = await postEncodedRequest(apiEndpoint, {
     "jsonrpc": "2.0",
     "id": "1",
-    "method": "getRecentBlockhash",
+    "method": "getLatestBlockhash",
     "params": [
       {
         "commitment": "confirmed",

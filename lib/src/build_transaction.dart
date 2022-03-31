@@ -23,7 +23,7 @@ class BuildTransaction {
 
     String _recentBlockHash;
     if (recentBlockHash == null) {
-      final response = await recentBlockHashRequest(apiEndpoint: apiEndpoint);
+      final response = await latestBlockHashRequest(apiEndpoint: apiEndpoint);
       _recentBlockHash = jsonDecode(response)["result"]["value"]["blockhash"];
     } else {
       _recentBlockHash = recentBlockHash;
@@ -61,7 +61,7 @@ class BuildTransaction {
 
     String _recentBlockHash;
     if (recentBlockHash == null) {
-      final response = await recentBlockHashRequest(apiEndpoint: apiEndpoint);
+      final response = await latestBlockHashRequest(apiEndpoint: apiEndpoint);
       _recentBlockHash = jsonDecode(response)["result"]["value"]["blockhash"];
     } else {
       _recentBlockHash = recentBlockHash;
