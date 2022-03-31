@@ -14,6 +14,67 @@ class Broadcast {
     return broadcast.body;
   }
 
+  /// Send Bitcoin Cash on mainnet
+  /// Works with Blockbook
+  static Future<String> bitcoinCash({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast =
+        await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
+
+    return broadcast.body;
+  }
+
+  /// Send Dash on mainnet
+  /// Works with Blockbook
+  static Future<String> dash({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast =
+        await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
+
+    return broadcast.body;
+  }
+
+  /// Send DigiByte on mainnet
+  /// Works with Blockbook
+  static Future<String> digibyte({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast =
+        await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
+
+    return broadcast.body;
+  }
+
+  /// Send Doge on mainnet
+  /// Works with Blockbook
+  static Future<String> doge({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast =
+        await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
+
+    return broadcast.body;
+  }
+
+  /// Send Flux on mainnet
+  /// Works with Insight
+  static Future<String> flux({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postEncodedRequest(apiEndpoint + 'api/tx/send/', {
+      "rawtx": signedTxEncoded,
+    });
+
+    return broadcast.body;
+  }
+
   /// Send Litecoin on mainnet
   /// Works with Blockbook
   static Future<String> litecoin({
@@ -38,6 +99,18 @@ class Broadcast {
       "method": "sendTransaction",
       "params": [signedTxEncoded]
     });
+
+    return broadcast.body;
+  }
+
+  /// Send Zcash on mainnet
+  /// Works with Blockbook
+  static Future<String> zcash({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast =
+        await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
 
     return broadcast.body;
   }

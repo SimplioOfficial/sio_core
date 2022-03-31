@@ -4,12 +4,14 @@
     "Blockhash",
     "codecov",
     "devnet",
+    "digibyte",
     "fixnum",
     "gradlew",
     "lcov",
     "Litecoin",
     "noaudio",
     "protobuf",
+    "rawtx",
     "Riyi",
     "satoshis",
     "Sats",
@@ -21,6 +23,7 @@
     "trustdart",
     "txid",
     "utxo",
-    "vout"
+    "vout",
+    "Zcash"
   ]
 }

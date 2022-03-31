@@ -18,7 +18,7 @@ void main() {
     expect(jsonDecode(response.body)['id'], 201);
   });
   test('Create recent block hash request', () async {
-    final response = await recentBlockHashRequest(
+    final response = await latestBlockHashRequest(
         apiEndpoint: 'https://api.devnet.solana.com');
     final String blockHash =
         jsonDecode(response)['result']['value']['blockhash'];
