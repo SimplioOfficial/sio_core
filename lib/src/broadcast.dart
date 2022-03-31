@@ -77,4 +77,16 @@ class Broadcast {
 
     return broadcast.body;
   }
+
+  /// Send Zcash on mainnet
+  /// Works with Blockbook
+  static Future<String> zcash({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast =
+        await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
+
+    return broadcast.body;
+  }
 }
