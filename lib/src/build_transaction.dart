@@ -6,11 +6,35 @@ import 'package:convert/convert.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_lib.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_ffi.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
-import 'package:trust_wallet_core_lib/protobuf/Solana.pb.dart' as solana_pb;
 import 'package:trust_wallet_core_lib/protobuf/Bitcoin.pb.dart' as bitcoin_pb;
+import 'package:trust_wallet_core_lib/protobuf/Ethereum.pb.dart' as ethereum_pb;
+import 'package:trust_wallet_core_lib/protobuf/Solana.pb.dart' as solana_pb;
 
 /// Class that builds transactions and return OutputTx ready for broadcasting.
 class BuildTransaction {
+  /// BNB Smart Chain native transactions
+  static Future<String> bsc({
+    required HDWallet wallet,
+    required int amount,
+    required String toAddress,
+  }) async {
+    final secretPrivateKey =
+        wallet.getKeyForCoin(TWCoinType.TWCoinTypeSmartChain);
+    final tx = ethereum_pb.Transaction_Transfer(amount: [amount]);
+    final signingInput = ethereum_pb.SigningInput(
+      chainId: [1],
+      gasPrice: [3600000000],
+      gasLimit: [21000],
+      toAddress: toAddress,
+      transaction: ethereum_pb.Transaction(transfer: tx),
+      privateKey: secretPrivateKey.data(),
+    );
+    final sign = AnySigner.sign(
+        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);
+    final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
+    return hex.encode(signingOutput.encoded);
+  }
+
   /// Solana native transaction
   static Future<String> solana({
     required HDWallet wallet,
