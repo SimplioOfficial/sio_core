@@ -26,6 +26,18 @@ class Broadcast {
     return broadcast.body;
   }
 
+  /// Send Doge on mainnet
+  /// Works with Blockbook
+  static Future<String> doge({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast =
+        await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
+
+    return broadcast.body;
+  }
+
   /// Send Litecoin on mainnet
   /// Works with Blockbook
   static Future<String> litecoin({
