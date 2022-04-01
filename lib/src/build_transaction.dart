@@ -13,18 +13,26 @@ import 'package:trust_wallet_core_lib/protobuf/Solana.pb.dart' as solana_pb;
 /// Class that builds transactions and return OutputTx ready for broadcasting.
 class BuildTransaction {
   /// BNB Smart Chain native transactions
-  static Future<String> bsc({
+  ///
+  /// `amount` value in gwei
+  ///
+  /// `gasPrice` and `gasLimit` values in wei
+  static Future<String> bnbSmartChain({
     required HDWallet wallet,
-    required int amount,
+    required String amount, // value in gwei (10^9 wei)
     required String toAddress,
+    int gasPrice = 3600000000, // value in wei = 10^(-18) ETH (or 10^(-9) gwei)
+    int gasLimit = 21000, // price in wei = 10^(-18) ETH (or 10^(-9) gwei)
   }) async {
     final secretPrivateKey =
         wallet.getKeyForCoin(TWCoinType.TWCoinTypeSmartChain);
-    final tx = ethereum_pb.Transaction_Transfer(amount: [amount]);
+    final tx = ethereum_pb.Transaction_Transfer(
+      amount: [int.parse(amount) * 10 ^ 9],
+    );
     final signingInput = ethereum_pb.SigningInput(
-      chainId: [1],
-      gasPrice: [3600000000],
-      gasLimit: [21000],
+      // chainId: [1],
+      gasPrice: [gasPrice],
+      gasLimit: [gasLimit],
       toAddress: toAddress,
       transaction: ethereum_pb.Transaction(transfer: tx),
       privateKey: secretPrivateKey.data(),
