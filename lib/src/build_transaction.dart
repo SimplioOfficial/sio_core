@@ -24,9 +24,11 @@ class BuildTransaction {
     required String toAddress,
     required String nonce,
     // value in wei = 10^(-18) ETH (or 10^(-9) gwei)
-    String gasPrice = '3600000000',
+    String gasPrice = '13600000000',
     // price in wei = 10^(-18) ETH (or 10^(-9) gwei)
     String gasLimit = '21000',
+    // change chainId to 97 for testnet chain
+    int chainId = 56,
   }) async {
     final secretPrivateKey =
         wallet.getKeyForCoin(TWCoinType.TWCoinTypeSmartChain);
@@ -34,11 +36,53 @@ class BuildTransaction {
       amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
     );
     final signingInput = ethereum_pb.SigningInput(
-      chainId: [97],
+      chainId: [chainId],
       gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
       gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
       toAddress: toAddress,
       transaction: ethereum_pb.Transaction(transfer: tx),
+      privateKey: secretPrivateKey.data(),
+      nonce: bigIntToBytes(BigInt.parse(nonce)),
+    );
+    final sign = AnySigner.sign(
+        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);
+    final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
+    return hex.encode(signingOutput.encoded);
+  }
+
+  /// BNB Smart Chain token transactions
+  ///
+  /// `amount` value in smallest denomination
+  ///
+  /// `gasPrice` and `gasLimit` values in wei
+  static Future<String> bnbSmartChainToken({
+    required HDWallet wallet,
+    // value in smallest denomination
+    required String amount,
+    required String tokenContract,
+    required String toAddress,
+    required String nonce,
+    // value in wei = 10^(-18) ETH (or 10^(-9) gwei)
+    String gasPrice = '3600000000',
+    // price in wei = 10^(-18) ETH (or 10^(-9) gwei)
+    String gasLimit = '21000',
+    // change chainId to 97 for testnet chain
+    int chainId = 56,
+  }) async {
+    final secretPrivateKey =
+        wallet.getKeyForCoin(TWCoinType.TWCoinTypeSmartChain);
+
+    final tx = ethereum_pb.Transaction_ERC20Transfer(
+      amount: bigIntToBytes(BigInt.parse(amount)),
+      to: toAddress,
+    );
+
+    final signingInput = ethereum_pb.SigningInput(
+      chainId: [chainId],
+      gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
+      gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
+      toAddress: tokenContract, // yes here must be tokenContract (crazy right?)
+      transaction: ethereum_pb.Transaction(erc20Transfer: tx),
       privateKey: secretPrivateKey.data(),
       nonce: bigIntToBytes(BigInt.parse(nonce)),
     );

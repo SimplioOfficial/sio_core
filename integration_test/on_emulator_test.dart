@@ -45,6 +45,7 @@ void main() {
   group('Ethereum transaction tests - ', () {
     const toAddress = '0x3E26e7F73A80444e67b7bE654A38aB85ccb6ea47';
     const amount = '924400';
+    const tokenContract = '0x26Fc591feCC4948c4288d95B6AAdAB00eBa4e72A';
     test('BSC native transaction length', () async {
       final signedBscTx = await BuildTransaction.bnbSmartChain(
         wallet: wallet,
@@ -52,7 +53,7 @@ void main() {
         toAddress: toAddress,
         nonce: '0',
       );
-      expect(hex.decode(signedBscTx).length, 109);
+      expect(hex.decode(signedBscTx).length, 110);
     });
     test('BSC native transaction hash', () async {
       final signedBscTx = await BuildTransaction.bnbSmartChain(
@@ -62,7 +63,28 @@ void main() {
         nonce: '0',
       );
       expect(signedBscTx,
-          'f86b8084d693a400825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a160008081e5a08fa922ed5dd537ad285adba6d9a3be05a8556a76a21aa59dc8713b1c4f280fd7a0285bfd9d99deb462dec9db33161e534db8eedb18b8d0b3543ec0881d235ba961');
+          'f86c8085032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a16000808194a0d2c6acce01755661bf4dceee0826d0b7962b018b7a298ec443ad5587e310baefa020a3ffd793ff276af6676bad45887551508c6e98eb07faa9d1bd29a1844f1f8b');
+    });
+    test('BSC token transaction length', () async {
+      final signedBscTx = await BuildTransaction.bnbSmartChainToken(
+        wallet: wallet,
+        amount: amount,
+        tokenContract: tokenContract,
+        toAddress: toAddress,
+        nonce: '0',
+      );
+      expect(hex.decode(signedBscTx).length, 171);
+    });
+    test('BSC token transaction hash', () async {
+      final signedBscTx = await BuildTransaction.bnbSmartChainToken(
+        wallet: wallet,
+        amount: amount,
+        tokenContract: tokenContract,
+        toAddress: toAddress,
+        nonce: '0',
+      );
+      expect(signedBscTx,
+          'f8a98084d693a4008252089426fc591fecc4948c4288d95b6aadab00eba4e72a80b844a9059cbb0000000000000000000000003e26e7f73a80444e67b7be654a38ab85ccb6ea4700000000000000000000000000000000000000000000000000000000000e1af08194a0cad73e551edf5e537ee7bad6cdf3e5454c70566b6ea7471b4df4360c364087afa02cfcc1d078171ebc87fc36b725d50f172d9414e50c15c87f59508101b8ae40ea');
     });
   });
 
