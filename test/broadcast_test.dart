@@ -4,6 +4,30 @@ import 'package:test/test.dart';
 import 'package:sio_core/sio_core.dart';
 
 void main() {
+  test('Broadcast BNB Smart Chain', () async {
+    const signedTxEncoded =
+        'f86c0385032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea4787234230709be0008081e5a0e873a5e71069a59d7e652f9ac4cd667274cb7cdd356e3644601e811ac0105a10a0735e2cef7b1274dc72e1d5c90b3864f270c4cb0a5be90a8c337b4eeee56f8179';
+    final response = await Broadcast.bnbSmartChain(
+      signedTxEncoded: signedTxEncoded,
+      apiEndpoint: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+    );
+    expect(jsonDecode(response), isMap);
+    expect(jsonDecode(response)["error"]["code"], -32000);
+  });
+
+  test('Broadcast solana', () async {
+    const signedTxEncoded =
+        '4vEk1KnknS8YGWD8y5L8LtacJauYv7XKo7UtrBHuAGDLKnxQ39eiLjGwrDcKDXPyv1bNX9Y8jgZ5AtAFdiWn6aanYsGqfjArv1ZGdySmwEHDd4d5UZ2vo5LxZHu5bEU5gXxC1VMV4n3C1fXqb7DNt7h9aNyRnoRYzCe76FvxtewQQZ7uuxtGsArKyRufCfpse5d7J1sdMhucW7E7Ab3m46rooUm3BboGDaf5qiEZCgsfbdPfUQJHXFwrZFMGrVXkMvzWVkdHdBZHeAU2nbfznJiinEtkE9x3bEGMu';
+    final response = await Broadcast.solana(
+        signedTxEncoded: signedTxEncoded,
+        apiEndpoint: 'https://api.devnet.solana.com/');
+    expect(jsonDecode(response)["error"]["code"], equals(-32002));
+    expect(
+      jsonDecode(response)["error"]["message"],
+      equals('Transaction simulation failed: Blockhash not found'),
+    );
+  });
+
   group('Broadcast utxo coin - ', () {
     test('Bitcoin', () async {
       const signedTxEncoded =
@@ -83,18 +107,5 @@ void main() {
       expect(jsonDecode(response), isMap);
       expect(jsonDecode(response)['error'], contains('-22'));
     });
-  });
-
-  test('Broadcast solana', () async {
-    const signedTxEncoded =
-        '4vEk1KnknS8YGWD8y5L8LtacJauYv7XKo7UtrBHuAGDLKnxQ39eiLjGwrDcKDXPyv1bNX9Y8jgZ5AtAFdiWn6aanYsGqfjArv1ZGdySmwEHDd4d5UZ2vo5LxZHu5bEU5gXxC1VMV4n3C1fXqb7DNt7h9aNyRnoRYzCe76FvxtewQQZ7uuxtGsArKyRufCfpse5d7J1sdMhucW7E7Ab3m46rooUm3BboGDaf5qiEZCgsfbdPfUQJHXFwrZFMGrVXkMvzWVkdHdBZHeAU2nbfznJiinEtkE9x3bEGMu';
-    final response = await Broadcast.solana(
-        signedTxEncoded: signedTxEncoded,
-        apiEndpoint: 'https://api.devnet.solana.com/');
-    expect(jsonDecode(response)["error"]["code"], equals(-32002));
-    expect(
-      jsonDecode(response)["error"]["message"],
-      equals('Transaction simulation failed: Blockhash not found'),
-    );
   });
 }

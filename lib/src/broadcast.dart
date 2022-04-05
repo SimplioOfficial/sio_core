@@ -26,6 +26,21 @@ class Broadcast {
     return broadcast.body;
   }
 
+  /// Send BNB Smart Chain on mainnet, testnet
+  static Future<String> bnbSmartChain({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postEncodedRequest(apiEndpoint, {
+      "jsonrpc": "2.0",
+      "id": "1",
+      "method": "eth_sendRawTransaction",
+      "params": ["0x" + signedTxEncoded]
+    });
+
+    return broadcast.body;
+  }
+
   /// Send Dash on mainnet
   /// Works with Blockbook
   static Future<String> dash({

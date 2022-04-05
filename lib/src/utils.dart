@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:convert/convert.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart';
 
@@ -49,9 +50,32 @@ Future<String> latestBlockHashRequest({
 }
 
 @internal
+Future<String> getNonce({
+  required String address,
+  required String apiEndpoint,
+}) async {
+  final request = await postEncodedRequest(apiEndpoint, {
+    "jsonrpc": "2.0",
+    "id": "1",
+    "method": "eth_getTransactionCount",
+    "params": [address, "latest"]
+  });
+  return request.body;
+}
+
+@internal
 Future<String> getUtxo({
   required String apiEndpoint,
 }) async {
   final request = await getRequest(apiEndpoint);
   return request.body;
+}
+
+@internal
+List<int> bigIntToBytes(BigInt number) {
+  var inHex = number.toRadixString(16);
+  if (inHex.length % 2 == 1) {
+    inHex = '0' + inHex;
+  }
+  return hex.decode(inHex);
 }

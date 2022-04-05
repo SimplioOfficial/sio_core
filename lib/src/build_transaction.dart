@@ -19,23 +19,28 @@ class BuildTransaction {
   /// `gasPrice` and `gasLimit` values in wei
   static Future<String> bnbSmartChain({
     required HDWallet wallet,
-    required String amount, // value in gwei (10^9 wei)
+    // value in gwei (10^9 wei)
+    required String amount,
     required String toAddress,
-    int gasPrice = 3600000000, // value in wei = 10^(-18) ETH (or 10^(-9) gwei)
-    int gasLimit = 21000, // price in wei = 10^(-18) ETH (or 10^(-9) gwei)
+    required String nonce,
+    // value in wei = 10^(-18) ETH (or 10^(-9) gwei)
+    String gasPrice = '3600000000',
+    // price in wei = 10^(-18) ETH (or 10^(-9) gwei)
+    String gasLimit = '21000',
   }) async {
     final secretPrivateKey =
         wallet.getKeyForCoin(TWCoinType.TWCoinTypeSmartChain);
     final tx = ethereum_pb.Transaction_Transfer(
-      amount: [int.parse(amount) * 10 ^ 9],
+      amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
     );
     final signingInput = ethereum_pb.SigningInput(
-      // chainId: [1],
-      gasPrice: [gasPrice],
-      gasLimit: [gasLimit],
+      chainId: [97],
+      gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
+      gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
       toAddress: toAddress,
       transaction: ethereum_pb.Transaction(transfer: tx),
       privateKey: secretPrivateKey.data(),
+      nonce: bigIntToBytes(BigInt.parse(nonce)),
     );
     final sign = AnySigner.sign(
         signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);

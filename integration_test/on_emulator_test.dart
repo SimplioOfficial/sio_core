@@ -50,17 +50,19 @@ void main() {
         wallet: wallet,
         amount: amount,
         toAddress: toAddress,
+        nonce: '0',
       );
-      expect(hex.decode(signedBscTx).length, 95);
+      expect(hex.decode(signedBscTx).length, 109);
     });
     test('BSC native transaction hash', () async {
       final signedBscTx = await BuildTransaction.bnbSmartChain(
         wallet: wallet,
         amount: amount,
         toAddress: toAddress,
+        nonce: '0',
       );
       expect(signedBscTx,
-          'f85d808008943e26e7f73a80444e67b7be654a38ab85ccb6ea4769801ba0b05e4b8262a95747c80745789646d3882bf445ba34238ab034ab6ec86e214ee0a04274295e538e5933122224bb6fefa6d926c8133fce90500793c68b22e5b309c2');
+          'f86b8084d693a400825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a160008081e5a08fa922ed5dd537ad285adba6d9a3be05a8556a76a21aa59dc8713b1c4f280fd7a0285bfd9d99deb462dec9db33161e534db8eedb18b8d0b3543ec0881d235ba961');
     });
   });
 
