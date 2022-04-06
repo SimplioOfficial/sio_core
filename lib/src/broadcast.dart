@@ -77,6 +77,36 @@ class Broadcast {
     return broadcast.body;
   }
 
+  /// Send Ethereum on mainnet
+  static Future<String> ethereum({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postEncodedRequest(apiEndpoint, {
+      "jsonrpc": "2.0",
+      "id": "1",
+      "method": "eth_sendRawTransaction",
+      "params": ["0x" + signedTxEncoded]
+    });
+
+    return broadcast.body;
+  }
+
+  /// Send Ethereum Classic on mainnet
+  static Future<String> ethereumClassic({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postEncodedRequest(apiEndpoint, {
+      "jsonrpc": "2.0",
+      "id": "1",
+      "method": "eth_sendRawTransaction",
+      "params": ["0x" + signedTxEncoded]
+    });
+
+    return broadcast.body;
+  }
+
   /// Send Flux on mainnet
   /// Works with Insight
   static Future<String> flux({

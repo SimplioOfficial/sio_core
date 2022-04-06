@@ -4,15 +4,38 @@ import 'package:test/test.dart';
 import 'package:sio_core/sio_core.dart';
 
 void main() {
-  test('Broadcast BNB Smart Chain', () async {
-    const signedTxEncoded =
-        'f86c0385032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea4787234230709be0008081e5a0e873a5e71069a59d7e652f9ac4cd667274cb7cdd356e3644601e811ac0105a10a0735e2cef7b1274dc72e1d5c90b3864f270c4cb0a5be90a8c337b4eeee56f8179';
-    final response = await Broadcast.bnbSmartChain(
-      signedTxEncoded: signedTxEncoded,
-      apiEndpoint: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
-    );
-    expect(jsonDecode(response), isMap);
-    expect(jsonDecode(response)["error"]["code"], -32000);
+  group('Broadcast Ethereum coin - ', () {
+    test('BNB Smart Chain', () async {
+      const signedTxEncoded =
+          'f86c0385032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea4787234230709be0008081e5a0e873a5e71069a59d7e652f9ac4cd667274cb7cdd356e3644601e811ac0105a10a0735e2cef7b1274dc72e1d5c90b3864f270c4cb0a5be90a8c337b4eeee56f8179';
+      final response = await Broadcast.bnbSmartChain(
+        signedTxEncoded: signedTxEncoded,
+        apiEndpoint: 'https://bsc-dataseed.binance.org/',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)["error"]["code"], -32000);
+    });
+    test('Ethereum', () async {
+      const signedTxEncoded =
+          'f86b8085032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a160008026a002280d6ed62e1157127ef9a90dfb4b377697d36759e10a3015e33aa7e870ebd5a0483f537fb6c687dc29f60a0b9e861af09ce5d223d339c06c8b7af408277f487f';
+      final response = await Broadcast.ethereum(
+        signedTxEncoded: signedTxEncoded,
+        apiEndpoint:
+            'https://mainnet.infura.io/v3/d0b366367e6d4a1b97b2d844397ca182',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)["error"]["code"], -32000);
+    });
+    test('Ethereum Classic', () async {
+      const signedTxEncoded =
+          'f86c8085032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a1600080819da00a977cf89f7a84522aa0a87f7504bbc3a18d0a87c8a2c030d96e89427846331ba07da98ce74f7a8214864ed0a4e4f018dbfe8c40518658be51fcfb987218b5f67e';
+      final response = await Broadcast.ethereumClassic(
+        signedTxEncoded: signedTxEncoded,
+        apiEndpoint: 'https://www.ethercluster.com/etc/',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)["error"]["code"], -32000);
+    });
   });
 
   test('Broadcast solana', () async {
@@ -38,7 +61,6 @@ void main() {
       expect(jsonDecode(response), isMap);
       expect(jsonDecode(response)['error'], contains('-22'));
     });
-
     test('Bitcoin Cash', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
@@ -48,7 +70,6 @@ void main() {
       expect(jsonDecode(response), isMap);
       expect(jsonDecode(response)['error'], contains('-22'));
     });
-
     test('Dash', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
@@ -58,7 +79,6 @@ void main() {
       expect(jsonDecode(response), isMap);
       expect(jsonDecode(response)['error'], contains('-22'));
     });
-
     test('DigiByte', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
@@ -68,7 +88,6 @@ void main() {
       expect(jsonDecode(response), isMap);
       expect(jsonDecode(response)['error'], contains('-22'));
     });
-
     test('Doge', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
@@ -78,7 +97,6 @@ void main() {
       expect(jsonDecode(response), isMap);
       expect(jsonDecode(response)['error'], contains('-22'));
     });
-
     test('Flux', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
@@ -87,7 +105,6 @@ void main() {
           apiEndpoint: 'https://explorer.runonflux.io/');
       expect(response, 'TX decode failed. Code:-22');
     });
-
     test('Litecoin', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
@@ -97,7 +114,6 @@ void main() {
       expect(jsonDecode(response), isMap);
       expect(jsonDecode(response)['error'], contains('-22'));
     });
-
     test('Zcash', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
