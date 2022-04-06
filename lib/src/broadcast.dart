@@ -26,6 +26,21 @@ class Broadcast {
     return broadcast.body;
   }
 
+  /// Send BNB Smart Chain on mainnet, testnet
+  static Future<String> bnbSmartChain({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postEncodedRequest(apiEndpoint, {
+      "jsonrpc": "2.0",
+      "id": "1",
+      "method": "eth_sendRawTransaction",
+      "params": ["0x" + signedTxEncoded]
+    });
+
+    return broadcast.body;
+  }
+
   /// Send Dash on mainnet
   /// Works with Blockbook
   static Future<String> dash({
@@ -58,6 +73,36 @@ class Broadcast {
   }) async {
     final broadcast =
         await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
+
+    return broadcast.body;
+  }
+
+  /// Send Ethereum on mainnet
+  static Future<String> ethereum({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postEncodedRequest(apiEndpoint, {
+      "jsonrpc": "2.0",
+      "id": "1",
+      "method": "eth_sendRawTransaction",
+      "params": ["0x" + signedTxEncoded]
+    });
+
+    return broadcast.body;
+  }
+
+  /// Send Ethereum Classic on mainnet
+  static Future<String> ethereumClassic({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postEncodedRequest(apiEndpoint, {
+      "jsonrpc": "2.0",
+      "id": "1",
+      "method": "eth_sendRawTransaction",
+      "params": ["0x" + signedTxEncoded]
+    });
 
     return broadcast.body;
   }
