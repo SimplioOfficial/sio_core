@@ -1,9 +1,8 @@
 import 'dart:convert';
+import 'package:sio_core/sio_core.dart';
+import 'package:sio_core/src/utils_internal.dart';
 import 'package:test/test.dart';
 import 'package:bs58/bs58.dart';
-
-// ignore: avoid_relative_lib_imports
-import '../lib/src/utils.dart';
 
 void main() {
   test('Create get request', () async {
@@ -29,5 +28,14 @@ void main() {
     final response = await getUtxo(
         apiEndpoint: 'https://jsonplaceholder.typicode.com/todos/1');
     expect(jsonDecode(response)['id'], 1);
+  });
+
+  test('Create get nonce request', () async {
+    final response = await getNonce(
+      address: '0x6A86087Ee103DCC2494cA2804e4934b913df84E8',
+      apiEndpoint: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+    );
+    expect(jsonDecode(response), isMap);
+    expect(jsonDecode(response)['result'], '0xa');
   });
 }
