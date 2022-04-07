@@ -1,4 +1,4 @@
-import 'utils.dart';
+import 'package:sio_core/src/utils_internal.dart';
 
 /// Class that broadcast messages into different platforms
 class Broadcast {

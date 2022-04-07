@@ -1,8 +1,5 @@
-import 'dart:convert';
-import 'utils.dart';
-import 'exceptions.dart';
-
 import 'package:convert/convert.dart';
+import 'package:sio_core/sio_core.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_lib.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_ffi.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
@@ -17,7 +14,7 @@ class BuildTransaction {
   /// `amount` value in gwei
   ///
   /// `gasPrice` and `gasLimit` values in wei
-  static Future<String> bnbSmartChain({
+  static String bnbSmartChain({
     required HDWallet wallet,
     // value in gwei (10^9 wei)
     required String amount,
@@ -29,7 +26,7 @@ class BuildTransaction {
     String gasLimit = '21000',
     // change chainId to 97 for testnet chain
     int chainId = 56,
-  }) async {
+  }) {
     final secretPrivateKey =
         wallet.getKeyForCoin(TWCoinType.TWCoinTypeSmartChain);
     final tx = ethereum_pb.Transaction_Transfer(
@@ -55,7 +52,7 @@ class BuildTransaction {
   /// `amount` value in smallest denomination
   ///
   /// `gasPrice` and `gasLimit` values in wei
-  static Future<String> bnbSmartChainToken({
+  static String bnbSmartChainToken({
     required HDWallet wallet,
     // value in smallest denomination
     required String amount,
@@ -68,7 +65,7 @@ class BuildTransaction {
     String gasLimit = '21000',
     // change chainId to 97 for testnet chain
     int chainId = 56,
-  }) async {
+  }) {
     final secretPrivateKey =
         wallet.getKeyForCoin(TWCoinType.TWCoinTypeSmartChain);
 
@@ -97,7 +94,7 @@ class BuildTransaction {
   /// `amount` value in gwei
   ///
   /// `gasPrice` and `gasLimit` values in wei
-  static Future<String> ethereum({
+  static String ethereum({
     required HDWallet wallet,
     // value in gwei (10^9 wei)
     required String amount,
@@ -108,7 +105,7 @@ class BuildTransaction {
     // price in wei = 10^(-18) ETH (or 10^(-9) gwei)
     String gasLimit = '21000',
     int chainId = 1,
-  }) async {
+  }) {
     final secretPrivateKey =
         wallet.getKeyForCoin(TWCoinType.TWCoinTypeSmartChain);
     final tx = ethereum_pb.Transaction_Transfer(
@@ -134,7 +131,7 @@ class BuildTransaction {
   /// `amount` value in smallest denomination
   ///
   /// `gasPrice` and `gasLimit` values in wei
-  static Future<String> ethereumERC20Token({
+  static String ethereumERC20Token({
     required HDWallet wallet,
     // value in smallest denomination
     required String amount,
@@ -146,7 +143,7 @@ class BuildTransaction {
     // price in wei = 10^(-18) ETH (or 10^(-9) gwei)
     String gasLimit = '21000',
     int chainId = 1,
-  }) async {
+  }) {
     final secretPrivateKey =
         wallet.getKeyForCoin(TWCoinType.TWCoinTypeSmartChain);
 
@@ -175,7 +172,7 @@ class BuildTransaction {
   /// `amount` value in gwei
   ///
   /// `gasPrice` and `gasLimit` values in wei
-  static Future<String> ethereumClassic({
+  static String ethereumClassic({
     required HDWallet wallet,
     // value in gwei (10^9 wei)
     required String amount,
@@ -186,7 +183,7 @@ class BuildTransaction {
     // price in wei = 10^(-18) ETC (or 10^(-9) gwei)
     String gasLimit = '21000',
     int chainId = 61,
-  }) async {
+  }) {
     final secretPrivateKey =
         wallet.getKeyForCoin(TWCoinType.TWCoinTypeSmartChain);
     final tx = ethereum_pb.Transaction_Transfer(
@@ -208,22 +205,13 @@ class BuildTransaction {
   }
 
   /// Solana native transaction
-  static Future<String> solana({
+  static String solana({
     required HDWallet wallet,
     required String recipient,
     required String amount,
-    required String apiEndpoint,
-    String? recentBlockHash, // needed for tests
-  }) async {
+    required String recentBlockHash,
+  }) {
     final secretPrivateKey = wallet.getKeyForCoin(TWCoinType.TWCoinTypeSolana);
-
-    String _recentBlockHash;
-    if (recentBlockHash == null) {
-      final response = await latestBlockHashRequest(apiEndpoint: apiEndpoint);
-      _recentBlockHash = jsonDecode(response)["result"]["value"]["blockhash"];
-    } else {
-      _recentBlockHash = recentBlockHash;
-    }
 
     final tx = solana_pb.Transfer(
       recipient: recipient,
@@ -231,7 +219,7 @@ class BuildTransaction {
     );
     final signingInput = solana_pb.SigningInput(
       privateKey: secretPrivateKey.data().toList(),
-      recentBlockhash: _recentBlockHash,
+      recentBlockhash: recentBlockHash,
       transferTransaction: tx,
     );
     final sign = AnySigner.sign(
@@ -244,24 +232,15 @@ class BuildTransaction {
   }
 
   /// Solana token transaction
-  static Future<String> solanaToken({
+  static String solanaToken({
     required HDWallet wallet,
     required String recipientSolanaAddress,
     required String tokenMintAddress,
     required String amount,
     required int decimals,
-    required String apiEndpoint,
-    String? recentBlockHash, // needed for tests
-  }) async {
+    required String recentBlockHash,
+  }) {
     final secretPrivateKey = wallet.getKeyForCoin(TWCoinType.TWCoinTypeSolana);
-
-    String _recentBlockHash;
-    if (recentBlockHash == null) {
-      final response = await latestBlockHashRequest(apiEndpoint: apiEndpoint);
-      _recentBlockHash = jsonDecode(response)["result"]["value"]["blockhash"];
-    } else {
-      _recentBlockHash = recentBlockHash;
-    }
 
     final solanaAddress = SolanaAddress.createWithString(
         wallet.getAddressForCoin(TWCoinType.TWCoinTypeSolana));
@@ -281,7 +260,7 @@ class BuildTransaction {
 
     final signingInput = solana_pb.SigningInput(
       privateKey: secretPrivateKey.data().toList(),
-      recentBlockhash: _recentBlockHash,
+      recentBlockhash: recentBlockHash,
       tokenTransferTransaction: tx,
     );
     final sign = AnySigner.sign(
@@ -300,12 +279,9 @@ class BuildTransaction {
     required String toAddress,
     required String amount,
     required String byteFee,
-    required String apiEndpoint,
+    required List utxo,
   }) async {
     final changeAddress = wallet.getAddressForCoin(coin);
-    final utxoString = await (getUtxo(
-        apiEndpoint: apiEndpoint + 'api/v2/utxo/' + changeAddress));
-    List<dynamic> utxo = jsonDecode(utxoString);
     if (utxo.isEmpty) {
       throw NoUtxoAvailableException();
     }
