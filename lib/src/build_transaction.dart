@@ -209,7 +209,7 @@ class BuildTransaction {
     required HDWallet wallet,
     required String recipient,
     required String amount,
-    required String recentBlockHash,
+    required String latestBlockHash,
   }) {
     final secretPrivateKey = wallet.getKeyForCoin(TWCoinType.TWCoinTypeSolana);
 
@@ -219,7 +219,7 @@ class BuildTransaction {
     );
     final signingInput = solana_pb.SigningInput(
       privateKey: secretPrivateKey.data().toList(),
-      recentBlockhash: recentBlockHash,
+      recentBlockhash: latestBlockHash,
       transferTransaction: tx,
     );
     final sign = AnySigner.sign(
@@ -238,7 +238,7 @@ class BuildTransaction {
     required String tokenMintAddress,
     required String amount,
     required int decimals,
-    required String recentBlockHash,
+    required String latestBlockHash,
   }) {
     final secretPrivateKey = wallet.getKeyForCoin(TWCoinType.TWCoinTypeSolana);
 
@@ -260,7 +260,7 @@ class BuildTransaction {
 
     final signingInput = solana_pb.SigningInput(
       privateKey: secretPrivateKey.data().toList(),
-      recentBlockhash: recentBlockHash,
+      recentBlockhash: latestBlockHash,
       tokenTransferTransaction: tx,
     );
     final sign = AnySigner.sign(

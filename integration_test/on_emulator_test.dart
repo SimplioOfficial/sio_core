@@ -157,14 +157,14 @@ void main() {
     const apiEndpoint = 'https://api.devnet.solana.com';
     test('Solana native transaction length', () async {
       final response = await latestBlockHashRequest(apiEndpoint: apiEndpoint);
-      final recentBlockHash =
+      final latestBlockHash =
           jsonDecode(response)["result"]["value"]["blockhash"];
 
       final signedSolanaTx = BuildTransaction.solana(
         wallet: wallet,
         recipient: toAddress,
         amount: amount,
-        recentBlockHash: recentBlockHash,
+        latestBlockHash: latestBlockHash,
       );
       expect(base58.decode(signedSolanaTx).length, 215);
     });
@@ -173,7 +173,7 @@ void main() {
         wallet: wallet,
         recipient: toAddress,
         amount: amount,
-        recentBlockHash: '11111111111111111111111111111111',
+        latestBlockHash: '11111111111111111111111111111111',
       );
       expect(
           signedSolanaTx,
@@ -182,7 +182,7 @@ void main() {
     });
     test('Solana token transaction length', () async {
       final response = await latestBlockHashRequest(apiEndpoint: apiEndpoint);
-      final recentBlockHash =
+      final latestBlockHash =
           jsonDecode(response)["result"]["value"]["blockhash"];
       final signedSolanaTokenTx = BuildTransaction.solanaToken(
         wallet: wallet,
@@ -190,7 +190,7 @@ void main() {
         tokenMintAddress: tokenMintAddress,
         amount: amount,
         decimals: decimals,
-        recentBlockHash: recentBlockHash,
+        latestBlockHash: latestBlockHash,
       );
       expect(base58.decode(signedSolanaTokenTx).length, 279);
     });
@@ -201,7 +201,7 @@ void main() {
         tokenMintAddress: tokenMintAddress,
         amount: amount,
         decimals: decimals,
-        recentBlockHash: '11111111111111111111111111111111',
+        latestBlockHash: '11111111111111111111111111111111',
       );
       expect(
           signedSolanaTokenTx,

@@ -16,7 +16,7 @@ void main() {
         'https://jsonplaceholder.typicode.com/todos', {});
     expect(jsonDecode(response.body)['id'], 201);
   });
-  test('Create recent block hash request', () async {
+  test('Create latest block hash request', () async {
     final response = await latestBlockHashRequest(
         apiEndpoint: 'https://api.devnet.solana.com');
     final String blockHash =
