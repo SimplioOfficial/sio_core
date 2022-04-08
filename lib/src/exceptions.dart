@@ -7,13 +7,9 @@ class NoUtxoAvailableException implements Exception {
 }
 
 /// Total amount in the address is lower than the amount
-/// that is wanted to be send
-class LowTotalAmountException implements Exception {
-  LowTotalAmountException();
-}
-
-/// Total amount that remains in the address after this transaction
-/// is lower than 10000 satoshis. Try to send lower amount.
-class Under10kTotalAmountException implements Exception {
-  Under10kTotalAmountException();
+/// that is wanted to be send plus the transaction fee
+/// needed to execute this transaction. Try to lower
+/// the amount to be sent.
+class LowTotalAmountPLusFeeException implements Exception {
+  LowTotalAmountPLusFeeException();
 }

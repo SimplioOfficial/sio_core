@@ -1,6 +1,6 @@
 name: sio_core
 description: Simplio wallet core library for blockchain interactions, developed in Dart, can be used in Flutter framework.
-version: 0.0.5
+version: 0.0.6
 repository: https://github.com/SimplioOfficial/sio_core
 
 environment:

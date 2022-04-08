@@ -157,14 +157,14 @@ void main() {
     const apiEndpoint = 'https://api.devnet.solana.com';
     test('Solana native transaction length', () async {
       final response = await latestBlockHashRequest(apiEndpoint: apiEndpoint);
-      final recentBlockHash =
+      final latestBlockHash =
           jsonDecode(response)["result"]["value"]["blockhash"];
 
       final signedSolanaTx = BuildTransaction.solana(
         wallet: wallet,
         recipient: toAddress,
         amount: amount,
-        recentBlockHash: recentBlockHash,
+        latestBlockHash: latestBlockHash,
       );
       expect(base58.decode(signedSolanaTx).length, 215);
     });
@@ -173,7 +173,7 @@ void main() {
         wallet: wallet,
         recipient: toAddress,
         amount: amount,
-        recentBlockHash: '11111111111111111111111111111111',
+        latestBlockHash: '11111111111111111111111111111111',
       );
       expect(
           signedSolanaTx,
@@ -182,7 +182,7 @@ void main() {
     });
     test('Solana token transaction length', () async {
       final response = await latestBlockHashRequest(apiEndpoint: apiEndpoint);
-      final recentBlockHash =
+      final latestBlockHash =
           jsonDecode(response)["result"]["value"]["blockhash"];
       final signedSolanaTokenTx = BuildTransaction.solanaToken(
         wallet: wallet,
@@ -190,7 +190,7 @@ void main() {
         tokenMintAddress: tokenMintAddress,
         amount: amount,
         decimals: decimals,
-        recentBlockHash: recentBlockHash,
+        latestBlockHash: latestBlockHash,
       );
       expect(base58.decode(signedSolanaTokenTx).length, 279);
     });
@@ -201,7 +201,7 @@ void main() {
         tokenMintAddress: tokenMintAddress,
         amount: amount,
         decimals: decimals,
-        recentBlockHash: '11111111111111111111111111111111',
+        latestBlockHash: '11111111111111111111111111111111',
       );
       expect(
           signedSolanaTokenTx,
@@ -220,56 +220,40 @@ void main() {
           apiEndpoint:
               apiEndpoint + 'api/v2/utxo/' + wallet.getAddressForCoin(coin));
       List utxo = jsonDecode(utxoString);
-
-      final signedUtxoCoinTx = BuildTransaction.utxoCoin(
-        wallet: wallet,
-        coin: coin,
-        toAddress: toAddress,
-        amount: amount,
-        byteFee: '10',
-        utxo: utxo,
-      );
-      expect(signedUtxoCoinTx, throwsException);
-    });
-    test('Total amount < amount', () async {
-      const coin = TWCoinType.TWCoinTypeLitecoin;
-      const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
-      const amount = '1550000';
-      const apiEndpoint = 'https://ltc1.simplio.io/';
-      final utxoString = await getUtxo(
-          apiEndpoint:
-              apiEndpoint + 'api/v2/utxo/' + wallet.getAddressForCoin(coin));
-      List utxo = jsonDecode(utxoString);
-
-      final signedUtxoCoinTx = BuildTransaction.utxoCoin(
-        wallet: wallet,
-        coin: coin,
-        toAddress: toAddress,
-        amount: amount,
-        byteFee: '10',
-        utxo: utxo,
-      );
-      expect(signedUtxoCoinTx, throwsException);
+      try {
+        BuildTransaction.utxoCoin(
+          wallet: wallet,
+          coin: coin,
+          toAddress: toAddress,
+          amount: amount,
+          byteFee: '10',
+          utxo: utxo,
+        );
+      } catch (exception) {
+        expect(exception, isA<NoUtxoAvailableException>());
+      }
     });
     test('Total amount < amount + estimated fee (1000 sats)', () async {
       const coin = TWCoinType.TWCoinTypeLitecoin;
       const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
-      const amount = '30000';
+      const amount = '38900';
       const apiEndpoint = 'https://ltc1.simplio.io/';
       final utxoString = await getUtxo(
           apiEndpoint:
               apiEndpoint + 'api/v2/utxo/' + wallet.getAddressForCoin(coin));
       List utxo = jsonDecode(utxoString);
-
-      final signedUtxoCoinTx = BuildTransaction.utxoCoin(
-        wallet: wallet,
-        coin: coin,
-        toAddress: toAddress,
-        amount: amount,
-        byteFee: '10',
-        utxo: utxo,
-      );
-      expect(signedUtxoCoinTx, throwsException);
+      try {
+        BuildTransaction.utxoCoin(
+          wallet: wallet,
+          coin: coin,
+          toAddress: toAddress,
+          amount: amount,
+          byteFee: '10',
+          utxo: utxo,
+        );
+      } catch (exception) {
+        expect(exception, isA<LowTotalAmountPLusFeeException>());
+      }
     });
     test('Valid utxoCoin transaction', () async {
       const coin = TWCoinType.TWCoinTypeLitecoin;
@@ -281,7 +265,7 @@ void main() {
               apiEndpoint + 'api/v2/utxo/' + wallet.getAddressForCoin(coin));
       List utxo = jsonDecode(utxoString);
 
-      final signedUtxoCoinTx = await BuildTransaction.utxoCoin(
+      final signedUtxoCoinTx = BuildTransaction.utxoCoin(
         wallet: wallet,
         coin: coin,
         toAddress: toAddress,
