@@ -233,32 +233,10 @@ void main() {
         expect(exception, isA<NoUtxoAvailableException>());
       }
     });
-    test('Total amount < amount', () async {
-      const coin = TWCoinType.TWCoinTypeLitecoin;
-      const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
-      const amount = '1550000';
-      const apiEndpoint = 'https://ltc1.simplio.io/';
-      final utxoString = await getUtxo(
-          apiEndpoint:
-              apiEndpoint + 'api/v2/utxo/' + wallet.getAddressForCoin(coin));
-      List utxo = jsonDecode(utxoString);
-      try {
-        BuildTransaction.utxoCoin(
-          wallet: wallet,
-          coin: coin,
-          toAddress: toAddress,
-          amount: amount,
-          byteFee: '10',
-          utxo: utxo,
-        );
-      } catch (exception) {
-        expect(exception, isA<LowTotalAmountException>());
-      }
-    });
     test('Total amount < amount + estimated fee (1000 sats)', () async {
       const coin = TWCoinType.TWCoinTypeLitecoin;
       const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
-      const amount = '30000';
+      const amount = '38900';
       const apiEndpoint = 'https://ltc1.simplio.io/';
       final utxoString = await getUtxo(
           apiEndpoint:
@@ -274,7 +252,7 @@ void main() {
           utxo: utxo,
         );
       } catch (exception) {
-        expect(exception, isA<Under10kTotalAmountException>());
+        expect(exception, isA<LowTotalAmountPLusFeeException>());
       }
     });
     test('Valid utxoCoin transaction', () async {
