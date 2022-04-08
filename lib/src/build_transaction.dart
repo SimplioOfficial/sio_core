@@ -273,14 +273,14 @@ class BuildTransaction {
   }
 
   /// Utxo coins transaction
-  static Future<String> utxoCoin({
+  static String utxoCoin({
     required HDWallet wallet,
     required int coin,
     required String toAddress,
     required String amount,
     required String byteFee,
     required List utxo,
-  }) async {
+  }) {
     final changeAddress = wallet.getAddressForCoin(coin);
     if (utxo.isEmpty) {
       throw NoUtxoAvailableException();
