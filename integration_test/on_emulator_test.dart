@@ -275,5 +275,25 @@ void main() {
       );
       expect(hex.decode(signedUtxoCoinTx).length, 223);
     });
+    test('Valid utxoCoin transaction one additional utxo add', () async {
+      const coin = TWCoinType.TWCoinTypeLitecoin;
+      const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
+      const amount = '9999';
+      const apiEndpoint = 'https://ltc1.simplio.io/';
+      final utxoString = await getUtxo(
+          apiEndpoint:
+              apiEndpoint + 'api/v2/utxo/' + wallet.getAddressForCoin(coin));
+      List utxo = jsonDecode(utxoString);
+
+      final signedUtxoCoinTx = BuildTransaction.utxoCoin(
+        wallet: wallet,
+        coin: coin,
+        toAddress: toAddress,
+        amount: amount,
+        byteFee: '10',
+        utxo: utxo,
+      );
+      expect(hex.decode(signedUtxoCoinTx).length, 222);
+    });
   });
 }
