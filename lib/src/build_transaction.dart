@@ -4,6 +4,7 @@ import 'package:trust_wallet_core_lib/trust_wallet_core_lib.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_ffi.dart';
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:trust_wallet_core_lib/protobuf/Bitcoin.pb.dart' as bitcoin_pb;
+import 'package:trust_wallet_core_lib/protobuf/Cosmos.pb.dart' as cosmos_pb;
 import 'package:trust_wallet_core_lib/protobuf/Ethereum.pb.dart' as ethereum_pb;
 import 'package:trust_wallet_core_lib/protobuf/Solana.pb.dart' as solana_pb;
 
@@ -82,6 +83,49 @@ class BuildTransaction {
       transaction: ethereum_pb.Transaction(erc20Transfer: tx),
       privateKey: secretPrivateKey.data(),
       nonce: bigIntToBytes(BigInt.parse(nonce)),
+    );
+    final sign = AnySigner.sign(
+        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);
+    final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
+    return hex.encode(signingOutput.encoded);
+  }
+
+  /// Cosmos native transactions
+  /// Investigate denominations strings of the chains
+  /// ATOM have 'uatom', 'matom', 'atom'
+  static String cosmos({
+    required HDWallet wallet,
+    required int coin,
+    required String amount,
+    required String fee,
+    required String gas,
+    required String toAddress,
+    required String chainId,
+    required String denomination,
+  }) {
+    final messageSend = cosmos_pb.Message_Send(
+      amounts: [
+        cosmos_pb.Amount(
+          amount: $fixnum.Int64.parseInt(amount),
+          denom: denomination,
+        )
+      ],
+      fromAddress: wallet.getAddressForCoin(coin),
+      toAddress: toAddress,
+    );
+    final signingInput = cosmos_pb.SigningInput(
+      chainId: chainId,
+      messages: [cosmos_pb.Message(sendCoinsMessage: messageSend)],
+      fee: cosmos_pb.Fee(
+        amounts: [
+          cosmos_pb.Amount(
+            amount: $fixnum.Int64.parseInt(fee),
+            denom: denomination,
+          )
+        ],
+        gas: $fixnum.Int64.parseInt(gas),
+      ),
+      privateKey: wallet.getKeyForCoin(coin).data().toList(),
     );
     final sign = AnySigner.sign(
         signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);

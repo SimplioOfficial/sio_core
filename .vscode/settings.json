@@ -9,6 +9,7 @@
     "gradlew",
     "lcov",
     "Litecoin",
+    "matom",
     "noaudio",
     "protobuf",
     "rawtx",
@@ -22,6 +23,7 @@
     "swiftshader",
     "trustdart",
     "txid",
+    "uatom",
     "utxo",
     "vout",
     "Zcash"
