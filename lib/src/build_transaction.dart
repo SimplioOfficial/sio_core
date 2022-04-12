@@ -114,6 +114,7 @@ class BuildTransaction {
       toAddress: toAddress,
     );
     final signingInput = cosmos_pb.SigningInput(
+      signingMode: cosmos_pb.SigningMode.Protobuf,
       chainId: chainId,
       messages: [cosmos_pb.Message(sendCoinsMessage: messageSend)],
       fee: cosmos_pb.Fee(
