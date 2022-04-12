@@ -125,12 +125,15 @@ class BuildTransaction {
         ],
         gas: $fixnum.Int64.parseInt(gas),
       ),
-      privateKey: wallet.getKeyForCoin(coin).data().toList(),
+      privateKey: wallet.getKeyForCoin(coin).data(),
+      memo: '',
+      accountNumber: $fixnum.Int64.parseInt('1037'),
+      sequence: $fixnum.Int64.parseInt('0'),
+      mode: cosmos_pb.BroadcastMode.BLOCK,
     );
-    final sign = AnySigner.sign(
-        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);
-    final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
-    return hex.encode(signingOutput.encoded);
+    final sign = AnySigner.sign(signingInput.writeToBuffer(), coin);
+    final signingOutput = cosmos_pb.SigningOutput.fromBuffer(sign);
+    return hex.encode(signingOutput.signature);
   }
 
   /// Ethereum native transactions
