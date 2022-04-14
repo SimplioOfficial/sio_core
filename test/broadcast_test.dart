@@ -4,6 +4,19 @@ import 'package:test/test.dart';
 import 'package:sio_core/sio_core.dart';
 
 void main() {
+  group('Broadcast Cosmos coin', () {
+    test('Osmosis', () async {
+      const signedTxSerialized =
+          '{"mode":"BROADCAST_MODE_BLOCK","tx_bytes":"CowBCokBChwvY29zbW9zLmJhbmsudjFiZXRhMS5Nc2dTZW5kEmkKK29zbW8xcmx3ZW10NDVyeXpjOHluYWt6d2dma2x0bTdqeThsc3dwbmZzd24SK29zbW8xcXJobHZycWN0djI2dm42YXo3cm51bnJlZGd5MjQ5c205anQ3dXMaDQoFdW9zbW8SBDc4MDASZgpQCkYKHy9jb3Ntb3MuY3J5cHRvLnNlY3AyNTZrMS5QdWJLZXkSIwohA09C2YHdJ122Jo1qWsfNo2VFmVONXfWmohBm/ha+5G0pEgQKAggBGAUSEgoMCgV1b3NtbxIDMTAwEMCaDBpA1aGulU+jYUpCcA3eQ0dWYTt8qsDH/MNIZbenQj+cwvtVfD+RCWJ2ndhC2sEwVOjD5fenq93mK3/8xylj6jMyGg=="}';
+      final response = await Broadcast.osmosis(
+        signedTxSerialized: signedTxSerialized,
+        apiEndpoint: 'https://lcd-osmosis.keplr.app/',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)["tx_response"]["txhash"],
+          'BAB563D0784B60E3C95BCCA53A0D083781A928BE403DCA6D3D51AF47C37CC944');
+    });
+  });
   group('Broadcast Ethereum coin - ', () {
     test('BNB Smart Chain', () async {
       const signedTxEncoded =
@@ -34,7 +47,7 @@ void main() {
         apiEndpoint: 'https://www.ethercluster.com/etc/',
       );
       expect(jsonDecode(response), isMap);
-      expect(jsonDecode(response)["error"]["code"], -32000);
+      expect(jsonDecode(response)["error"]["code"], -1);
     });
   });
 

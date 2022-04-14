@@ -91,17 +91,22 @@ class BuildTransaction {
   }
 
   /// Cosmos native transactions
-  /// Investigate denominations strings of the chains
-  /// ATOM have 'uatom', 'matom', 'atom'
+  ///
+  /// Denomination of OSMO: 'uosmo', 'mmosmo', 'osmo'
+  /// ChainId of OSMO: 'osmosis-1'
+  /// BroadcastMode enum: 0-BLOCK, 1-SYNC, 2-ASYNC
   static String cosmos({
     required HDWallet wallet,
     required int coin,
     required String amount,
-    required String fee,
-    required String gas,
     required String toAddress,
     required String chainId,
     required String denomination,
+    required String accountNumber,
+    required String sequence,
+    String fee = '0',
+    String gas = '200000',
+    int broadcastMode = 0,
   }) {
     final messageSend = cosmos_pb.Message_Send(
       amounts: [
@@ -128,13 +133,13 @@ class BuildTransaction {
       ),
       privateKey: wallet.getKeyForCoin(coin).data(),
       memo: '',
-      accountNumber: $fixnum.Int64.parseInt('1037'),
-      sequence: $fixnum.Int64.parseInt('0'),
-      mode: cosmos_pb.BroadcastMode.BLOCK,
+      accountNumber: $fixnum.Int64.parseInt(accountNumber),
+      sequence: $fixnum.Int64.parseInt(sequence),
+      mode: cosmos_pb.BroadcastMode.valueOf(broadcastMode),
     );
     final sign = AnySigner.sign(signingInput.writeToBuffer(), coin);
     final signingOutput = cosmos_pb.SigningOutput.fromBuffer(sign);
-    return hex.encode(signingOutput.signature);
+    return signingOutput.serialized;
   }
 
   /// Ethereum native transactions

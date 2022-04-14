@@ -132,6 +132,18 @@ class Broadcast {
     return broadcast.body;
   }
 
+  /// Send Osmosis mainnet
+  /// Works with LCD api providers
+  static Future<String> osmosis({
+    required String signedTxSerialized,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postRequest(
+        apiEndpoint + 'cosmos/tx/v1beta1/txs', signedTxSerialized);
+
+    return broadcast.body;
+  }
+
   /// Send Solana and Solana Tokens into mainnet, testnet, devnet
   /// depending on whatever apiEndpoint is used.
   static Future<String> solana({
