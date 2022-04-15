@@ -11,6 +11,7 @@
     "Litecoin",
     "matom",
     "noaudio",
+    "Osmo",
     "protobuf",
     "rawtx",
     "Riyi",
@@ -24,6 +25,7 @@
     "trustdart",
     "txid",
     "uatom",
+    "uosmo",
     "utxo",
     "vout",
     "Zcash"

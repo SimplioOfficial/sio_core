@@ -93,16 +93,13 @@ class Broadcast {
   }
 
   /// Send Ethereum Classic on mainnet
+  /// Works https://etcblockexplorer.com/
   static Future<String> ethereumClassic({
     required String signedTxEncoded,
     required String apiEndpoint,
   }) async {
-    final broadcast = await postEncodedRequest(apiEndpoint, {
-      "jsonrpc": "2.0",
-      "id": "1",
-      "method": "eth_sendRawTransaction",
-      "params": ["0x" + signedTxEncoded]
-    });
+    final broadcast =
+        await getRequest(apiEndpoint + 'api/sendtx/0x' + signedTxEncoded);
 
     return broadcast.body;
   }

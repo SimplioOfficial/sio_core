@@ -44,10 +44,11 @@ void main() {
           'f86c8085032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a1600080819da00a977cf89f7a84522aa0a87f7504bbc3a18d0a87c8a2c030d96e89427846331ba07da98ce74f7a8214864ed0a4e4f018dbfe8c40518658be51fcfb987218b5f67e';
       final response = await Broadcast.ethereumClassic(
         signedTxEncoded: signedTxEncoded,
-        apiEndpoint: 'https://www.ethercluster.com/etc/',
+        apiEndpoint: 'https://etcblockexplorer.com/',
       );
       expect(jsonDecode(response), isMap);
-      expect(jsonDecode(response)["error"]["code"], -1);
+      expect(jsonDecode(response)["error"],
+          'insufficient funds for gas * price + value');
     });
   });
 
