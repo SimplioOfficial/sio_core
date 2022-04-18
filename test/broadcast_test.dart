@@ -4,6 +4,42 @@ import 'package:test/test.dart';
 import 'package:sio_core/sio_core.dart';
 
 void main() {
+  group('Broadcast Cosmos coin', () {
+    test('Cosmos', () async {
+      const signedTxSerialized =
+          '{"mode":"BROADCAST_MODE_BLOCK","tx_bytes":"CpABCo0BChwvY29zbW9zLmJhbmsudjFiZXRhMS5Nc2dTZW5kEm0KLWNvc21vczFybHdlbXQ0NXJ5emM4eW5ha3p3Z2ZrbHRtN2p5OGxzd2ZnNnFjcBItY29zbW9zMXFyaGx2cnFjdHYyNnZuNmF6N3JudW5yZWRneTI0OXNtZGZjdzJ6Gg0KBXVhdG9tEgQ3ODAwEmYKUApGCh8vY29zbW9zLmNyeXB0by5zZWNwMjU2azEuUHViS2V5EiMKIQNPQtmB3SddtiaNalrHzaNlRZlTjV31pqIQZv4WvuRtKRIECgIIARgFEhIKDAoFdWF0b20SAzEwMBDAmgwaQJgniD4nTl+vgx/Y7Pb6jY4UVDynjYYpUbN1WSpLU7E+UMmvtiYl8kB7Ss++2KdYNeq8DSbReetUocfujUUtY1c="}';
+      final response = await Broadcast.cosmos(
+        signedTxSerialized: signedTxSerialized,
+        apiEndpoint: 'https://api.cosmos.network/',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)["tx_response"]["txhash"],
+          'D7D0253C4687BABA5687057D4B084FF5895E929B7BD5AF69457493CEEBCA3A4C');
+    });
+    test('Osmosis', () async {
+      const signedTxSerialized =
+          '{"mode":"BROADCAST_MODE_BLOCK","tx_bytes":"CowBCokBChwvY29zbW9zLmJhbmsudjFiZXRhMS5Nc2dTZW5kEmkKK29zbW8xcmx3ZW10NDVyeXpjOHluYWt6d2dma2x0bTdqeThsc3dwbmZzd24SK29zbW8xcXJobHZycWN0djI2dm42YXo3cm51bnJlZGd5MjQ5c205anQ3dXMaDQoFdW9zbW8SBDc4MDASZgpQCkYKHy9jb3Ntb3MuY3J5cHRvLnNlY3AyNTZrMS5QdWJLZXkSIwohA09C2YHdJ122Jo1qWsfNo2VFmVONXfWmohBm/ha+5G0pEgQKAggBGAUSEgoMCgV1b3NtbxIDMTAwEMCaDBpA1aGulU+jYUpCcA3eQ0dWYTt8qsDH/MNIZbenQj+cwvtVfD+RCWJ2ndhC2sEwVOjD5fenq93mK3/8xylj6jMyGg=="}';
+      final response = await Broadcast.osmosis(
+        signedTxSerialized: signedTxSerialized,
+        apiEndpoint: 'https://lcd-osmosis.keplr.app/',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)["tx_response"]["txhash"],
+          'BAB563D0784B60E3C95BCCA53A0D083781A928BE403DCA6D3D51AF47C37CC944');
+    });
+    test('Terra', () async {
+      const signedTxSerialized =
+          '{"mode":"BROADCAST_MODE_BLOCK","tx_bytes":"Co4BCosBChwvY29zbW9zLmJhbmsudjFiZXRhMS5Nc2dTZW5kEmsKLHRlcnJhMXJ2YTlhNzB4YzN2cHZkZXpuNjBqZXJ6NHl3cWE1dWV5N25lZnBzEix0ZXJyYTFzdmM2M3l4d2xxdjJjcG16bWEwZWhjODh6a2Zwa25yYWw5ajZhNBoNCgV1bHVuYRIENzgwMBJmClAKRgofL2Nvc21vcy5jcnlwdG8uc2VjcDI1NmsxLlB1YktleRIjCiEDYPiVIhGbxRWKBJ2ly5K2TpgPeQJfiPaVjTZ/KGjQvA0SBAoCCAEYBRISCgwKBXVsdW5hEgMxMDAQwJoMGkB7eQSdCXKSHMC1fzFDWX3aE3tw0IapUvMpq71GbyiZdg23yDhNMwSnXEc8M8CF5B+QL+pKTXMv09ANe6d+StMP"}';
+      final response = await Broadcast.terra(
+        signedTxSerialized: signedTxSerialized,
+        apiEndpoint: 'https://lcd.terra.dev/',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)["tx_response"]["txhash"],
+          'D1D9AD275913333D4BE577FBF5C233C313CE3EAB76EB0F4ADCD00977182BD9FA');
+    });
+  });
+
   group('Broadcast Ethereum coin - ', () {
     test('BNB Smart Chain', () async {
       const signedTxEncoded =
@@ -31,10 +67,11 @@ void main() {
           'f86c8085032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a1600080819da00a977cf89f7a84522aa0a87f7504bbc3a18d0a87c8a2c030d96e89427846331ba07da98ce74f7a8214864ed0a4e4f018dbfe8c40518658be51fcfb987218b5f67e';
       final response = await Broadcast.ethereumClassic(
         signedTxEncoded: signedTxEncoded,
-        apiEndpoint: 'https://www.ethercluster.com/etc/',
+        apiEndpoint: 'https://etcblockexplorer.com/',
       );
       expect(jsonDecode(response), isMap);
-      expect(jsonDecode(response)["error"]["code"], -32000);
+      expect(jsonDecode(response)["error"],
+          'insufficient funds for gas * price + value');
     });
   });
 

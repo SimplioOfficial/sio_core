@@ -44,3 +44,12 @@ List<int> bigIntToBytes(BigInt number) {
   }
   return hex.decode(inHex);
 }
+
+Future<String> getCosmosAccountDetails({
+  required String address,
+  required String apiEndpoint,
+}) async {
+  final request =
+      await getRequest(apiEndpoint + 'cosmos/auth/v1beta1/accounts/' + address);
+  return request.body;
+}

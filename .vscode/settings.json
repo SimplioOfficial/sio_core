@@ -9,7 +9,9 @@
     "gradlew",
     "lcov",
     "Litecoin",
+    "matom",
     "noaudio",
+    "Osmo",
     "protobuf",
     "rawtx",
     "Riyi",
@@ -22,6 +24,8 @@
     "swiftshader",
     "trustdart",
     "txid",
+    "uatom",
+    "uosmo",
     "utxo",
     "vout",
     "Zcash"

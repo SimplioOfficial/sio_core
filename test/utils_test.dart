@@ -38,4 +38,13 @@ void main() {
     expect(jsonDecode(response), isMap);
     expect(jsonDecode(response)['result'], '0xa');
   });
+
+  test('Create get cosmos account details request', () async {
+    final response = await getCosmosAccountDetails(
+      address: 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn',
+      apiEndpoint: 'https://lcd-osmosis.keplr.app/',
+    );
+    expect(jsonDecode(response), isMap);
+    expect(jsonDecode(response)['account']['account_number'], '456069');
+  });
 }

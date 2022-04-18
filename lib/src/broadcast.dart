@@ -41,6 +41,18 @@ class Broadcast {
     return broadcast.body;
   }
 
+  /// Send Cosmos mainnet
+  /// Works with LCD api providers
+  static Future<String> cosmos({
+    required String signedTxSerialized,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postRequest(
+        apiEndpoint + 'cosmos/tx/v1beta1/txs', signedTxSerialized);
+
+    return broadcast.body;
+  }
+
   /// Send Dash on mainnet
   /// Works with Blockbook
   static Future<String> dash({
@@ -93,16 +105,13 @@ class Broadcast {
   }
 
   /// Send Ethereum Classic on mainnet
+  /// Works https://etcblockexplorer.com/
   static Future<String> ethereumClassic({
     required String signedTxEncoded,
     required String apiEndpoint,
   }) async {
-    final broadcast = await postEncodedRequest(apiEndpoint, {
-      "jsonrpc": "2.0",
-      "id": "1",
-      "method": "eth_sendRawTransaction",
-      "params": ["0x" + signedTxEncoded]
-    });
+    final broadcast =
+        await getRequest(apiEndpoint + 'api/sendtx/0x' + signedTxEncoded);
 
     return broadcast.body;
   }
@@ -132,6 +141,18 @@ class Broadcast {
     return broadcast.body;
   }
 
+  /// Send Osmosis mainnet
+  /// Works with LCD api providers
+  static Future<String> osmosis({
+    required String signedTxSerialized,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postRequest(
+        apiEndpoint + 'cosmos/tx/v1beta1/txs', signedTxSerialized);
+
+    return broadcast.body;
+  }
+
   /// Send Solana and Solana Tokens into mainnet, testnet, devnet
   /// depending on whatever apiEndpoint is used.
   static Future<String> solana({
@@ -144,6 +165,18 @@ class Broadcast {
       "method": "sendTransaction",
       "params": [signedTxEncoded]
     });
+
+    return broadcast.body;
+  }
+
+  /// Send Terra mainnet
+  /// Works with LCD api providers
+  static Future<String> terra({
+    required String signedTxSerialized,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postRequest(
+        apiEndpoint + 'cosmos/tx/v1beta1/txs', signedTxSerialized);
 
     return broadcast.body;
   }
