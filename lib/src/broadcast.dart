@@ -41,6 +41,18 @@ class Broadcast {
     return broadcast.body;
   }
 
+  /// Send Cosmos mainnet
+  /// Works with LCD api providers
+  static Future<String> cosmos({
+    required String signedTxSerialized,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postRequest(
+        apiEndpoint + 'cosmos/tx/v1beta1/txs', signedTxSerialized);
+
+    return broadcast.body;
+  }
+
   /// Send Dash on mainnet
   /// Works with Blockbook
   static Future<String> dash({
@@ -153,6 +165,18 @@ class Broadcast {
       "method": "sendTransaction",
       "params": [signedTxEncoded]
     });
+
+    return broadcast.body;
+  }
+
+  /// Send Terra mainnet
+  /// Works with LCD api providers
+  static Future<String> terra({
+    required String signedTxSerialized,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postRequest(
+        apiEndpoint + 'cosmos/tx/v1beta1/txs', signedTxSerialized);
 
     return broadcast.body;
   }
