@@ -64,6 +64,17 @@ void main() {
       expect(jsonDecode(response)['balance'], '0');
     });
   });
+
+  test('Get balance for Solana', () async {
+    const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJCu4f';
+    final response = await GetBalance.solana(
+      apiEndpoint: 'https://api.devnet.solana.com/',
+      address: address,
+    );
+    expect(jsonDecode(response), isMap);
+    expect(jsonDecode(response)['result']['value'], 0);
+  });
+
   group('Get balance for utxoCoin - ', () {
     test('Bitcoin', () async {
       const address = 'bc1qwquauyfgqgwh2gc9td8dhrf00432duh77wvxy5';
