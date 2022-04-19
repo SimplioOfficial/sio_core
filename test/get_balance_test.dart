@@ -50,15 +50,14 @@ void main() {
       expect(jsonDecode(response), isMap);
       expect(jsonDecode(response)['balance'], '0');
     });
-    // test('Flux', () async {
-    //   const address = 't1amMB14YTcUktfjHrz42XcDb2tdHmjgMQd';
-    //   final response = await GetBalance.flux(
-    //     apiEndpoint: 'https://btc1.simplio.io/',
-    //     address: address,
-    //   );
-    //   expect(jsonDecode(response), isMap);
-    //   expect(jsonDecode(response)['balance'], '0');
-    // });
+    test('Flux', () async {
+      const address = 't1amMB14YTcUktfjHrz42XcDb2tdHmjgMQd';
+      final response = await GetBalance.flux(
+        apiEndpoint: 'https://explorer.runonflux.io/',
+        address: address,
+      );
+      expect(jsonDecode(response), 0);
+    });
     test('Litecoin', () async {
       const address = 'ltc1q4jd8494yun73v5ul2wcl5p32lcxm66afx4efr6';
       final response = await GetBalance.litecoin(
