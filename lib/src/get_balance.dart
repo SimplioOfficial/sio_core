@@ -23,6 +23,17 @@ class GetBalance {
     return response.body;
   }
 
+  /// Get Cosmos balance from mainnet.
+  /// Works with LCD api providers.
+  static Future<String> cosmos({
+    required String address,
+    required String apiEndpoint,
+  }) async {
+    final request = await getRequest(
+        apiEndpoint + 'cosmos/bank/v1beta1/balances/' + address);
+    return request.body;
+  }
+
   /// Get Dash balance from mainnet.
   /// Works with Blockbook.
   static Future<String> dash({
@@ -76,6 +87,28 @@ class GetBalance {
     final response =
         await getRequest(apiEndpoint + 'api/v2/address/' + address);
     return response.body;
+  }
+
+  /// Get Osmosis balance from mainnet.
+  /// Works with LCD api providers.
+  static Future<String> osmosis({
+    required String address,
+    required String apiEndpoint,
+  }) async {
+    final request = await getRequest(
+        apiEndpoint + 'cosmos/bank/v1beta1/balances/' + address);
+    return request.body;
+  }
+
+  /// Get Terra balance from mainnet.
+  /// Works with LCD api providers.
+  static Future<String> terra({
+    required String address,
+    required String apiEndpoint,
+  }) async {
+    final request = await getRequest(
+        apiEndpoint + 'cosmos/bank/v1beta1/balances/' + address);
+    return request.body;
   }
 
   /// Get Zcash balance from mainnet.

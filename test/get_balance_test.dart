@@ -4,6 +4,35 @@ import 'package:test/test.dart';
 import 'package:sio_core/src/get_balance.dart';
 
 void main() {
+  group('Get balance for cosmos coin - ', () {
+    test('Cosmos', () async {
+      const address = 'cosmos1rlwemt45ryzc8ynakzwgfkltm7jy8lswfg6qcp';
+      final response = await GetBalance.cosmos(
+        address: address,
+        apiEndpoint: 'https://api.cosmos.network/',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)['balances'], []);
+    });
+    test('Osmosis', () async {
+      const address = 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn';
+      final response = await GetBalance.osmosis(
+        address: address,
+        apiEndpoint: 'https://lcd-osmosis.keplr.app/',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)['balances'], []);
+    });
+    test('Terra', () async {
+      const address = 'terra1rva9a70xc3vpvdezn60jerz4ywqa5uey7nefps';
+      final response = await GetBalance.terra(
+        address: address,
+        apiEndpoint: 'https://lcd.terra.dev/',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)['balances'], []);
+    });
+  });
   group('Get balance for utxoCoin - ', () {
     test('Bitcoin', () async {
       const address = 'bc1qwquauyfgqgwh2gc9td8dhrf00432duh77wvxy5';
