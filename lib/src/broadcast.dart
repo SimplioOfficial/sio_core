@@ -89,7 +89,7 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send Ethereum on mainnet.
+  /// Send Ethereum on mainnet, testnet.
   static Future<String> ethereum({
     required String signedTxEncoded,
     required String apiEndpoint,
@@ -105,13 +105,15 @@ class Broadcast {
   }
 
   /// Send Ethereum Classic on mainnet.
-  /// Works with https://etcblockexplorer.com/
+  /// Works with Blockbook.
+  /// * https://etcblockexplorer.com/
+  /// * https://etc1.trezor.io/
   static Future<String> ethereumClassic({
     required String signedTxEncoded,
     required String apiEndpoint,
   }) async {
     final broadcast =
-        await getRequest(apiEndpoint + 'api/sendtx/0x' + signedTxEncoded);
+        await getRequest(apiEndpoint + 'api/v2/sendtx/0x' + signedTxEncoded);
 
     return broadcast.body;
   }

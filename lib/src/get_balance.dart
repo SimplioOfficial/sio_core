@@ -12,6 +12,20 @@ class GetBalance {
     return response.body;
   }
 
+  /// Get BNB Smart Chain balance from mainnet, testnet.
+  static Future<String> bnbSmartChain({
+    required String address,
+    required String apiEndpoint,
+  }) async {
+    final request = await postEncodedRequest(apiEndpoint, {
+      "jsonrpc": "2.0",
+      "id": "1",
+      "method": "eth_getBalance",
+      "params": [address, "latest"]
+    });
+    return request.body;
+  }
+
   /// Get Bitcoin Cash balance from mainnet.
   /// Works with Blockbook.
   static Future<String> bitcoinCash({
@@ -59,6 +73,31 @@ class GetBalance {
   /// Get Doge balance from mainnet.
   /// Works with Blockbook.
   static Future<String> doge({
+    required String apiEndpoint,
+    required String address,
+  }) async {
+    final response =
+        await getRequest(apiEndpoint + 'api/v2/address/' + address);
+    return response.body;
+  }
+
+  /// Get Ethereum balance from mainnet, testnet.
+  static Future<String> ethereum({
+    required String address,
+    required String apiEndpoint,
+  }) async {
+    final request = await postEncodedRequest(apiEndpoint, {
+      "jsonrpc": "2.0",
+      "id": "1",
+      "method": "eth_getBalance",
+      "params": [address, "latest"]
+    });
+    return request.body;
+  }
+
+  /// Get Ethereum Classic balance from mainnet.
+  /// Works with Blockbook.
+  static Future<String> ethereumClassic({
     required String apiEndpoint,
     required String address,
   }) async {

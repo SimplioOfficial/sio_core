@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 import 'package:sio_core/src/get_balance.dart';
 
 void main() {
-  group('Get balance for cosmos coin - ', () {
+  group('Get balance for Cosmos coin - ', () {
     test('Cosmos', () async {
       const address = 'cosmos1rlwemt45ryzc8ynakzwgfkltm7jy8lswfg6qcp';
       final response = await GetBalance.cosmos(
@@ -31,6 +31,37 @@ void main() {
       );
       expect(jsonDecode(response), isMap);
       expect(jsonDecode(response)['balances'], []);
+    });
+  });
+
+  group('Get balance for Ethereum coin - ', () {
+    test('BNB Smart Chain', () async {
+      const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
+      final response = await GetBalance.bnbSmartChain(
+        address: address,
+        apiEndpoint: 'https://bsc-dataseed.binance.org/',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)['result'], '0x0');
+    });
+    test('Ethereum', () async {
+      const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
+      final response = await GetBalance.ethereum(
+        address: address,
+        apiEndpoint:
+            'https://mainnet.infura.io/v3/d0b366367e6d4a1b97b2d844397ca182',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)['result'], '0x0');
+    });
+    test('Ethereum Classic', () async {
+      const address = '0x9C35cd0398E9c8f61258cCdC822233da2D8228a2';
+      final response = await GetBalance.ethereumClassic(
+        address: address,
+        apiEndpoint: 'https://etcblockexplorer.com/',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)['balance'], '0');
     });
   });
   group('Get balance for utxoCoin - ', () {
