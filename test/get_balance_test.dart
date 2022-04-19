@@ -65,14 +65,29 @@ void main() {
     });
   });
 
-  test('Get balance for Solana', () async {
-    const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJCu4f';
-    final response = await GetBalance.solana(
-      apiEndpoint: 'https://api.devnet.solana.com/',
-      address: address,
-    );
-    expect(jsonDecode(response), isMap);
-    expect(jsonDecode(response)['result']['value'], 0);
+  group('Get balance for Solana - ', () {
+    test('Solana', () async {
+      const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJCu4f';
+      final response = await GetBalance.solana(
+        apiEndpoint: 'https://api.devnet.solana.com/',
+        address: address,
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)['result']['value'], 0);
+    });
+
+    test('Solana token', () async {
+      const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJCu4f';
+      const tokenMintAddress =
+          '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R'; //Raydium
+      final response = await GetBalance.solanaToken(
+        address: address,
+        tokenMintAddress: tokenMintAddress,
+        apiEndpoint: 'https://api.mainnet-beta.solana.com/',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)['result']['value'], []);
+    });
   });
 
   group('Get balance for utxoCoin - ', () {

@@ -155,6 +155,31 @@ class GetBalance {
     return broadcast.body;
   }
 
+  /// Get Solana Token balance from mainnet, testnet, devnet
+  /// depending on whatever apiEndpoint is used.
+  static Future<String> solanaToken({
+    required String address,
+    required String tokenMintAddress,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postEncodedRequest(apiEndpoint, {
+      "jsonrpc": "2.0",
+      "id": "1",
+      "method": "getTokenAccountsByOwner",
+      "params": [
+        address,
+        {
+          "mint": tokenMintAddress,
+        },
+        {
+          "encoding": "jsonParsed",
+        },
+      ],
+    });
+
+    return broadcast.body;
+  }
+
   /// Get Terra balance from mainnet.
   /// Works with LCD api providers.
   static Future<String> terra({
