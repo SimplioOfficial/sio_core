@@ -1,6 +1,6 @@
 import 'package:trust_wallet_core_lib/trust_wallet_core_lib.dart' as trust_core;
 
-/// Class that manipulates BIP39 English mnemonics
+/// Class that manipulates BIP39 English mnemonics.
 class Mnemonic {
   final _wallet = trust_core.HDWallet(strength: 256);
 
@@ -10,7 +10,7 @@ class Mnemonic {
   }
 
   /// Determines whether a BIP39 English mnemonic phrase is valid.
-  /// Wallet Core supports only 12 or 24 words mnemonic phrases
+  /// Wallet Core supports only 12 or 24 words mnemonic phrases.
   static bool isValid({required String mnemonic}) {
     return trust_core.Mnemonic.isValid(mnemonic);
   }

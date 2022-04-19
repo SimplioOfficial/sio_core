@@ -7,18 +7,18 @@ import 'package:bs58/bs58.dart';
 void main() {
   test('Create get request', () async {
     final response =
-        await getRequest('https://jsonplaceholder.typicode.com/todos/1');
+        await getRequest('https://jsonplaceholder.typicode.com/todos/1/');
     expect(jsonDecode(response.body)['id'], 1);
   });
 
   test('Create post request', () async {
     final response = await postEncodedRequest(
-        'https://jsonplaceholder.typicode.com/todos', {});
+        'https://jsonplaceholder.typicode.com/todos/', {});
     expect(jsonDecode(response.body)['id'], 201);
   });
   test('Create latest block hash request', () async {
     final response = await latestBlockHashRequest(
-        apiEndpoint: 'https://api.devnet.solana.com');
+        apiEndpoint: 'https://api.devnet.solana.com/');
     final String blockHash =
         jsonDecode(response)['result']['value']['blockhash'];
     expect(base58.decode(blockHash).length, 32);
@@ -26,7 +26,7 @@ void main() {
 
   test('Create get utxo request', () async {
     final response = await getUtxo(
-        apiEndpoint: 'https://jsonplaceholder.typicode.com/todos/1');
+        apiEndpoint: 'https://jsonplaceholder.typicode.com/todos/1/');
     expect(jsonDecode(response)['id'], 1);
   });
 
@@ -46,5 +46,18 @@ void main() {
     );
     expect(jsonDecode(response), isMap);
     expect(jsonDecode(response)['account']['account_number'], '456069');
+  });
+
+  test('Test BigInt into list of bytes conversion', () async {
+    expect(bigIntToBytes(BigInt.parse('100')), [100]);
+    expect(bigIntToBytes(BigInt.parse('1000')), [3, 232]);
+    expect(bigIntToBytes(BigInt.parse('10000')), [39, 16]);
+    expect(bigIntToBytes(BigInt.parse('100000')), [1, 134, 160]);
+    expect(bigIntToBytes(BigInt.parse('1000000')), [15, 66, 64]);
+    expect(bigIntToBytes(BigInt.parse('10000000')), [152, 150, 128]);
+    expect(bigIntToBytes(BigInt.parse('100000000')), [5, 245, 225, 0]);
+    expect(bigIntToBytes(BigInt.parse('1000000000')), [59, 154, 202, 0]);
+    expect(bigIntToBytes(BigInt.parse('10000000000')), [2, 84, 11, 228, 0]);
+    expect(bigIntToBytes(BigInt.parse('100000000000')), [23, 72, 118, 232, 0]);
   });
 }
