@@ -53,7 +53,7 @@ class BuildTransaction {
   /// `amount` value in smallest denomination.
   ///
   /// `gasPrice` and `gasLimit` values in wei.
-  static String bnbSmartChainToken({
+  static String bnbSmartChainBEP20Token({
     required HDWallet wallet,
     // value in smallest denomination
     required String amount,

@@ -44,6 +44,18 @@ void main() {
       expect(jsonDecode(response), isMap);
       expect(jsonDecode(response)['result'], '0x0');
     });
+    test('BNB Smart Chain BEP20 Token', () async {
+      const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
+      const contractAddress = '0xe9e7cea3dedca5984780bafc599bd69add087d56';
+      final response = await GetBalance.bnbSmartChainBEP20Token(
+        address: address,
+        contractAddress: contractAddress,
+        apiEndpoint:
+            'https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=PED3MB4V1CD3XAIGTQNAVCD8AHG1KSWAPN',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)['result'], '0');
+    });
     test('Ethereum', () async {
       const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
       final response = await GetBalance.ethereum(
@@ -53,6 +65,18 @@ void main() {
       );
       expect(jsonDecode(response), isMap);
       expect(jsonDecode(response)['result'], '0x0');
+    });
+    test('Ethereum ERC20 Token', () async {
+      const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
+      const contractAddress = '0x57d90b64a1a57749b0f932f1a3395792e12e7055';
+      final response = await GetBalance.ethereumERC20Token(
+        address: address,
+        contractAddress: contractAddress,
+        apiEndpoint:
+            'https://api.etherscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=J6CAMARJ1QMXIIX3VU2PC81BEYU262PIHU',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)['result'], '0');
     });
     test('Ethereum Classic', () async {
       const address = '0x9C35cd0398E9c8f61258cCdC822233da2D8228a2';
