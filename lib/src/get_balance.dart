@@ -1,5 +1,6 @@
 import 'package:sio_core/src/utils_internal.dart';
 
+/// Class that returns the balance of different coins and tokens.
 class GetBalance {
   /// Get Bitcoin balance from mainnet.
   /// Works with Blockbook.
@@ -7,7 +8,8 @@ class GetBalance {
     required String apiEndpoint,
     required String address,
   }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
+    final request = await getRequest(
+        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
     return request.body;
   }
 
@@ -47,7 +49,8 @@ class GetBalance {
     required String apiEndpoint,
     required String address,
   }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
+    final request = await getRequest(
+        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
     return request.body;
   }
 
@@ -68,7 +71,8 @@ class GetBalance {
     required String apiEndpoint,
     required String address,
   }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
+    final request = await getRequest(
+        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
     return request.body;
   }
 
@@ -78,7 +82,8 @@ class GetBalance {
     required String apiEndpoint,
     required String address,
   }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
+    final request = await getRequest(
+        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
     return request.body;
   }
 
@@ -88,7 +93,8 @@ class GetBalance {
     required String apiEndpoint,
     required String address,
   }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
+    final request = await getRequest(
+        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
     return request.body;
   }
 
@@ -128,7 +134,8 @@ class GetBalance {
     required String apiEndpoint,
     required String address,
   }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
+    final request = await getRequest(
+        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
     return request.body;
   }
 
@@ -149,7 +156,8 @@ class GetBalance {
     required String apiEndpoint,
     required String address,
   }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
+    final request = await getRequest(
+        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
     return request.body;
   }
 
@@ -246,7 +254,8 @@ class GetBalance {
     required String apiEndpoint,
     required String address,
   }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
+    final request = await getRequest(
+        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
     return request.body;
   }
 }
