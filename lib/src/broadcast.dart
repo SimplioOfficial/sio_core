@@ -2,8 +2,8 @@ import 'package:sio_core/src/utils_internal.dart';
 
 /// Class that broadcast messages into different platforms
 class Broadcast {
-  /// Send Bitcoin on mainnet
-  /// Works with Blockbook
+  /// Send Bitcoin on mainnet.
+  /// Works with Blockbook.
   static Future<String> bitcoin({
     required String signedTxEncoded,
     required String apiEndpoint,
@@ -14,8 +14,8 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send Bitcoin Cash on mainnet
-  /// Works with Blockbook
+  /// Send Bitcoin Cash on mainnet.
+  /// Works with Blockbook.
   static Future<String> bitcoinCash({
     required String signedTxEncoded,
     required String apiEndpoint,
@@ -26,7 +26,7 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send BNB Smart Chain on mainnet, testnet
+  /// Send BNB Smart Chain on mainnet, testnet.
   static Future<String> bnbSmartChain({
     required String signedTxEncoded,
     required String apiEndpoint,
@@ -41,8 +41,8 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send Cosmos mainnet
-  /// Works with LCD api providers
+  /// Send Cosmos on mainnet.
+  /// Works with LCD api providers.
   static Future<String> cosmos({
     required String signedTxSerialized,
     required String apiEndpoint,
@@ -53,8 +53,8 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send Dash on mainnet
-  /// Works with Blockbook
+  /// Send Dash on mainnet.
+  /// Works with Blockbook.
   static Future<String> dash({
     required String signedTxEncoded,
     required String apiEndpoint,
@@ -65,8 +65,8 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send DigiByte on mainnet
-  /// Works with Blockbook
+  /// Send DigiByte on mainnet.
+  /// Works with Blockbook.
   static Future<String> digibyte({
     required String signedTxEncoded,
     required String apiEndpoint,
@@ -77,8 +77,8 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send Doge on mainnet
-  /// Works with Blockbook
+  /// Send Doge on mainnet.
+  /// Works with Blockbook.
   static Future<String> doge({
     required String signedTxEncoded,
     required String apiEndpoint,
@@ -89,7 +89,7 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send Ethereum on mainnet
+  /// Send Ethereum on mainnet, testnet.
   static Future<String> ethereum({
     required String signedTxEncoded,
     required String apiEndpoint,
@@ -104,20 +104,22 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send Ethereum Classic on mainnet
-  /// Works https://etcblockexplorer.com/
+  /// Send Ethereum Classic on mainnet.
+  /// Works with Blockbook.
+  /// * https://etcblockexplorer.com/
+  /// * https://etc1.trezor.io/
   static Future<String> ethereumClassic({
     required String signedTxEncoded,
     required String apiEndpoint,
   }) async {
     final broadcast =
-        await getRequest(apiEndpoint + 'api/sendtx/0x' + signedTxEncoded);
+        await getRequest(apiEndpoint + 'api/v2/sendtx/0x' + signedTxEncoded);
 
     return broadcast.body;
   }
 
-  /// Send Flux on mainnet
-  /// Works with Insight
+  /// Send Flux on mainnet.
+  /// Works with Insight.
   static Future<String> flux({
     required String signedTxEncoded,
     required String apiEndpoint,
@@ -129,8 +131,8 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send Litecoin on mainnet
-  /// Works with Blockbook
+  /// Send Litecoin on mainnet.
+  /// Works with Blockbook.
   static Future<String> litecoin({
     required String signedTxEncoded,
     required String apiEndpoint,
@@ -141,8 +143,8 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send Osmosis mainnet
-  /// Works with LCD api providers
+  /// Send Osmosis on mainnet.
+  /// Works with LCD api providers.
   static Future<String> osmosis({
     required String signedTxSerialized,
     required String apiEndpoint,
@@ -169,8 +171,8 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send Terra mainnet
-  /// Works with LCD api providers
+  /// Send Terra on mainnet.
+  /// Works with LCD api providers.
   static Future<String> terra({
     required String signedTxSerialized,
     required String apiEndpoint,
@@ -181,8 +183,8 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send Zcash on mainnet
-  /// Works with Blockbook
+  /// Send Zcash on mainnet.
+  /// Works with Blockbook.
   static Future<String> zcash({
     required String signedTxEncoded,
     required String apiEndpoint,

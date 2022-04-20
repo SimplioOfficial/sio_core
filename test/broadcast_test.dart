@@ -4,7 +4,7 @@ import 'package:test/test.dart';
 import 'package:sio_core/sio_core.dart';
 
 void main() {
-  group('Broadcast Cosmos coin', () {
+  group('Broadcast Cosmos coin - ', () {
     test('Cosmos', () async {
       const signedTxSerialized =
           '{"mode":"BROADCAST_MODE_BLOCK","tx_bytes":"CpABCo0BChwvY29zbW9zLmJhbmsudjFiZXRhMS5Nc2dTZW5kEm0KLWNvc21vczFybHdlbXQ0NXJ5emM4eW5ha3p3Z2ZrbHRtN2p5OGxzd2ZnNnFjcBItY29zbW9zMXFyaGx2cnFjdHYyNnZuNmF6N3JudW5yZWRneTI0OXNtZGZjdzJ6Gg0KBXVhdG9tEgQ3ODAwEmYKUApGCh8vY29zbW9zLmNyeXB0by5zZWNwMjU2azEuUHViS2V5EiMKIQNPQtmB3SddtiaNalrHzaNlRZlTjV31pqIQZv4WvuRtKRIECgIIARgFEhIKDAoFdWF0b20SAzEwMBDAmgwaQJgniD4nTl+vgx/Y7Pb6jY4UVDynjYYpUbN1WSpLU7E+UMmvtiYl8kB7Ss++2KdYNeq8DSbReetUocfujUUtY1c="}';

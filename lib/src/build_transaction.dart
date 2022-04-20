@@ -10,11 +10,11 @@ import 'package:trust_wallet_core_lib/protobuf/Solana.pb.dart' as solana_pb;
 
 /// Class that builds transactions and return OutputTx ready for broadcasting.
 class BuildTransaction {
-  /// BNB Smart Chain native transactions
+  /// BNB Smart Chain native transactions.
   ///
-  /// `amount` value in gwei
+  /// `amount` value in gwei.
   ///
-  /// `gasPrice` and `gasLimit` values in wei
+  /// `gasPrice` and `gasLimit` values in wei.
   static String bnbSmartChain({
     required HDWallet wallet,
     // value in gwei (10^9 wei)
@@ -48,12 +48,12 @@ class BuildTransaction {
     return hex.encode(signingOutput.encoded);
   }
 
-  /// BNB Smart Chain token transactions
+  /// BNB Smart Chain token transactions.
   ///
-  /// `amount` value in smallest denomination
+  /// `amount` value in smallest denomination.
   ///
-  /// `gasPrice` and `gasLimit` values in wei
-  static String bnbSmartChainToken({
+  /// `gasPrice` and `gasLimit` values in wei.
+  static String bnbSmartChainBEP20Token({
     required HDWallet wallet,
     // value in smallest denomination
     required String amount,
@@ -90,11 +90,13 @@ class BuildTransaction {
     return hex.encode(signingOutput.encoded);
   }
 
-  /// Cosmos native transactions
+  /// Cosmos native transactions.
   ///
-  /// Denomination of OSMO: 'uosmo', 'mmosmo', 'osmo'
-  /// ChainId of OSMO: 'osmosis-1'
-  /// BroadcastMode enum: 0-BLOCK, 1-SYNC, 2-ASYNC
+  /// Denomination of OSMO: `uosmo`, `mosmo`, `osmo`.
+  ///
+  /// ChainId of OSMO: `osmosis-1`.
+  ///
+  /// BroadcastMode enum: `0-BLOCK`, `1-SYNC`, `2-ASYNC`.
   static String cosmos({
     required HDWallet wallet,
     required int coin,
@@ -142,11 +144,11 @@ class BuildTransaction {
     return signingOutput.serialized;
   }
 
-  /// Ethereum native transactions
+  /// Ethereum native transactions.
   ///
-  /// `amount` value in gwei
+  /// `amount` value in gwei.
   ///
-  /// `gasPrice` and `gasLimit` values in wei
+  /// `gasPrice` and `gasLimit` values in wei.
   static String ethereum({
     required HDWallet wallet,
     // value in gwei (10^9 wei)
@@ -179,11 +181,11 @@ class BuildTransaction {
     return hex.encode(signingOutput.encoded);
   }
 
-  /// Ethereum ERC20 token transactions
+  /// Ethereum ERC20 token transactions.
   ///
-  /// `amount` value in smallest denomination
+  /// `amount` value in smallest denomination.
   ///
-  /// `gasPrice` and `gasLimit` values in wei
+  /// `gasPrice` and `gasLimit` values in wei.
   static String ethereumERC20Token({
     required HDWallet wallet,
     // value in smallest denomination
@@ -220,11 +222,11 @@ class BuildTransaction {
     return hex.encode(signingOutput.encoded);
   }
 
-  /// Ethereum Classic native transactions
+  /// Ethereum Classic native transactions.
   ///
-  /// `amount` value in gwei
+  /// `amount` value in gwei.
   ///
-  /// `gasPrice` and `gasLimit` values in wei
+  /// `gasPrice` and `gasLimit` values in wei.
   static String ethereumClassic({
     required HDWallet wallet,
     // value in gwei (10^9 wei)
@@ -257,7 +259,7 @@ class BuildTransaction {
     return hex.encode(signingOutput.encoded);
   }
 
-  /// Solana native transaction
+  /// Solana native transaction.
   static String solana({
     required HDWallet wallet,
     required String recipient,
@@ -284,7 +286,7 @@ class BuildTransaction {
     return signingOutput.encoded;
   }
 
-  /// Solana token transaction
+  /// Solana token transaction.
   static String solanaToken({
     required HDWallet wallet,
     required String recipientSolanaAddress,
@@ -325,7 +327,7 @@ class BuildTransaction {
     return signingOutput.encoded;
   }
 
-  /// Utxo coins transaction
+  /// Utxo coins transaction.
   static String utxoCoin({
     required HDWallet wallet,
     required int coin,

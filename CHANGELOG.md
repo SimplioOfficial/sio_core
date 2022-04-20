@@ -1,3 +1,6 @@
+## 0.0.7
+* Implement ATOM, LUNA, OSMO native transactions
+* Implement get Balance for all supported coins and tokens
 ## 0.0.6
 * Implement BSC, ETH, ETC native transactions and BSC, ETH token transactions
 * Implement BTC, BCH, DASH, DGB, DOGE, FLUX, LTC, ZEC transactions

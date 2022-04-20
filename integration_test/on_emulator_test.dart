@@ -89,7 +89,7 @@ void main() {
           'f86c8085032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a16000808194a0d2c6acce01755661bf4dceee0826d0b7962b018b7a298ec443ad5587e310baefa020a3ffd793ff276af6676bad45887551508c6e98eb07faa9d1bd29a1844f1f8b');
     });
     test('BSC token transaction length', () {
-      final signedBscTx = BuildTransaction.bnbSmartChainToken(
+      final signedBscTx = BuildTransaction.bnbSmartChainBEP20Token(
         wallet: wallet,
         amount: amount,
         tokenContract: tokenContract,
@@ -99,7 +99,7 @@ void main() {
       expect(hex.decode(signedBscTx).length, 171);
     });
     test('BSC token transaction hash', () {
-      final signedBscTx = BuildTransaction.bnbSmartChainToken(
+      final signedBscTx = BuildTransaction.bnbSmartChainBEP20Token(
         wallet: wallet,
         amount: amount,
         tokenContract: tokenContract,
