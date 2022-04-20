@@ -155,8 +155,8 @@ class GetBalance {
     return broadcast.body;
   }
 
-  /// Get Solana Token balance from mainnet, testnet, devnet
-  /// depending on whatever apiEndpoint is used.
+  /// Get Solana specific Token balance for an address from
+  /// mainnet, testnet, devnet depending on whatever apiEndpoint is used.
   static Future<String> solanaToken({
     required String address,
     required String tokenMintAddress,
@@ -170,6 +170,30 @@ class GetBalance {
         address,
         {
           "mint": tokenMintAddress,
+        },
+        {
+          "encoding": "jsonParsed",
+        },
+      ],
+    });
+
+    return broadcast.body;
+  }
+
+  /// Get All Solana Tokens balance  for an address from
+  /// mainnet, testnet, devnet depending on whatever apiEndpoint is used.
+  static Future<String> solanaAllTokens({
+    required String address,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postEncodedRequest(apiEndpoint, {
+      "jsonrpc": "2.0",
+      "id": "1",
+      "method": "getTokenAccountsByOwner",
+      "params": [
+        address,
+        {
+          "programId": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
         },
         {
           "encoding": "jsonParsed",

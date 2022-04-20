@@ -75,14 +75,22 @@ void main() {
       expect(jsonDecode(response), isMap);
       expect(jsonDecode(response)['result']['value'], 0);
     });
-
-    test('Solana token', () async {
+    test('Solana specific token', () async {
       const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJCu4f';
       const tokenMintAddress =
           '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R'; //Raydium
       final response = await GetBalance.solanaToken(
         address: address,
         tokenMintAddress: tokenMintAddress,
+        apiEndpoint: 'https://api.mainnet-beta.solana.com/',
+      );
+      expect(jsonDecode(response), isMap);
+      expect(jsonDecode(response)['result']['value'], []);
+    });
+    test('Solana all tokens', () async {
+      const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJCu4f';
+      final response = await GetBalance.solanaAllTokens(
+        address: address,
         apiEndpoint: 'https://api.mainnet-beta.solana.com/',
       );
       expect(jsonDecode(response), isMap);
