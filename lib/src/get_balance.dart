@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:sio_core/src/utils_internal.dart';
 
-<<<<<<< HEAD
 /// Class that builds transactions and return OutputTx ready for broadcasting.
 class GetBalance {
   /// Get ATOM, LUNA, OSMO balance from mainnet.
@@ -12,72 +11,12 @@ class GetBalance {
   /// * https://lcd.terra.dev/
   /// * https://lcd-osmosis.keplr.app/
   static Future<BigInt> cosmos({
-=======
-/// Class that returns the balance of different coins and tokens.
-class GetBalance {
-  /// Get Bitcoin balance from mainnet.
-  /// Works with Blockbook.
-  static Future<String> bitcoin({
-    required String apiEndpoint,
-    required String address,
-  }) async {
-    final request = await getRequest(
-        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
-    return request.body;
-  }
-
-  /// Get BNB Smart Chain balance from mainnet, testnet.
-  /// Works with any rpc endpoints from
-  /// https://docs.binance.org/smart-chain/developer/rpc.html
-  static Future<String> bnbSmartChain({
-    required String address,
-    required String apiEndpoint,
-  }) async {
-    final request = await postEncodedRequest(apiEndpoint, {
-      "jsonrpc": "2.0",
-      "id": "1",
-      "method": "eth_getBalance",
-      "params": [address, "latest"]
-    });
-    return request.body;
-  }
-
-  /// Get BEP-20 Token balance from mainnet.
-  /// Works with https://api.bscscan.com/
-  /// Use apiEndpoint like "https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=YourApiKeyToken"
-  static Future<String> bnbSmartChainBEP20Token({
-    required String address,
-    required String contractAddress,
-    required String apiEndpoint,
-  }) async {
-    final request = await getRequest(apiEndpoint
-        .replaceFirst('<contractAddress>', contractAddress)
-        .replaceFirst('<address>', address));
-    return request.body;
-  }
-
-  /// Get Bitcoin Cash balance from mainnet.
-  /// Works with Blockbook.
-  static Future<String> bitcoinCash({
-    required String apiEndpoint,
-    required String address,
-  }) async {
-    final request = await getRequest(
-        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
-    return request.body;
-  }
-
-  /// Get Cosmos balance from mainnet.
-  /// Works with LCD api providers.
-  static Future<String> cosmos({
->>>>>>> fix: basic details in blockbook balance api
     required String address,
     required String apiEndpoint,
     required String denomination,
   }) async {
     final request = await getRequest(
         apiEndpoint + 'cosmos/bank/v1beta1/balances/' + address);
-<<<<<<< HEAD
     if (jsonDecode(request.body)['balances'] == null) {
       throw Exception(request.body);
     }
@@ -104,50 +43,16 @@ class GetBalance {
   /// * https://etcblockexplorer.com/ or https://etc1.trezor.io/
   /// * https://ethblockexplorer.org/ or https://eth1.trezor.io/
   static Future<BigInt> ethereumBlockbook({
-=======
-    return request.body;
-  }
-
-  /// Get Dash balance from mainnet.
-  /// Works with Blockbook.
-  static Future<String> dash({
     required String apiEndpoint,
     required String address,
   }) async {
     final request = await getRequest(
         apiEndpoint + 'api/v2/address/' + address + '?details=basic');
-    return request.body;
-  }
-
-  /// Get DigiByte balance from mainnet.
-  /// Works with Blockbook.
-  static Future<String> digibyte({
->>>>>>> fix: basic details in blockbook balance api
-    required String apiEndpoint,
-    required String address,
-  }) async {
-    final request = await getRequest(
-        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
-<<<<<<< HEAD
     if (jsonDecode(request.body)['error'] != null) {
       throw Exception(jsonDecode(request.body)['error']);
     }
 
     return BigInt.parse(jsonDecode(request.body)['balance']);
-=======
-    return request.body;
-  }
-
-  /// Get Doge balance from mainnet.
-  /// Works with Blockbook.
-  static Future<String> doge({
-    required String apiEndpoint,
-    required String address,
-  }) async {
-    final request = await getRequest(
-        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
-    return request.body;
->>>>>>> fix: basic details in blockbook balance api
   }
 
   /// Get BNB (Smart Chain), ETC, ETH balance from mainnet, testnet.
@@ -196,19 +101,7 @@ class GetBalance {
       return BigInt.zero;
     }
 
-<<<<<<< HEAD
     return BigInt.parse(jsonDecode(request.body)['tokens'][0]['balance']);
-=======
-  /// Get Ethereum Classic balance from mainnet.
-  /// Works with Blockbook.
-  static Future<String> ethereumClassic({
-    required String apiEndpoint,
-    required String address,
-  }) async {
-    final request = await getRequest(
-        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
-    return request.body;
->>>>>>> fix: basic details in blockbook balance api
   }
 
   /// Get BEP-20 or ERC-20 Token balance from mainnet.
@@ -222,19 +115,12 @@ class GetBalance {
     required String contractAddress,
     required String apiEndpoint,
   }) async {
-<<<<<<< HEAD
     final request = await getRequest(apiEndpoint
         .replaceFirst('<contractAddress>', contractAddress)
         .replaceFirst('<address>', address));
     if (jsonDecode(request.body)['status'] == '0') {
       throw Exception(jsonDecode(request.body)['result']);
     }
-=======
-    final request = await getRequest(
-        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
-    return request.body;
-  }
->>>>>>> fix: basic details in blockbook balance api
 
     return BigInt.parse(jsonDecode(request.body)['result']);
   }
@@ -354,15 +240,9 @@ class GetBalance {
     required String apiEndpoint,
     required String address,
   }) async {
-<<<<<<< HEAD
     final request =
         await getRequest(apiEndpoint + 'api/addr/' + address + '/balance');
 
     return BigInt.parse(request.body);
-=======
-    final request = await getRequest(
-        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
-    return request.body;
->>>>>>> fix: basic details in blockbook balance api
   }
 }
