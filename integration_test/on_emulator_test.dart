@@ -260,8 +260,9 @@ void main() {
       const amount = '38900';
       const apiEndpoint = 'https://ltc1.simplio.io/';
       final utxoString = await getUtxo(
-          apiEndpoint:
-              apiEndpoint + 'api/v2/utxo/' + wallet.getAddressForCoin(coin));
+          apiEndpoint: apiEndpoint +
+              'api/v2/utxo/' +
+              'ltc1qulzv02h8nmsuqxaqas3dv22cl244r7vs0smssh');
       List utxo = jsonDecode(utxoString);
       try {
         BuildTransaction.utxoCoin(
@@ -282,8 +283,9 @@ void main() {
       const amount = '25000';
       const apiEndpoint = 'https://ltc1.simplio.io/';
       final utxoString = await getUtxo(
-          apiEndpoint:
-              apiEndpoint + 'api/v2/utxo/' + wallet.getAddressForCoin(coin));
+          apiEndpoint: apiEndpoint +
+              'api/v2/utxo/' +
+              'ltc1qulzv02h8nmsuqxaqas3dv22cl244r7vs0smssh');
       List utxo = jsonDecode(utxoString);
 
       final signedUtxoCoinTx = BuildTransaction.utxoCoin(
@@ -302,8 +304,9 @@ void main() {
       const amount = '9999';
       const apiEndpoint = 'https://ltc1.simplio.io/';
       final utxoString = await getUtxo(
-          apiEndpoint:
-              apiEndpoint + 'api/v2/utxo/' + wallet.getAddressForCoin(coin));
+          apiEndpoint: apiEndpoint +
+              'api/v2/utxo/' +
+              'ltc1qulzv02h8nmsuqxaqas3dv22cl244r7vs0smssh');
       List utxo = jsonDecode(utxoString);
 
       final signedUtxoCoinTx = BuildTransaction.utxoCoin(
