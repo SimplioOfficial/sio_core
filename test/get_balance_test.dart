@@ -24,6 +24,18 @@ void main() {
       );
       expect(response, BigInt.zero);
     });
+    test('Osmosis exception', () async {
+      const address = 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfsw';
+      try {
+        await GetBalance.cosmos(
+          address: address,
+          apiEndpoint: 'https://lcd-osmosis.keplr.app/',
+          denomination: 'uosmo',
+        );
+      } catch (exception) {
+        expect(exception, isA<Exception>());
+      }
+    });
     test('Terra', () async {
       const address = 'terra1rva9a70xc3vpvdezn60jerz4ywqa5uey7nefps';
       final response = await GetBalance.cosmos(
@@ -182,6 +194,17 @@ void main() {
         address: address,
       );
       expect(response, BigInt.zero);
+    });
+    test('Litecoin exception', () async {
+      const address = 'bitcoincash:qphjd0f4jeg9naf29u6tkakv800wgksyhvsamcpdd2';
+      try {
+        await GetBalance.utxoCoinBlockbook(
+          apiEndpoint: 'https://ltc1.simplio.io/',
+          address: address,
+        );
+      } catch (exception) {
+        expect(exception, isA<Exception>());
+      }
     });
     test('Zcash', () async {
       const address = 't1RTNMRyJhc1UgfvrTSqFP46C5xuyxjJGeR';
