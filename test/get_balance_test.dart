@@ -47,7 +47,7 @@ void main() {
     test('BNB Smart Chain BEP20 Token', () async {
       const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
       const contractAddress = '0xe9e7cea3dedca5984780bafc599bd69add087d56';
-      final response = await GetBalance.ethereumERC20(
+      final response = await GetBalance.ethereumERC20Scan(
         address: address,
         contractAddress: contractAddress,
         apiEndpoint:
@@ -67,7 +67,7 @@ void main() {
     test('Ethereum ERC20 Token', () async {
       const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
       const contractAddress = '0x57d90b64a1a57749b0f932f1a3395792e12e7055';
-      final response = await GetBalance.ethereumERC20(
+      final response = await GetBalance.ethereumERC20Scan(
         address: address,
         contractAddress: contractAddress,
         apiEndpoint:
