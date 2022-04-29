@@ -1,6 +1,6 @@
-name: Run unit tests
+name: Run unit tests - on emulator
 env:
-  FLUTTER_VERSION: "2.10.3"
+  FLUTTER_VERSION: "2.10.5"
 
 on: push
 
@@ -18,9 +18,6 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: $FLUTTER_VERSION
-
-      - name: Install lcov
-        run: brew install lcov
 
       - name: Install app dependencies
         run: flutter pub get
@@ -60,22 +57,7 @@ jobs:
           disable-animations: true
           script: flutter test integration_test --coverage
 
-      - name: Adjusting coverage info to consider only emulator tests
-        run: lcov -r coverage/lcov.info 'lib/src/broadcast.dart' -o coverage/lcov.info
-
       - name: Upload emulator tests coverage to Codecov
-        uses: codecov/codecov-action@v1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          file: coverage/lcov.info
-
-      - name: Run unit tests directly with flutter test
-        run: flutter test test --coverage
-
-      - name: Adjusting coverage info to exclude emulator tests
-        run: lcov -r coverage/lcov.info 'lib/src/mnemonic.dart' -o coverage/lcov.info
-
-      - name: Upload unit tests coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}

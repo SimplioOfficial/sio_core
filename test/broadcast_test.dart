@@ -19,7 +19,7 @@ void main() {
     test('Osmosis', () async {
       const signedTxSerialized =
           '{"mode":"BROADCAST_MODE_BLOCK","tx_bytes":"CowBCokBChwvY29zbW9zLmJhbmsudjFiZXRhMS5Nc2dTZW5kEmkKK29zbW8xcmx3ZW10NDVyeXpjOHluYWt6d2dma2x0bTdqeThsc3dwbmZzd24SK29zbW8xcXJobHZycWN0djI2dm42YXo3cm51bnJlZGd5MjQ5c205anQ3dXMaDQoFdW9zbW8SBDc4MDASZgpQCkYKHy9jb3Ntb3MuY3J5cHRvLnNlY3AyNTZrMS5QdWJLZXkSIwohA09C2YHdJ122Jo1qWsfNo2VFmVONXfWmohBm/ha+5G0pEgQKAggBGAUSEgoMCgV1b3NtbxIDMTAwEMCaDBpA1aGulU+jYUpCcA3eQ0dWYTt8qsDH/MNIZbenQj+cwvtVfD+RCWJ2ndhC2sEwVOjD5fenq93mK3/8xylj6jMyGg=="}';
-      final response = await Broadcast.osmosis(
+      final response = await Broadcast.cosmos(
         signedTxSerialized: signedTxSerialized,
         apiEndpoint: 'https://lcd-osmosis.keplr.app/',
       );
@@ -30,7 +30,7 @@ void main() {
     test('Terra', () async {
       const signedTxSerialized =
           '{"mode":"BROADCAST_MODE_BLOCK","tx_bytes":"Co4BCosBChwvY29zbW9zLmJhbmsudjFiZXRhMS5Nc2dTZW5kEmsKLHRlcnJhMXJ2YTlhNzB4YzN2cHZkZXpuNjBqZXJ6NHl3cWE1dWV5N25lZnBzEix0ZXJyYTFzdmM2M3l4d2xxdjJjcG16bWEwZWhjODh6a2Zwa25yYWw5ajZhNBoNCgV1bHVuYRIENzgwMBJmClAKRgofL2Nvc21vcy5jcnlwdG8uc2VjcDI1NmsxLlB1YktleRIjCiEDYPiVIhGbxRWKBJ2ly5K2TpgPeQJfiPaVjTZ/KGjQvA0SBAoCCAEYBRISCgwKBXVsdW5hEgMxMDAQwJoMGkB7eQSdCXKSHMC1fzFDWX3aE3tw0IapUvMpq71GbyiZdg23yDhNMwSnXEc8M8CF5B+QL+pKTXMv09ANe6d+StMP"}';
-      final response = await Broadcast.terra(
+      final response = await Broadcast.cosmos(
         signedTxSerialized: signedTxSerialized,
         apiEndpoint: 'https://lcd.terra.dev/',
       );
@@ -44,7 +44,7 @@ void main() {
     test('BNB Smart Chain', () async {
       const signedTxEncoded =
           'f86c0385032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea4787234230709be0008081e5a0e873a5e71069a59d7e652f9ac4cd667274cb7cdd356e3644601e811ac0105a10a0735e2cef7b1274dc72e1d5c90b3864f270c4cb0a5be90a8c337b4eeee56f8179';
-      final response = await Broadcast.bnbSmartChain(
+      final response = await Broadcast.ethereumRPC(
         signedTxEncoded: signedTxEncoded,
         apiEndpoint: 'https://bsc-dataseed.binance.org/',
       );
@@ -54,7 +54,7 @@ void main() {
     test('Ethereum', () async {
       const signedTxEncoded =
           'f86b8085032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a160008026a002280d6ed62e1157127ef9a90dfb4b377697d36759e10a3015e33aa7e870ebd5a0483f537fb6c687dc29f60a0b9e861af09ce5d223d339c06c8b7af408277f487f';
-      final response = await Broadcast.ethereum(
+      final response = await Broadcast.ethereumRPC(
         signedTxEncoded: signedTxEncoded,
         apiEndpoint:
             'https://mainnet.infura.io/v3/d0b366367e6d4a1b97b2d844397ca182',
@@ -65,7 +65,7 @@ void main() {
     test('Ethereum Classic', () async {
       const signedTxEncoded =
           'f86c8085032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a1600080819da00a977cf89f7a84522aa0a87f7504bbc3a18d0a87c8a2c030d96e89427846331ba07da98ce74f7a8214864ed0a4e4f018dbfe8c40518658be51fcfb987218b5f67e';
-      final response = await Broadcast.ethereumClassic(
+      final response = await Broadcast.ethereumBlockbook(
         signedTxEncoded: signedTxEncoded,
         apiEndpoint: 'https://etcblockexplorer.com/',
       );
@@ -92,7 +92,7 @@ void main() {
     test('Bitcoin', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
-      final response = await Broadcast.bitcoin(
+      final response = await Broadcast.utxoCoinBlockbook(
           signedTxEncoded: signedTxEncoded,
           apiEndpoint: 'https://btc1.simplio.io/');
       expect(jsonDecode(response), isMap);
@@ -101,7 +101,7 @@ void main() {
     test('Bitcoin Cash', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
-      final response = await Broadcast.bitcoinCash(
+      final response = await Broadcast.utxoCoinBlockbook(
           signedTxEncoded: signedTxEncoded,
           apiEndpoint: 'https://bch1.simplio.io/');
       expect(jsonDecode(response), isMap);
@@ -110,7 +110,7 @@ void main() {
     test('Dash', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
-      final response = await Broadcast.dash(
+      final response = await Broadcast.utxoCoinBlockbook(
           signedTxEncoded: signedTxEncoded,
           apiEndpoint: 'https://dash1.simplio.io/');
       expect(jsonDecode(response), isMap);
@@ -119,7 +119,7 @@ void main() {
     test('DigiByte', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
-      final response = await Broadcast.digibyte(
+      final response = await Broadcast.utxoCoinBlockbook(
           signedTxEncoded: signedTxEncoded,
           apiEndpoint: 'https://dgb1.simplio.io/');
       expect(jsonDecode(response), isMap);
@@ -128,7 +128,7 @@ void main() {
     test('Doge', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
-      final response = await Broadcast.doge(
+      final response = await Broadcast.utxoCoinBlockbook(
           signedTxEncoded: signedTxEncoded,
           apiEndpoint: 'https://doge1.simplio.io/');
       expect(jsonDecode(response), isMap);
@@ -137,7 +137,7 @@ void main() {
     test('Flux', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
-      final response = await Broadcast.flux(
+      final response = await Broadcast.utxoCoinInsight(
           signedTxEncoded: signedTxEncoded,
           apiEndpoint: 'https://explorer.runonflux.io/');
       expect(response, 'TX decode failed. Code:-22');
@@ -145,7 +145,7 @@ void main() {
     test('Litecoin', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
-      final response = await Broadcast.litecoin(
+      final response = await Broadcast.utxoCoinBlockbook(
           signedTxEncoded: signedTxEncoded,
           apiEndpoint: 'https://ltc1.simplio.io/');
       expect(jsonDecode(response), isMap);
@@ -154,7 +154,7 @@ void main() {
     test('Zcash', () async {
       const signedTxEncoded =
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
-      final response = await Broadcast.zcash(
+      final response = await Broadcast.utxoCoinBlockbook(
           signedTxEncoded: signedTxEncoded,
           apiEndpoint: 'https://zec1.simplio.io/');
       expect(jsonDecode(response), isMap);

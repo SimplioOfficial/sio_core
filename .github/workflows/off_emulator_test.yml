@@ -1,0 +1,33 @@
+name: Run unit tests - off emulator
+env:
+  FLUTTER_VERSION: "2.10.5"
+
+on: push
+
+jobs:
+  test:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: $FLUTTER_VERSION
+
+      - name: Install app dependencies
+        run: flutter pub get
+      - name: Analyze files
+        run: flutter analyze
+      - name: Verify formatting
+        run: flutter format --output=none --set-exit-if-changed .
+
+      - name: Run unit tests directly with flutter test
+        run: flutter test test --coverage
+
+      - name: Upload unit tests coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage/lcov.info
