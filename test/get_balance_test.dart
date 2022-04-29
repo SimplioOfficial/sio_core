@@ -45,6 +45,15 @@ void main() {
       );
       expect(response, BigInt.zero);
     });
+    test('Terra existent positive', () async {
+      const address = 'terra1whevxvk66j7p4c0rgm0fzzep4hywrm6sytfh0j';
+      final response = await GetBalance.cosmos(
+        address: address,
+        apiEndpoint: 'https://lcd.terra.dev/',
+        denomination: 'uluna',
+      );
+      expect(response, greaterThan(BigInt.parse('-1')));
+    });
   });
 
   group('Get balance for Ethereum coin - ', () {
@@ -56,6 +65,17 @@ void main() {
       );
       expect(response, BigInt.zero);
     });
+    test('BNB Smart Chain error', () async {
+      const address = '0x6A86087Ee103DCC2494cA2804e4934b913df';
+      try {
+        await GetBalance.ethereumRPC(
+          address: address,
+          apiEndpoint: 'https://bsc-dataseed.binance.org/',
+        );
+      } catch (exception) {
+        expect(exception, isA<Exception>());
+      }
+    });
     test('BNB Smart Chain BEP20 Token', () async {
       const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
       const contractAddress = '0xe9e7cea3dedca5984780bafc599bd69add087d56';
@@ -66,6 +86,20 @@ void main() {
             'https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=PED3MB4V1CD3XAIGTQNAVCD8AHG1KSWAPN',
       );
       expect(response, BigInt.zero);
+    });
+    test('BNB Smart Chain BEP20 Token error', () async {
+      const address = '0x6A86087Ee103DCC2494cA2804e4934b913df';
+      const contractAddress = '0xe9e7cea3dedca5984780bafc599bd69add08';
+      try {
+        await GetBalance.ethereumERC20Scan(
+          address: address,
+          contractAddress: contractAddress,
+          apiEndpoint:
+              'https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=PED3MB4V1CD3XAIGTQNAVCD8AHG1KSWAPN',
+        );
+      } catch (exception) {
+        expect(exception, isA<Exception>());
+      }
     });
     test('Ethereum', () async {
       const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
@@ -95,6 +129,17 @@ void main() {
       );
       expect(response, BigInt.zero);
     });
+    test('Ethereum Classic error', () async {
+      const address = '0x9C35cd0398E9c8f61258cCdC822233da2D82';
+      try {
+        await GetBalance.ethereumBlockbook(
+          address: address,
+          apiEndpoint: 'https://etcblockexplorer.com/',
+        );
+      } catch (exception) {
+        expect(exception, isA<Exception>());
+      }
+    });
     test('Ethereum Classic ETC20 Token', () async {
       const address = '0x9C35cd0398E9c8f61258cCdC822233da2D8228a2';
       const contractAddress = '0x57d90b64a1a57749b0f932f1a3395792e12e7055';
@@ -104,6 +149,29 @@ void main() {
         apiEndpoint: 'https://etcblockexplorer.com/',
       );
       expect(response, BigInt.zero);
+    });
+    test('Ethereum Classic ETC20 Token implicit BigInt.zero', () async {
+      const address = '0x734Ac651Dd95a339c633cdEd410228515F97fAfF';
+      const contractAddress = '0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39';
+      final response = await GetBalance.ethereumERC20Blockbook(
+        address: address,
+        contractAddress: contractAddress,
+        apiEndpoint: 'https://etcblockexplorer.com/',
+      );
+      expect(response, BigInt.zero);
+    });
+    test('Ethereum Classic ETC20 Token error', () async {
+      const address = '0x9C35cd0398E9c8f61258cCdC822233da2D82';
+      const contractAddress = '0x57d90b64a1a57749b0f932f1a3395792e12e';
+      try {
+        await GetBalance.ethereumERC20Blockbook(
+          address: address,
+          contractAddress: contractAddress,
+          apiEndpoint: 'https://etcblockexplorer.com/',
+        );
+      } catch (exception) {
+        expect(exception, isA<Exception>());
+      }
     });
   });
 
@@ -116,6 +184,17 @@ void main() {
       );
       expect(response, BigInt.zero);
     });
+    test('Solana error', () async {
+      const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJ';
+      try {
+        await GetBalance.solana(
+          apiEndpoint: 'https://api.devnet.solana.com/',
+          address: address,
+        );
+      } catch (exception) {
+        expect(exception, isA<Exception>());
+      }
+    });
     test('Solana specific token', () async {
       const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJCu4f';
       const tokenMintAddress =
@@ -126,6 +205,31 @@ void main() {
         apiEndpoint: 'https://api.mainnet-beta.solana.com/',
       );
       expect(response, BigInt.zero);
+    });
+    test('Solana specific token error', () async {
+      const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJ';
+      const tokenMintAddress =
+          '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R'; //Raydium
+      try {
+        await GetBalance.solanaToken(
+          address: address,
+          tokenMintAddress: tokenMintAddress,
+          apiEndpoint: 'https://api.mainnet-beta.solana.com/',
+        );
+      } catch (exception) {
+        expect(exception, isA<Exception>());
+      }
+    });
+    test('Solana specific token existent positive', () async {
+      const address = '3fTR8GGL2mniGyHtd3Qy2KDVhZ9LHbW59rCc7A3RtBWk';
+      const tokenMintAddress =
+          '4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R'; //Raydium
+      final response = await GetBalance.solanaToken(
+        address: address,
+        tokenMintAddress: tokenMintAddress,
+        apiEndpoint: 'https://api.mainnet-beta.solana.com/',
+      );
+      expect(response, greaterThan(BigInt.parse('-1')));
     });
     test('Solana all tokens', () async {
       const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJCu4f';
