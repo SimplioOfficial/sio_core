@@ -25,7 +25,7 @@ void main() {
       expect(response, BigInt.zero);
     });
     test('Osmosis search inexistent denomination', () async {
-      const address = 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn';
+      const address = 'osmo1ryfjy25gmqxkggyxjrz93lrv5tc9q3rz2dyua3';
       final response = await GetBalance.cosmos(
         address: address,
         apiEndpoint: 'https://lcd-osmosis.keplr.app/',
