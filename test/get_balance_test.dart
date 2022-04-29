@@ -24,6 +24,15 @@ void main() {
       );
       expect(response, BigInt.zero);
     });
+    test('Osmosis search inexistent denomination', () async {
+      const address = 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn';
+      final response = await GetBalance.cosmos(
+        address: address,
+        apiEndpoint: 'https://lcd-osmosis.keplr.app/',
+        denomination: 'uluna',
+      );
+      expect(response, BigInt.zero);
+    });
     test('Osmosis exception', () async {
       const address = 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfsw';
       try {
