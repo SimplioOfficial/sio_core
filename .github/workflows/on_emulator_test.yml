@@ -19,9 +19,6 @@ jobs:
         with:
           flutter-version: $FLUTTER_VERSION
 
-      - name: Install lcov
-        run: brew install lcov
-
       - name: Install app dependencies
         run: flutter pub get
       - name: Analyze files
@@ -59,9 +56,6 @@ jobs:
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
           script: flutter test integration_test --coverage
-
-      - name: Adjusting coverage info to consider only emulator tests
-        run: lcov -r coverage/lcov.info 'lib/src/broadcast.dart' 'lib/src/get_balance.dart' 'lib/src/get_transactions.dart' 'lib/src/utils.dart' 'lib/src/utils_internal.dart' -o coverage/lcov.info
 
       - name: Upload emulator tests coverage to Codecov
         uses: codecov/codecov-action@v1
