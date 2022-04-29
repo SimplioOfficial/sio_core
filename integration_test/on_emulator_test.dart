@@ -175,17 +175,12 @@ void main() {
     const tokenMintAddress = 'SioTkQxHyAs98ouRiyi1YDv3gLMSrX3eNBg61GH7NrM';
     const amount = '4000';
     const decimals = 8;
-    const apiEndpoint = 'https://api.devnet.solana.com';
     test('Solana native transaction length', () async {
-      final response = await latestBlockHashRequest(apiEndpoint: apiEndpoint);
-      final latestBlockHash =
-          jsonDecode(response)["result"]["value"]["blockhash"];
-
       final signedSolanaTx = BuildTransaction.solana(
         wallet: wallet,
         recipient: toAddress,
         amount: amount,
-        latestBlockHash: latestBlockHash,
+        latestBlockHash: '11111111111111111111111111111111',
       );
       expect(base58.decode(signedSolanaTx).length, 215);
     });
@@ -202,16 +197,13 @@ void main() {
               '3zWUJPKRuoYY39TFcezbAxEgnYQ6vdhxHrKR9AfHBwe1jqVeAEREwoSWC1JyuyayggHvMjBjpBzR4EGyAFeR4cYTDB2ivdKmRM56P2vEgZkmEAt57LTxwtVM1isG88Fo9fqkT14vnrkke1tRbD8ivG6BEwhDvYURy1Z9RyKe3QozAKcP28mUyaCeBdjd4LgvmyDNCvstDmT2DADeD6qYoZZHxVNGxpjnR7rQfuG8UgfNWcixZFJkQB7k5SkDE5GuTxZqnHy4M87QdvCc7qKWrGGnmD9j8sQeycJk7'));
     });
     test('Solana token transaction length', () async {
-      final response = await latestBlockHashRequest(apiEndpoint: apiEndpoint);
-      final latestBlockHash =
-          jsonDecode(response)["result"]["value"]["blockhash"];
       final signedSolanaTokenTx = BuildTransaction.solanaToken(
         wallet: wallet,
         recipientSolanaAddress: toAddress,
         tokenMintAddress: tokenMintAddress,
         amount: amount,
         decimals: decimals,
-        latestBlockHash: latestBlockHash,
+        latestBlockHash: '11111111111111111111111111111111',
       );
       expect(base58.decode(signedSolanaTokenTx).length, 279);
     });
@@ -236,10 +228,8 @@ void main() {
       const coin = TWCoinType.TWCoinTypeDogecoin;
       const toAddress = 'DK3AhJvD57AfUqFCp5MUV62GE6K4enGxSw';
       const amount = '1005000';
-      const apiEndpoint = 'https://doge1.simplio.io/';
-      final utxoString = await getUtxo(
-          apiEndpoint:
-              apiEndpoint + 'api/v2/utxo/' + wallet.getAddressForCoin(coin));
+      // https://doge1.simplio.io/api/v2/utxo/DTbELQaWmv5KpFcNpZ9X9wy5RjQGL4YMm2
+      const utxoString = '[]';
       List utxo = jsonDecode(utxoString);
       try {
         BuildTransaction.utxoCoin(
@@ -258,10 +248,9 @@ void main() {
       const coin = TWCoinType.TWCoinTypeLitecoin;
       const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
       const amount = '38900';
-      const apiEndpoint = 'https://ltc1.simplio.io/';
-      final utxoString = await getUtxo(
-          apiEndpoint:
-              apiEndpoint + 'api/v2/utxo/' + wallet.getAddressForCoin(coin));
+      // https://ltc1.simplio.io/api/v2/utxo/ltc1qulzv02h8nmsuqxaqas3dv22cl244r7vs0smssh
+      const utxoString =
+          '[{"txid":"f873f455ded89ef7fc7eae62f9ef78c02814f28cf9501f871cbe576096ad9ef5","vout":0,"value":"29169","height":2252921,"confirmations":683},{"txid":"6e5da8e54a0d785a9c3ec9eb0848d14a4011782cf93491404599e0a4cb5a1c67","vout":0,"value":"10000","height":2252920,"confirmations":684}]';
       List utxo = jsonDecode(utxoString);
       try {
         BuildTransaction.utxoCoin(
@@ -280,10 +269,9 @@ void main() {
       const coin = TWCoinType.TWCoinTypeLitecoin;
       const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
       const amount = '25000';
-      const apiEndpoint = 'https://ltc1.simplio.io/';
-      final utxoString = await getUtxo(
-          apiEndpoint:
-              apiEndpoint + 'api/v2/utxo/' + wallet.getAddressForCoin(coin));
+      // https://ltc1.simplio.io/api/v2/utxo/ltc1qulzv02h8nmsuqxaqas3dv22cl244r7vs0smssh
+      const utxoString =
+          '[{"txid":"f873f455ded89ef7fc7eae62f9ef78c02814f28cf9501f871cbe576096ad9ef5","vout":0,"value":"29169","height":2252921,"confirmations":683},{"txid":"6e5da8e54a0d785a9c3ec9eb0848d14a4011782cf93491404599e0a4cb5a1c67","vout":0,"value":"10000","height":2252920,"confirmations":684}]';
       List utxo = jsonDecode(utxoString);
 
       final signedUtxoCoinTx = BuildTransaction.utxoCoin(
@@ -300,10 +288,9 @@ void main() {
       const coin = TWCoinType.TWCoinTypeLitecoin;
       const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
       const amount = '9999';
-      const apiEndpoint = 'https://ltc1.simplio.io/';
-      final utxoString = await getUtxo(
-          apiEndpoint:
-              apiEndpoint + 'api/v2/utxo/' + wallet.getAddressForCoin(coin));
+      // https://ltc1.simplio.io/api/v2/utxo/ltc1qulzv02h8nmsuqxaqas3dv22cl244r7vs0smssh
+      const utxoString =
+          '[{"txid":"f873f455ded89ef7fc7eae62f9ef78c02814f28cf9501f871cbe576096ad9ef5","vout":0,"value":"29169","height":2252921,"confirmations":683},{"txid":"6e5da8e54a0d785a9c3ec9eb0848d14a4011782cf93491404599e0a4cb5a1c67","vout":0,"value":"10000","height":2252920,"confirmations":684}]';
       List utxo = jsonDecode(utxoString);
 
       final signedUtxoCoinTx = BuildTransaction.utxoCoin(

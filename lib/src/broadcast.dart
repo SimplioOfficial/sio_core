@@ -1,48 +1,13 @@
 import 'package:sio_core/src/utils_internal.dart';
 
-/// Class that broadcast messages into different platforms
+/// Class that broadcast messages into different platforms.
 class Broadcast {
-  /// Send Bitcoin on mainnet.
-  /// Works with Blockbook.
-  static Future<String> bitcoin({
-    required String signedTxEncoded,
-    required String apiEndpoint,
-  }) async {
-    final broadcast =
-        await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
-
-    return broadcast.body;
-  }
-
-  /// Send Bitcoin Cash on mainnet.
-  /// Works with Blockbook.
-  static Future<String> bitcoinCash({
-    required String signedTxEncoded,
-    required String apiEndpoint,
-  }) async {
-    final broadcast =
-        await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
-
-    return broadcast.body;
-  }
-
-  /// Send BNB Smart Chain on mainnet, testnet.
-  static Future<String> bnbSmartChain({
-    required String signedTxEncoded,
-    required String apiEndpoint,
-  }) async {
-    final broadcast = await postEncodedRequest(apiEndpoint, {
-      "jsonrpc": "2.0",
-      "id": "1",
-      "method": "eth_sendRawTransaction",
-      "params": ["0x" + signedTxEncoded]
-    });
-
-    return broadcast.body;
-  }
-
-  /// Send Cosmos on mainnet.
-  /// Works with LCD api providers.
+  /// Broadcast ATOM, LUNA, OSMO transactions on mainnet.
+  ///
+  /// Works with LCD api providers:
+  /// * https://api.cosmos.network/
+  /// * https://lcd.terra.dev/
+  /// * https://lcd-osmosis.keplr.app/
   static Future<String> cosmos({
     required String signedTxSerialized,
     required String apiEndpoint,
@@ -53,44 +18,29 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send Dash on mainnet.
-  /// Works with Blockbook.
-  static Future<String> dash({
+  /// Broadcast BNB (Smart Chain), ETC or ETH transactions on mainnet.
+  ///
+  /// Works with Blockbook:
+  /// * https://bscxplorer.com/
+  /// * https://etcblockexplorer.com/ or https://etc1.trezor.io/
+  /// * https://ethblockexplorer.org/ or https://eth1.trezor.io/
+  static Future<String> ethereumBlockbook({
     required String signedTxEncoded,
     required String apiEndpoint,
   }) async {
     final broadcast =
-        await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
+        await getRequest(apiEndpoint + 'api/v2/sendtx/0x' + signedTxEncoded);
 
     return broadcast.body;
   }
 
-  /// Send DigiByte on mainnet.
-  /// Works with Blockbook.
-  static Future<String> digibyte({
-    required String signedTxEncoded,
-    required String apiEndpoint,
-  }) async {
-    final broadcast =
-        await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
-
-    return broadcast.body;
-  }
-
-  /// Send Doge on mainnet.
-  /// Works with Blockbook.
-  static Future<String> doge({
-    required String signedTxEncoded,
-    required String apiEndpoint,
-  }) async {
-    final broadcast =
-        await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
-
-    return broadcast.body;
-  }
-
-  /// Send Ethereum on mainnet, testnet.
-  static Future<String> ethereum({
+  /// Broadcast BNB (Smart Chain), ETC, ETH transactions on mainnet, testnet.
+  ///
+  /// Works with any rpc endpoints from:
+  /// * https://docs.binance.org/smart-chain/developer/rpc.html
+  /// * https://www.ethercluster.com/etc
+  /// * https://infura.io/
+  static Future<String> ethereumRPC({
     required String signedTxEncoded,
     required String apiEndpoint,
   }) async {
@@ -104,59 +54,10 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send Ethereum Classic on mainnet.
-  /// Works with Blockbook.
-  /// * https://etcblockexplorer.com/
-  /// * https://etc1.trezor.io/
-  static Future<String> ethereumClassic({
-    required String signedTxEncoded,
-    required String apiEndpoint,
-  }) async {
-    final broadcast =
-        await getRequest(apiEndpoint + 'api/v2/sendtx/0x' + signedTxEncoded);
-
-    return broadcast.body;
-  }
-
-  /// Send Flux on mainnet.
-  /// Works with Insight.
-  static Future<String> flux({
-    required String signedTxEncoded,
-    required String apiEndpoint,
-  }) async {
-    final broadcast = await postEncodedRequest(apiEndpoint + 'api/tx/send/', {
-      "rawtx": signedTxEncoded,
-    });
-
-    return broadcast.body;
-  }
-
-  /// Send Litecoin on mainnet.
-  /// Works with Blockbook.
-  static Future<String> litecoin({
-    required String signedTxEncoded,
-    required String apiEndpoint,
-  }) async {
-    final broadcast =
-        await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
-
-    return broadcast.body;
-  }
-
-  /// Send Osmosis on mainnet.
-  /// Works with LCD api providers.
-  static Future<String> osmosis({
-    required String signedTxSerialized,
-    required String apiEndpoint,
-  }) async {
-    final broadcast = await postRequest(
-        apiEndpoint + 'cosmos/tx/v1beta1/txs', signedTxSerialized);
-
-    return broadcast.body;
-  }
-
-  /// Send Solana and Solana Tokens into mainnet, testnet, devnet
-  /// depending on whatever apiEndpoint is used.
+  /// Broadcast Solana and Solana Tokens transactions into mainnet, testnet,
+  /// devnet depending on whatever apiEndpoint is used:
+  /// * https://api.mainnet-beta.solana.com/
+  /// * https://api.devnet.solana.com/
   static Future<String> solana({
     required String signedTxEncoded,
     required String apiEndpoint,
@@ -171,26 +72,37 @@ class Broadcast {
     return broadcast.body;
   }
 
-  /// Send Terra on mainnet.
-  /// Works with LCD api providers.
-  static Future<String> terra({
-    required String signedTxSerialized,
-    required String apiEndpoint,
-  }) async {
-    final broadcast = await postRequest(
-        apiEndpoint + 'cosmos/tx/v1beta1/txs', signedTxSerialized);
-
-    return broadcast.body;
-  }
-
-  /// Send Zcash on mainnet.
+  /// Broadcast BTC, BCH, DASH, DGB, DOGE, LTC, ZEC transactions on mainnet.
+  ///
   /// Works with Blockbook.
-  static Future<String> zcash({
+  /// * https://btc1.simplio.io/
+  /// * https://bch1.simplio.io/
+  /// * https://dash1.simplio.io/
+  /// * https://dgb1.simplio.io/
+  /// * https://doge1.simplio.io/
+  /// * https://ltc1.simplio.io/
+  /// * https://zec1.simplio.io/
+  static Future<String> utxoCoinBlockbook({
     required String signedTxEncoded,
     required String apiEndpoint,
   }) async {
     final broadcast =
         await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
+
+    return broadcast.body;
+  }
+
+  /// Broadcast FLUX transactions on mainnet.
+  ///
+  /// Works with Insight:
+  /// * https://explorer.runonflux.io/
+  static Future<String> utxoCoinInsight({
+    required String signedTxEncoded,
+    required String apiEndpoint,
+  }) async {
+    final broadcast = await postEncodedRequest(apiEndpoint + 'api/tx/send/', {
+      "rawtx": signedTxEncoded,
+    });
 
     return broadcast.body;
   }

@@ -1,20 +1,67 @@
+import 'dart:convert';
+
 import 'package:sio_core/src/utils_internal.dart';
 
+/// Class that builds transactions and return OutputTx ready for broadcasting.
 class GetBalance {
-  /// Get Bitcoin balance from mainnet.
-  /// Works with Blockbook.
-  static Future<String> bitcoin({
+  /// Get ATOM, LUNA, OSMO balance from mainnet.
+  ///
+  /// Works with LCD api providers:
+  /// * https://api.cosmos.network/
+  /// * https://lcd.terra.dev/
+  /// * https://lcd-osmosis.keplr.app/
+  static Future<BigInt> cosmos({
+    required String address,
+    required String apiEndpoint,
+    required String denomination,
+  }) async {
+    final request = await getRequest(
+        apiEndpoint + 'cosmos/bank/v1beta1/balances/' + address);
+    if (jsonDecode(request.body)['balances'] == null) {
+      throw Exception(request.body);
+    }
+    final List balances = jsonDecode(request.body)['balances'];
+    var balance = '0';
+    if (balances.isEmpty) {
+      return BigInt.zero;
+    } else {
+      for (var i = 0; i < balances.length; i++) {
+        if (balances[i]['denom'] == denomination) {
+          return BigInt.parse(
+              jsonDecode(request.body)['balances'][i]['amount']);
+        }
+      }
+    }
+
+    return BigInt.parse(balance);
+  }
+
+  /// Get BNB (Smart Chain), ETC or ETH balance from mainnet.
+  ///
+  /// Works with Blockbook:
+  /// * https://bscxplorer.com/
+  /// * https://etcblockexplorer.com/ or https://etc1.trezor.io/
+  /// * https://ethblockexplorer.org/ or https://eth1.trezor.io/
+  static Future<BigInt> ethereumBlockbook({
     required String apiEndpoint,
     required String address,
   }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
-    return request.body;
+    final request = await getRequest(
+        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
+    if (jsonDecode(request.body)['error'] != null) {
+      throw Exception(jsonDecode(request.body)['error']);
+    }
+
+    return BigInt.parse(jsonDecode(request.body)['balance']);
   }
 
-  /// Get BNB Smart Chain balance from mainnet, testnet.
-  /// Works with any rpc endpoints from
-  /// https://docs.binance.org/smart-chain/developer/rpc.html
-  static Future<String> bnbSmartChain({
+  /// Get BNB (Smart Chain), ETC, ETH balance from mainnet, testnet.
+  ///
+  /// Works with any rpc endpoints from:
+  /// * https://docs.binance.org/smart-chain/developer/rpc.html
+  /// * https://www.ethercluster.com/etc
+  /// * https://infura.io/
+  static Future<BigInt> ethereumRPC({
     required String address,
     required String apiEndpoint,
   }) async {
@@ -24,13 +71,46 @@ class GetBalance {
       "method": "eth_getBalance",
       "params": [address, "latest"]
     });
-    return request.body;
+    if (jsonDecode(request.body)['error'] != null) {
+      throw Exception(jsonDecode(request.body)['error']);
+    }
+
+    return BigInt.parse(jsonDecode(request.body)['result']);
   }
 
-  /// Get BEP-20 Token balance from mainnet.
-  /// Works with https://api.bscscan.com/
-  /// Use apiEndpoint like "https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=YourApiKeyToken"
-  static Future<String> bnbSmartChainBEP20Token({
+  /// Get BEP-20, ETC-20 or ERC-20 Token balance from mainnet.
+  ///
+  /// Works with Blockbook:
+  /// * https://bscxplorer.com/
+  /// * https://etcblockexplorer.com/ or https://etc1.trezor.io/
+  /// * https://ethblockexplorer.org/ or https://eth1.trezor.io/
+  static Future<BigInt> ethereumERC20Blockbook({
+    required String address,
+    required String contractAddress,
+    required String apiEndpoint,
+  }) async {
+    final request = await getRequest(apiEndpoint +
+        'api/v2/address/' +
+        address +
+        '?details=tokenBalances:basic&contract=' +
+        contractAddress);
+    if (jsonDecode(request.body)['error'] != null) {
+      throw Exception(jsonDecode(request.body)['error']);
+    }
+    if (jsonDecode(request.body)['tokens'][0]['balance'] == null) {
+      return BigInt.zero;
+    }
+
+    return BigInt.parse(jsonDecode(request.body)['tokens'][0]['balance']);
+  }
+
+  /// Get BEP-20 or ERC-20 Token balance from mainnet.
+  /// Works with https://api.bscscan.com/ or https://api.etherscan.com/.
+  ///
+  /// Use apiEndpoint like:
+  /// * "https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=YourApiKeyToken"
+  /// * "https://api.etherscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=YourApiKeyToken"
+  static Future<BigInt> ethereumERC20Scan({
     required String address,
     required String contractAddress,
     required String apiEndpoint,
@@ -38,155 +118,44 @@ class GetBalance {
     final request = await getRequest(apiEndpoint
         .replaceFirst('<contractAddress>', contractAddress)
         .replaceFirst('<address>', address));
-    return request.body;
-  }
+    if (jsonDecode(request.body)['status'] == '0') {
+      throw Exception(jsonDecode(request.body)['result']);
+    }
 
-  /// Get Bitcoin Cash balance from mainnet.
-  /// Works with Blockbook.
-  static Future<String> bitcoinCash({
-    required String apiEndpoint,
-    required String address,
-  }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
-    return request.body;
-  }
-
-  /// Get Cosmos balance from mainnet.
-  /// Works with LCD api providers.
-  static Future<String> cosmos({
-    required String address,
-    required String apiEndpoint,
-  }) async {
-    final request = await getRequest(
-        apiEndpoint + 'cosmos/bank/v1beta1/balances/' + address);
-    return request.body;
-  }
-
-  /// Get Dash balance from mainnet.
-  /// Works with Blockbook.
-  static Future<String> dash({
-    required String apiEndpoint,
-    required String address,
-  }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
-    return request.body;
-  }
-
-  /// Get DigiByte balance from mainnet.
-  /// Works with Blockbook.
-  static Future<String> digibyte({
-    required String apiEndpoint,
-    required String address,
-  }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
-    return request.body;
-  }
-
-  /// Get Doge balance from mainnet.
-  /// Works with Blockbook.
-  static Future<String> doge({
-    required String apiEndpoint,
-    required String address,
-  }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
-    return request.body;
-  }
-
-  /// Get Ethereum balance from mainnet, testnet.
-  /// Works with any RPC endpoint like
-  /// https://infura.io/
-  static Future<String> ethereum({
-    required String address,
-    required String apiEndpoint,
-  }) async {
-    final request = await postEncodedRequest(apiEndpoint, {
-      "jsonrpc": "2.0",
-      "id": "1",
-      "method": "eth_getBalance",
-      "params": [address, "latest"]
-    });
-    return request.body;
-  }
-
-  /// Get ERC-20 Token balance from mainnet.
-  /// Works with https://api.etherscan.com/
-  /// Use apiEndpoint like "https://api.etherscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=YourApiKeyToken"
-  static Future<String> ethereumERC20Token({
-    required String address,
-    required String contractAddress,
-    required String apiEndpoint,
-  }) async {
-    final request = await getRequest(apiEndpoint
-        .replaceFirst('<contractAddress>', contractAddress)
-        .replaceFirst('<address>', address));
-    return request.body;
-  }
-
-  /// Get Ethereum Classic balance from mainnet.
-  /// Works with Blockbook.
-  static Future<String> ethereumClassic({
-    required String apiEndpoint,
-    required String address,
-  }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
-    return request.body;
-  }
-
-  /// Get Flux balance from mainnet.
-  /// Works with Insight.
-  static Future<String> flux({
-    required String apiEndpoint,
-    required String address,
-  }) async {
-    final request =
-        await getRequest(apiEndpoint + 'api/addr/' + address + '/balance');
-    return request.body;
-  }
-
-  /// Get Litecoin balance from mainnet.
-  /// Works with Blockbook.
-  static Future<String> litecoin({
-    required String apiEndpoint,
-    required String address,
-  }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
-    return request.body;
-  }
-
-  /// Get Osmosis balance from mainnet.
-  /// Works with LCD api providers.
-  static Future<String> osmosis({
-    required String address,
-    required String apiEndpoint,
-  }) async {
-    final request = await getRequest(
-        apiEndpoint + 'cosmos/bank/v1beta1/balances/' + address);
-    return request.body;
+    return BigInt.parse(jsonDecode(request.body)['result']);
   }
 
   /// Get Solana balance from mainnet, testnet, devnet
-  /// depending on whatever apiEndpoint is used.
-  static Future<String> solana({
+  /// depending on whatever apiEndpoint is used:
+  /// * https://api.mainnet-beta.solana.com/
+  /// * https://api.devnet.solana.com/
+  static Future<BigInt> solana({
     required String address,
     required String apiEndpoint,
   }) async {
-    final broadcast = await postEncodedRequest(apiEndpoint, {
+    final request = await postEncodedRequest(apiEndpoint, {
       "jsonrpc": "2.0",
       "id": "1",
       "method": "getBalance",
       "params": [address]
     });
+    if (jsonDecode(request.body)['error'] != null) {
+      throw Exception(jsonDecode(request.body)['error']);
+    }
 
-    return broadcast.body;
+    return BigInt.from(jsonDecode(request.body)['result']['value']);
   }
 
   /// Get All Solana Tokens balance  for an address from
   /// mainnet, testnet, devnet depending on whatever apiEndpoint is used.
+  ///
+  /// Returns the full object for the moment. Result will be parsed later
+  /// after the scope is set.
   static Future<String> solanaAllTokens({
     required String address,
     required String apiEndpoint,
   }) async {
-    final broadcast = await postEncodedRequest(apiEndpoint, {
+    final request = await postEncodedRequest(apiEndpoint, {
       "jsonrpc": "2.0",
       "id": "1",
       "method": "getTokenAccountsByOwner",
@@ -201,17 +170,19 @@ class GetBalance {
       ],
     });
 
-    return broadcast.body;
+    return request.body;
   }
 
   /// Get Solana specific Token balance for an address from
-  /// mainnet, testnet, devnet depending on whatever apiEndpoint is used.
-  static Future<String> solanaToken({
+  /// mainnet, testnet, devnet depending on whatever apiEndpoint is used:
+  /// * https://api.mainnet-beta.solana.com/
+  /// * https://api.devnet.solana.com/
+  static Future<BigInt> solanaToken({
     required String address,
     required String tokenMintAddress,
     required String apiEndpoint,
   }) async {
-    final broadcast = await postEncodedRequest(apiEndpoint, {
+    final request = await postEncodedRequest(apiEndpoint, {
       "jsonrpc": "2.0",
       "id": "1",
       "method": "getTokenAccountsByOwner",
@@ -226,27 +197,52 @@ class GetBalance {
       ],
     });
 
-    return broadcast.body;
+    if (jsonDecode(request.body)['error'] != null) {
+      throw Exception(jsonDecode(request.body)['error']);
+    }
+    final List accounts = jsonDecode(request.body)['result']['value'];
+    if (accounts.isEmpty) {
+      return BigInt.zero;
+    } else {
+      return BigInt.parse(accounts[0]['account']['data']['parsed']['info']
+          ['tokenAmount']['amount']);
+    }
   }
 
-  /// Get Terra balance from mainnet.
-  /// Works with LCD api providers.
-  static Future<String> terra({
-    required String address,
+  /// Get BTC, BCH, DASH, DGB, DOGE, LTC, ZEC balance from mainnet.
+  ///
+  /// Works with Blockbook:
+  /// * https://btc1.simplio.io/
+  /// * https://bch1.simplio.io/
+  /// * https://dash1.simplio.io/
+  /// * https://dgb1.simplio.io/
+  /// * https://doge1.simplio.io/
+  /// * https://ltc1.simplio.io/
+  /// * https://zec1.simplio.io/
+  static Future<BigInt> utxoCoinBlockbook({
     required String apiEndpoint,
+    required String address,
   }) async {
     final request = await getRequest(
-        apiEndpoint + 'cosmos/bank/v1beta1/balances/' + address);
-    return request.body;
+        apiEndpoint + 'api/v2/address/' + address + '?details=basic');
+    if (jsonDecode(request.body)['error'] != null) {
+      throw Exception(jsonDecode(request.body)['error']);
+    }
+
+    return BigInt.parse(jsonDecode(request.body)['balance']);
   }
 
-  /// Get Zcash balance from mainnet.
-  /// Works with Blockbook.
-  static Future<String> zcash({
+  /// Get FLUX balance from mainnet.
+  ///
+  /// Works with Insight:
+  /// * https://explorer.runonflux.io/
+  static Future<BigInt> utxoCoinInsight({
     required String apiEndpoint,
     required String address,
   }) async {
-    final request = await getRequest(apiEndpoint + 'api/v2/address/' + address);
-    return request.body;
+    final request =
+        await getRequest(apiEndpoint + 'api/addr/' + address + '/balance');
+
+    return BigInt.parse(request.body);
   }
 }
