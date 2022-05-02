@@ -9,15 +9,13 @@ enum TxType {
 }
 
 class _Tx {
-  final TxType? txType;
+  TxType? txType;
   final String? address;
-  final String? amount;
+  String? amount;
   final String? txid;
   final String? networkFee;
   final int? unixTime;
-  final bool? confirmed;
-  final int? blockNumber;
-  final String? txError;
+  bool? confirmed;
 
   _Tx({
     this.txType,
@@ -27,55 +25,58 @@ class _Tx {
     this.networkFee,
     this.unixTime,
     this.confirmed,
-    this.blockNumber,
-    this.txError,
   });
 
   Map<String, dynamic> toJson() {
-    if (txError != null) {
-      return {'txError': txError};
-    } else {
-      return {
-        'txType': txType?.name,
-        'address': address,
-        'amount': amount,
-        'txid': txid,
-        'networkFee': networkFee,
-        'unixTime': unixTime,
-        'confirmed': confirmed,
-        'blockNumber': blockNumber,
-      };
-    }
+    return {
+      'txType': txType?.name,
+      'address': address,
+      'amount': amount,
+      'txid': txid,
+      'networkFee': networkFee,
+      'unixTime': unixTime,
+      'confirmed': confirmed,
+    };
   }
 }
 
 /// Class that returns transaction object for different coins and tokens.
 class GetTransactions {
-  static Future<dynamic> litecoin({
+  /// Get BTC, BCH, DASH, DGB, DOGE, LTC, ZEC transactions from mainnet.
+  ///
+  /// Works with Blockbook:
+  /// * https://btc1.simplio.io/
+  /// * https://bch1.simplio.io/
+  /// * https://dash1.simplio.io/
+  /// * https://dgb1.simplio.io/
+  /// * https://doge1.simplio.io/
+  /// * https://ltc1.simplio.io/
+  /// * https://zec1.simplio.io/
+  static Future<List<_Tx>> utxoCoinBlockbook({
     required String apiEndpoint,
     required String address,
+    String page = '1',
+    String transactions = '1000',
   }) async {
     List<_Tx> txList = [];
-    final request = await getRequest(
-        apiEndpoint + 'api/v2/address/' + address + '?details=txs');
+    final request = await getRequest(apiEndpoint +
+        'api/v2/address/' +
+        address +
+        '?details=txs&page=' +
+        page +
+        '&pageSize=' +
+        transactions);
     if (jsonDecode(request.body)['error'] != null) {
-      final tx = _Tx(txError: jsonDecode(request.body)['error']);
-      return tx;
+      throw Exception(jsonDecode(request.body)['error']);
     }
     if (jsonDecode(request.body)['txs'] == 0) {
-      final tx = _Tx(txError: 'Address has no transactions');
-      return tx;
+      return [];
     }
 
     if (jsonDecode(request.body)['transactions'] is List) {
       final List _txList = jsonDecode(request.body)['transactions'];
       for (var txIndex = 0; txIndex < _txList.length; txIndex++) {
-        final tx = _Tx(
-          txType: _txList[txIndex]['vin'][0]['isAddress'] == false
-              ? TxType.generate
-              : (_txList[txIndex]['vin'][0]['addresses'][0] == address
-                  ? TxType.send
-                  : TxType.receive),
+        var tx = _Tx(
           address: _txList[txIndex]['vin'][0]['isAddress'] == false
               ? _txList[txIndex]['vout'][0]['addresses'][0]
               : (_txList[txIndex]['vin'][0]['addresses'][0] == address
@@ -85,9 +86,36 @@ class GetTransactions {
           txid: _txList[txIndex]['txid'],
           unixTime: _txList[txIndex]['blockTime'],
           networkFee: _txList[txIndex]['fees'],
-          blockNumber: _txList[txIndex]['blockHeight'],
           confirmed: _txList[txIndex]['confirmations'] > 0,
         );
+        if (_txList[txIndex]['vin'][0]['isAddress'] == false) {
+          tx.txType = TxType.generate;
+        } else {
+          final List _vinAddrsList = _txList[txIndex]['vin'];
+          final List _voutAddrsList = _txList[txIndex]['vout'];
+          for (var i = 0; i < _vinAddrsList.length; i++) {
+            if (_vinAddrsList[i]['addresses'][0] == address) {
+              tx.txType = TxType.send;
+            }
+          }
+          for (var i = 0; i < _voutAddrsList.length; i++) {
+            if (_voutAddrsList[i]['addresses'][0] == address &&
+                tx.txType == null) {
+              tx.txType = TxType.receive;
+            }
+          }
+        }
+
+        if (tx.txType == TxType.generate) {
+          tx.confirmed = _txList[txIndex]['confirmations'] > 100;
+          final List _voutAddrsList = _txList[txIndex]['vout'];
+          for (var i = 0; i < _voutAddrsList.length; i++) {
+            if (_voutAddrsList[i]['addresses'][0] == address) {
+              tx.amount = _voutAddrsList[i]['value'];
+            }
+          }
+        }
+
         txList.add(tx);
       }
     }
