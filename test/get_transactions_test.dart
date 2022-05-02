@@ -32,6 +32,32 @@ void main() {
 
       expect(response[response.length - 1].txid,
           '6e5da8e54a0d785a9c3ec9eb0848d14a4011782cf93491404599e0a4cb5a1c67');
+      late List responseJson;
+      for (var i = 0; i < response.length; i++) {
+        responseJson = [...response.map((tx) => tx.toJson())];
+      }
+      expect(responseJson, [
+        {
+          "txType": "receive",
+          "address": "ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z",
+          "amount": "29169",
+          "txid":
+              "f873f455ded89ef7fc7eae62f9ef78c02814f28cf9501f871cbe576096ad9ef5",
+          "networkFee": "705",
+          "unixTime": 1651047441,
+          "confirmed": true
+        },
+        {
+          "txType": "receive",
+          "address": "ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z",
+          "amount": "10000",
+          "txid":
+              "6e5da8e54a0d785a9c3ec9eb0848d14a4011782cf93491404599e0a4cb5a1c67",
+          "networkFee": "705",
+          "unixTime": 1651047165,
+          "confirmed": true
+        }
+      ]);
     });
     test('Litecoin - Generated coins', () async {
       const address = 'LfmssDyX6iZvbVqHv6t9P6JWXia2JG7mdb';
