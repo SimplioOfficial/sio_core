@@ -72,7 +72,6 @@ class GetTransactions {
     if (jsonDecode(request.body)['txs'] == 0) {
       return [];
     }
-
     if (jsonDecode(request.body)['transactions'] is List) {
       final List _txList = jsonDecode(request.body)['transactions'];
       for (var txIndex = 0; txIndex < _txList.length; txIndex++) {
@@ -105,9 +104,7 @@ class GetTransactions {
             }
           }
         }
-
-        if (tx.txType == TxType.generate) {
-          tx.confirmed = _txList[txIndex]['confirmations'] > 100;
+        if (tx.txType == TxType.generate || tx.txType == TxType.receive) {
           final List _voutAddrsList = _txList[txIndex]['vout'];
           for (var i = 0; i < _voutAddrsList.length; i++) {
             if (_voutAddrsList[i]['addresses'][0] == address) {
@@ -115,7 +112,82 @@ class GetTransactions {
             }
           }
         }
+        if (tx.txType == TxType.generate) {
+          tx.confirmed = _txList[txIndex]['confirmations'] > 100;
+        }
+        txList.add(tx);
+      }
+    }
 
+    return txList;
+  }
+
+  /// Get FLUX balance from mainnet.
+  ///
+  /// Works with Insight:
+  /// * https://explorer.runonflux.io/
+  static Future<List<_Tx>> utxoCoinInsight({
+    required String apiEndpoint,
+    required String address,
+    String fromTx = '0',
+    String toTx = '10',
+  }) async {
+    List<_Tx> txList = [];
+    const satoshis = 100000000;
+    final request = await getRequest(apiEndpoint +
+        'api/addrs/' +
+        address +
+        '/txs/?from=' +
+        fromTx +
+        '&to=' +
+        toTx);
+    if (jsonDecode(request.body)['totalItems'] == null) {
+      throw Exception(jsonDecode(request.body));
+    }
+    if (jsonDecode(request.body)['totalItems'] == 0) {
+      return [];
+    }
+    if (jsonDecode(request.body)['items'] is List) {
+      final List _txList = jsonDecode(request.body)['items'];
+      for (var txIndex = 0; txIndex < _txList.length; txIndex++) {
+        var tx = _Tx(
+          txid: _txList[txIndex]['txid'],
+          networkFee: _txList[txIndex]['fees'] != null
+              ? (_txList[txIndex]['fees'] * satoshis).round().toString()
+              : '0',
+          unixTime: _txList[txIndex]['time'],
+          confirmed: _txList[txIndex]['confirmations'] > 0,
+        );
+        if (_txList[txIndex]['isCoinBase'] == true) {
+          tx.txType = TxType.generate;
+        } else {
+          final List _vinAddrsList = _txList[txIndex]['vin'];
+          final List _voutAddrsList = _txList[txIndex]['vout'];
+          for (var i = 0; i < _vinAddrsList.length; i++) {
+            if (_vinAddrsList[i]['addr'] == address) {
+              tx.txType = TxType.send;
+            }
+          }
+          for (var i = 0; i < _voutAddrsList.length; i++) {
+            if (_voutAddrsList[i]['scriptPubKey']['addresses'][0] == address &&
+                tx.txType == null) {
+              tx.txType = TxType.receive;
+            }
+          }
+        }
+        if (tx.txType == TxType.generate || tx.txType == TxType.receive) {
+          final List _voutAddrsList = _txList[txIndex]['vout'];
+          for (var i = 0; i < _voutAddrsList.length; i++) {
+            if (_voutAddrsList[i]['scriptPubKey']['addresses'][0] == address) {
+              tx.amount = (double.parse(_voutAddrsList[i]['value']) * satoshis)
+                  .round()
+                  .toString();
+            }
+          }
+        }
+        if (tx.txType == TxType.generate) {
+          tx.confirmed = _txList[txIndex]['confirmations'] > 100;
+        }
         txList.add(tx);
       }
     }
