@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:http/http.dart';
 import 'package:sio_core/src/utils_internal.dart';
 
 enum TxType {
@@ -167,16 +168,22 @@ class GetTransactions {
     required String address,
     String fromTx = '0',
     String toTx = '10',
+    String? customEndpoint,
   }) async {
     List<_Tx> txList = [];
     const satoshis = 100000000;
-    final request = await getRequest(apiEndpoint +
-        'api/addrs/' +
-        address +
-        '/txs/?from=' +
-        fromTx +
-        '&to=' +
-        toTx);
+    late Response request;
+    if (customEndpoint == null) {
+      request = await getRequest(apiEndpoint +
+          'api/addrs/' +
+          address +
+          '/txs/?from=' +
+          fromTx +
+          '&to=' +
+          toTx);
+    } else {
+      request = await getRequest(customEndpoint);
+    }
     if (jsonDecode(request.body)['totalItems'] == null) {
       throw Exception(jsonDecode(request.body));
     }
@@ -205,9 +212,12 @@ class GetTransactions {
             }
           }
           for (var i = 0; i < _voutAddrsList.length; i++) {
-            if (_voutAddrsList[i]['scriptPubKey']['addresses'][0] == address &&
-                tx.txType == null) {
-              tx.txType = TxType.receive;
+            if (_voutAddrsList[i]['scriptPubKey']['addresses'] != null) {
+              if (_voutAddrsList[i]['scriptPubKey']['addresses'][0] ==
+                      address &&
+                  tx.txType == null) {
+                tx.txType = TxType.receive;
+              }
             }
           }
         }
@@ -215,9 +225,13 @@ class GetTransactions {
           final List _voutAddrsList = _txList[txIndex]['vout'];
           var amount = 0;
           for (var i = 0; i < _voutAddrsList.length; i++) {
-            if (_voutAddrsList[i]['scriptPubKey']['addresses'][0] == address) {
-              amount = amount +
-                  (double.parse(_voutAddrsList[i]['value']) * satoshis).round();
+            if (_voutAddrsList[i]['scriptPubKey']['addresses'] != null) {
+              if (_voutAddrsList[i]['scriptPubKey']['addresses'][0] ==
+                  address) {
+                amount = amount +
+                    (double.parse(_voutAddrsList[i]['value']) * satoshis)
+                        .round();
+              }
             }
           }
           tx.amount = amount.toString();
@@ -232,20 +246,30 @@ class GetTransactions {
             }
           }
           for (var i = 0; i < _voutAddrsList.length; i++) {
-            if (_voutAddrsList[i]['scriptPubKey']['addresses'][0] == address) {
-              amount = amount -
-                  (double.parse(_voutAddrsList[i]['value']) * satoshis).round();
+            if (_voutAddrsList[i]['scriptPubKey']['addresses'] != null) {
+              if (_voutAddrsList[i]['scriptPubKey']['addresses'][0] ==
+                  address) {
+                amount = amount -
+                    (double.parse(_voutAddrsList[i]['value']) * satoshis)
+                        .round();
+              }
             }
           }
           amount = amount - int.parse(tx.networkFee ?? '0');
           tx.amount = amount.toString();
           for (var i = 0; i < _voutAddrsList.length; i++) {
-            if (_voutAddrsList[i]['scriptPubKey']['addresses'][0] != address) {
-              tx.address = _voutAddrsList[i]['scriptPubKey']['addresses'][0];
-              break;
-            } else {
-              tx.address = address;
-              tx.amount = _voutAddrsList[0]['value'];
+            if (_voutAddrsList[i]['scriptPubKey']['addresses'] != null) {
+              if (_voutAddrsList[i]['scriptPubKey']['addresses'][0] !=
+                  address) {
+                tx.address = _voutAddrsList[i]['scriptPubKey']['addresses'][0];
+                break;
+              } else {
+                tx.address = address;
+                tx.amount =
+                    (double.parse(_voutAddrsList[0]['value']) * satoshis)
+                        .round()
+                        .toString();
+              }
             }
           }
         }
