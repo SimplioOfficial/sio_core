@@ -10,7 +10,7 @@ enum TxType {
 
 class _Tx {
   TxType? txType;
-  final String? address;
+  String? address;
   String? amount;
   final String? txid;
   final String? networkFee;
@@ -76,15 +76,9 @@ class GetTransactions {
       final List _txList = jsonDecode(request.body)['transactions'];
       for (var txIndex = 0; txIndex < _txList.length; txIndex++) {
         var tx = _Tx(
-          address: _txList[txIndex]['vin'][0]['isAddress'] == false
-              ? _txList[txIndex]['vout'][0]['addresses'][0]
-              : (_txList[txIndex]['vin'][0]['addresses'][0] == address
-                  ? _txList[txIndex]['vout'][0]['addresses'][0]
-                  : _txList[txIndex]['vin'][0]['addresses'][0]),
-          amount: _txList[txIndex]['vout'][0]['value'],
           txid: _txList[txIndex]['txid'],
-          unixTime: _txList[txIndex]['blockTime'],
           networkFee: _txList[txIndex]['fees'],
+          unixTime: _txList[txIndex]['blockTime'],
           confirmed: _txList[txIndex]['confirmations'] > 0,
         );
         if (_txList[txIndex]['vin'][0]['isAddress'] == false) {
@@ -106,14 +100,56 @@ class GetTransactions {
         }
         if (tx.txType == TxType.generate || tx.txType == TxType.receive) {
           final List _voutAddrsList = _txList[txIndex]['vout'];
+          var amount = 0;
           for (var i = 0; i < _voutAddrsList.length; i++) {
             if (_voutAddrsList[i]['addresses'][0] == address) {
-              tx.amount = _voutAddrsList[i]['value'];
+              amount = amount + int.parse(_voutAddrsList[i]['value']);
+            }
+          }
+          tx.amount = amount.toString();
+        }
+
+        if (tx.txType == TxType.send) {
+          final List _voutAddrsList = _txList[txIndex]['vout'];
+          final List _vinAddrsList = _txList[txIndex]['vin'];
+
+          var amount = 0;
+          for (var i = 0; i < _vinAddrsList.length; i++) {
+            if (_vinAddrsList[i]['addresses'][0] == address) {
+              amount = amount + int.parse(_vinAddrsList[i]['value']);
+            }
+          }
+          for (var i = 0; i < _voutAddrsList.length; i++) {
+            if (_voutAddrsList[i]['addresses'][0] == address) {
+              amount = amount - int.parse(_voutAddrsList[i]['value']);
+            }
+          }
+          amount = amount - int.parse(tx.networkFee ?? '0');
+          tx.amount = amount.toString();
+          for (var i = 0; i < _voutAddrsList.length; i++) {
+            if (_voutAddrsList[i]['addresses'][0] != address) {
+              tx.address = _voutAddrsList[i]['addresses'][0];
+              break;
+            } else {
+              tx.address = address;
+              tx.amount = _voutAddrsList[0]['value'];
             }
           }
         }
+
+        if (tx.txType == TxType.receive) {
+          final List _vinAddrsList = _txList[txIndex]['vin'];
+          for (var i = 0; i < _vinAddrsList.length; i++) {
+            if (_vinAddrsList[i]['addresses'][0] != address) {
+              tx.address = _vinAddrsList[i]['addresses'][0];
+              break;
+            }
+          }
+        }
+
         if (tx.txType == TxType.generate) {
           tx.confirmed = _txList[txIndex]['confirmations'] > 100;
+          tx.address = 'No Inputs (Newly Generated Coins)';
         }
         txList.add(tx);
       }
@@ -177,16 +213,54 @@ class GetTransactions {
         }
         if (tx.txType == TxType.generate || tx.txType == TxType.receive) {
           final List _voutAddrsList = _txList[txIndex]['vout'];
+          var amount = 0;
           for (var i = 0; i < _voutAddrsList.length; i++) {
             if (_voutAddrsList[i]['scriptPubKey']['addresses'][0] == address) {
-              tx.amount = (double.parse(_voutAddrsList[i]['value']) * satoshis)
-                  .round()
-                  .toString();
+              amount = amount +
+                  (double.parse(_voutAddrsList[i]['value']) * satoshis).round();
+            }
+          }
+          tx.amount = amount.toString();
+        }
+        if (tx.txType == TxType.send) {
+          final List _voutAddrsList = _txList[txIndex]['vout'];
+          final List _vinAddrsList = _txList[txIndex]['vin'];
+          var amount = 0;
+          for (var i = 0; i < _vinAddrsList.length; i++) {
+            if (_vinAddrsList[i]['addr'] == address) {
+              amount = amount + (_vinAddrsList[i]['valueSat'] as int);
+            }
+          }
+          for (var i = 0; i < _voutAddrsList.length; i++) {
+            if (_voutAddrsList[i]['scriptPubKey']['addresses'][0] == address) {
+              amount = amount -
+                  (double.parse(_voutAddrsList[i]['value']) * satoshis).round();
+            }
+          }
+          amount = amount - int.parse(tx.networkFee ?? '0');
+          tx.amount = amount.toString();
+          for (var i = 0; i < _voutAddrsList.length; i++) {
+            if (_voutAddrsList[i]['scriptPubKey']['addresses'][0] != address) {
+              tx.address = _voutAddrsList[i]['scriptPubKey']['addresses'][0];
+              break;
+            } else {
+              tx.address = address;
+              tx.amount = _voutAddrsList[0]['value'];
+            }
+          }
+        }
+        if (tx.txType == TxType.receive) {
+          final List _vinAddrsList = _txList[txIndex]['vin'];
+          for (var i = 0; i < _vinAddrsList.length; i++) {
+            if (_vinAddrsList[i]['addr'] != address) {
+              tx.address = _vinAddrsList[i]['addr'];
+              break;
             }
           }
         }
         if (tx.txType == TxType.generate) {
           tx.confirmed = _txList[txIndex]['confirmations'] > 100;
+          tx.address = 'No Inputs (Newly Generated Coins)';
         }
         txList.add(tx);
       }
