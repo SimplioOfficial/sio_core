@@ -184,9 +184,6 @@ class GetTransactions {
     } else {
       request = await getRequest(customEndpoint);
     }
-    if (jsonDecode(request.body)['totalItems'] == null) {
-      throw Exception(jsonDecode(request.body));
-    }
     if (jsonDecode(request.body)['totalItems'] == 0) {
       return [];
     }
