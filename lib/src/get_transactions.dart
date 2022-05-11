@@ -43,6 +43,45 @@ class _Tx {
 
 /// Class that returns transaction object for different coins and tokens.
 class GetTransactions {
+  /// Get Solana transactions from mainnet, testnet, devnet
+  /// depending on whatever apiEndpoint is used:
+  /// * https://api.mainnet-beta.solana.com/
+  /// * https://api.devnet.solana.com/
+  static Future<List<_Tx>> solana({
+    required String address,
+    required String apiEndpoint,
+    int txLimit = 1000,
+  }) async {
+    List<_Tx> txList = [];
+    final request = await postEncodedRequest(apiEndpoint, {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "getSignaturesForAddress",
+      "params": [
+        address,
+        {"limit": txLimit}
+      ]
+    });
+    if (jsonDecode(request.body)['error'] != null) {
+      throw Exception(jsonDecode(request.body)['error']);
+    }
+    final _txList = jsonDecode(request.body)['result'];
+    if (_txList.isEmpty) {
+      return [];
+    }
+    for (var txIndex = 0; txIndex < _txList.length; txIndex++) {
+      var tx = _Tx(
+        txid: _txList[txIndex]['signature'],
+        unixTime: _txList[txIndex]['blockTime'],
+        confirmed: _txList[txIndex]['confirmationStatus'] == 'finalized' ||
+            _txList[txIndex]['confirmationStatus'] == 'confirmed',
+      );
+      txList.add(tx);
+    }
+
+    return txList;
+  }
+
   /// Get BTC, BCH, DASH, DGB, DOGE, LTC, ZEC transactions from mainnet.
   ///
   /// Works with Blockbook:
@@ -54,8 +93,8 @@ class GetTransactions {
   /// * https://ltc1.simplio.io/
   /// * https://zec1.simplio.io/
   static Future<List<_Tx>> utxoCoinBlockbook({
-    required String apiEndpoint,
     required String address,
+    required String apiEndpoint,
     String page = '1',
     String transactions = '1000',
   }) async {
@@ -164,8 +203,8 @@ class GetTransactions {
   /// Works with Insight:
   /// * https://explorer.runonflux.io/
   static Future<List<_Tx>> utxoCoinInsight({
-    required String apiEndpoint,
     required String address,
+    required String apiEndpoint,
     String fromTx = '0',
     String toTx = '10',
     String? customEndpoint,

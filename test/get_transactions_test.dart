@@ -5,6 +5,48 @@ import 'package:sio_core/src/utils_internal.dart';
 import 'package:test/test.dart';
 
 void main() {
+  group('Get transactions for Solana - ', () {
+    test('Solana', () async {
+      const address = '3fTR8GGL2mniGyHtd3Qy2KDVhZ9LHbW59rCc7A3RtBWk';
+      final response = await GetTransactions.solana(
+        apiEndpoint: 'https://api.mainnet-beta.solana.com/',
+        address: address,
+        txLimit: 1000,
+      );
+      var responseJson = response[response.length - 1].toJson();
+      expect(responseJson, {
+        "txType": null,
+        "address": null,
+        "amount": null,
+        "txid":
+            "24vwWYjCzUbCwW3LonCMyvtSpshumBoANLyo2GN8wshMWuzkkGxRuEoNHiVKxwAjBWJF7Yz2ceomjtNdwUF5dkjR",
+        "networkFee": null,
+        "unixTime": 1628684172,
+        "confirmed": true
+      });
+    });
+    test('Solana - No transactions', () async {
+      const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJCu4f';
+      final response = await GetTransactions.solana(
+        apiEndpoint: 'https://api.mainnet-beta.solana.com/',
+        address: address,
+        txLimit: 1,
+      );
+      expect(response, []);
+    });
+    test('Solana - Error', () async {
+      const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJ';
+      try {
+        await GetTransactions.solana(
+          apiEndpoint: 'https://api.mainnet-beta.solana.com/',
+          address: address,
+        );
+      } catch (exception) {
+        expect(exception, isA<Exception>());
+      }
+    });
+  });
+
   group('Get transactions for utxoCoin - ', () {
     group('Blockbook - ', () {
       test('Bitcoin - No transactions', () async {
