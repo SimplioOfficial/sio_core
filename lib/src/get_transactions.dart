@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:sio_core/src/utils_internal.dart';
+import 'package:trust_wallet_core_lib/trust_wallet_core_lib.dart';
 
 enum TxType {
   generate,
@@ -79,6 +80,47 @@ class GetTransactions {
       txList.add(tx);
     }
 
+    return txList;
+  }
+
+  /// Get Solana token transactions from mainnet, testnet, devnet
+  /// depending on whatever apiEndpoint is used:
+  /// * https://api.mainnet-beta.solana.com/
+  /// * https://api.devnet.solana.com/
+  static Future<List<_Tx>> solanaToken({
+    required String address,
+    required String tokenMintAddress,
+    required String apiEndpoint,
+    int txLimit = 1000,
+  }) async {
+    List<_Tx> txList = [];
+    final solanaAddress = SolanaAddress.createWithString(address);
+    final tokenAddress = solanaAddress.defaultTokenAddress(tokenMintAddress);
+    final request = await postEncodedRequest(apiEndpoint, {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "getSignaturesForAddress",
+      "params": [
+        tokenAddress,
+        {"limit": txLimit}
+      ]
+    });
+    if (jsonDecode(request.body)['error'] != null) {
+      throw Exception(jsonDecode(request.body)['error']);
+    }
+    final _txList = jsonDecode(request.body)['result'];
+    if (_txList.isEmpty) {
+      return [];
+    }
+    for (var txIndex = 0; txIndex < _txList.length; txIndex++) {
+      var tx = _Tx(
+        txid: _txList[txIndex]['signature'],
+        unixTime: _txList[txIndex]['blockTime'],
+        confirmed: _txList[txIndex]['confirmationStatus'] == 'finalized' ||
+            _txList[txIndex]['confirmationStatus'] == 'confirmed',
+      );
+      txList.add(tx);
+    }
     return txList;
   }
 

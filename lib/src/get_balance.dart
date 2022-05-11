@@ -200,11 +200,11 @@ class GetBalance {
     if (jsonDecode(request.body)['error'] != null) {
       throw Exception(jsonDecode(request.body)['error']);
     }
-    final List accounts = jsonDecode(request.body)['result']['value'];
-    if (accounts.isEmpty) {
+    final List account = jsonDecode(request.body)['result']['value'];
+    if (account.isEmpty) {
       return BigInt.zero;
     } else {
-      return BigInt.parse(accounts[0]['account']['data']['parsed']['info']
+      return BigInt.parse(account[0]['account']['data']['parsed']['info']
           ['tokenAmount']['amount']);
     }
   }
