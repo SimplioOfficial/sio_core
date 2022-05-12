@@ -75,6 +75,7 @@ class GetTransactions {
         txid: _txList[txIndex]['signature'],
         unixTime: _txList[txIndex]['blockTime'],
         confirmed: _txList[txIndex]['confirmationStatus'] == 'finalized' ||
+            // coverage:ignore-line
             _txList[txIndex]['confirmationStatus'] == 'confirmed',
       );
       txList.add(tx);
@@ -117,6 +118,7 @@ class GetTransactions {
         txid: _txList[txIndex]['signature'],
         unixTime: _txList[txIndex]['blockTime'],
         confirmed: _txList[txIndex]['confirmationStatus'] == 'finalized' ||
+            // coverage:ignore-line
             _txList[txIndex]['confirmationStatus'] == 'confirmed',
       );
       txList.add(tx);
