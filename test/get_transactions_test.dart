@@ -38,7 +38,7 @@ void main() {
         const address = '0x6A86087Ee103DCC2494cA2804e4934b913df';
         try {
           await GetTransactions.ethereumBlockbook(
-            apiEndpoint: 'https://eth3.trezor.io/',
+            apiEndpoint: 'https://eth1.trezor.io/',
             address: address,
           );
         } catch (exception) {
