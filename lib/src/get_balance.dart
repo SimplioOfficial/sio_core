@@ -43,8 +43,8 @@ class GetBalance {
   /// * https://etcblockexplorer.com/ or https://etc1.trezor.io/
   /// * https://ethblockexplorer.org/ or https://eth1.trezor.io/
   static Future<BigInt> ethereumBlockbook({
-    required String apiEndpoint,
     required String address,
+    required String apiEndpoint,
   }) async {
     final request = await getRequest(
         apiEndpoint + 'api/v2/address/' + address + '?details=basic');

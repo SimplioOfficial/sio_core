@@ -20,8 +20,6 @@ class _Tx {
   bool? confirmed;
 
   _Tx({
-    this.txType,
-    this.address,
     this.amount,
     this.txid,
     this.networkFee,
@@ -44,6 +42,73 @@ class _Tx {
 
 /// Class that returns transaction object for different coins and tokens.
 class GetTransactions {
+  /// Get BNB (Smart Chain), ETC or ETH transactions from mainnet.
+  ///
+  /// Works with Blockbook:
+  /// * https://bscxplorer.com/
+  /// * https://etcblockexplorer.com/ or https://etc1.trezor.io/
+  /// * https://ethblockexplorer.org/ or https://eth1.trezor.io/
+  static Future<List<_Tx>> ethereumBlockbook({
+    required String address,
+    required String apiEndpoint,
+    String page = '1',
+    String transactions = '1000',
+  }) async {
+    List<_Tx> txList = [];
+    final request = await getRequest(apiEndpoint +
+        'api/v2/address/' +
+        address +
+        '?details=txs&page=' +
+        page +
+        '&pageSize=' +
+        transactions);
+    if (jsonDecode(request.body)['error'] != null) {
+      throw Exception(jsonDecode(request.body)['error']);
+    }
+    if (jsonDecode(request.body)['txs'] == 0) {
+      return [];
+    }
+    if (jsonDecode(request.body)['transactions'] is List) {
+      final List _txList = jsonDecode(request.body)['transactions'];
+      for (var txIndex = 0; txIndex < _txList.length; txIndex++) {
+        var tx = _Tx(
+          amount: _txList[txIndex]['vout'][0]['value'],
+          txid: _txList[txIndex]['txid'],
+          networkFee: _txList[txIndex]['fees'],
+          unixTime: _txList[txIndex]['blockTime'],
+          confirmed: _txList[txIndex]['confirmations'] > 0,
+        );
+
+        final List _vinAddrsList = _txList[txIndex]['vin'];
+        final List _voutAddrsList = _txList[txIndex]['vout'];
+        if (_vinAddrsList[0]['addresses'][0] == address) {
+          tx.txType = TxType.send;
+        }
+        if (_voutAddrsList[0]['addresses'][0] == address && tx.txType == null) {
+          tx.txType = TxType.receive;
+        }
+
+        if (tx.txType == TxType.send) {
+          if (_voutAddrsList[0]['addresses'][0] != address) {
+            tx.address = _voutAddrsList[0]['addresses'][0];
+          } else {
+            tx.address = address;
+          }
+        }
+        if (tx.txType == TxType.receive) {
+          if (_vinAddrsList[0]['addresses'][0] != address) {
+            tx.address = _vinAddrsList[0]['addresses'][0];
+          }
+        }
+        if (tx.txType != null) {
+          txList.add(tx);
+        }
+      }
+    }
+
+    return txList;
+  }
+
   /// Get Solana transactions from mainnet, testnet, devnet
   /// depending on whatever apiEndpoint is used:
   /// * https://api.mainnet-beta.solana.com/

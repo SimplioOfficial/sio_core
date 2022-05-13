@@ -5,6 +5,48 @@ import 'package:sio_core/src/utils_internal.dart';
 import 'package:test/test.dart';
 
 void main() {
+  group('Get transactions for Ethereum - ', () {
+    group('', () {
+      test('Normal transactions', () async {
+        const address = '0x7611615553cD85be3A3c86a1508b8437eFcD7193';
+        final response = await GetTransactions.ethereumBlockbook(
+          apiEndpoint: 'https://ethblockexplorer.org/',
+          address: address,
+        );
+        var responseJson = response[response.length - 1].toJson();
+        expect(responseJson, {
+          'txType': 'receive',
+          'address': '0x00192Fb10dF37c9FB26829eb2CC623cd1BF599E8',
+          'amount': '50789876000000000',
+          'txid':
+              '0x0898bc3a1fffa2ef31eca1d82ddb4dbef9f1c3f9d0b84be7bc68c5111a107737',
+          'networkFee': '809184238695000',
+          'unixTime': 1647196886,
+          'confirmed': true
+        });
+      });
+      test('No transactions', () async {
+        const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
+        final response = await GetTransactions.ethereumBlockbook(
+          apiEndpoint: 'https://eth2.trezor.io/',
+          address: address,
+          transactions: '1',
+        );
+        expect(response, []);
+      });
+      test('Error', () async {
+        const address = '0x6A86087Ee103DCC2494cA2804e4934b913df';
+        try {
+          await GetTransactions.ethereumBlockbook(
+            apiEndpoint: 'https://eth3.trezor.io/',
+            address: address,
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
+    });
+  });
   group('Get transactions for Solana - ', () {
     group('', () {
       test('Normal transactions', () async {
