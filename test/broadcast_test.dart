@@ -103,7 +103,7 @@ void main() {
           '0100000000010345e866343b494d89af0b75d15b56959e35280be401ee735920bba6a0c131436e';
       final response = await Broadcast.utxoCoinBlockbook(
           signedTxEncoded: signedTxEncoded,
-          apiEndpoint: 'https://bch1.simplio.io/');
+          apiEndpoint: 'https://bch1.trezor.io/');
       expect(jsonDecode(response), isMap);
       expect(jsonDecode(response)['error'], contains('-22'));
     });
