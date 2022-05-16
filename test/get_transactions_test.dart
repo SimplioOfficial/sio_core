@@ -46,7 +46,7 @@ void main() {
         }
       });
       group('ERC20 Tokens - ', () {
-        test('Normal transactions', () async {
+        test('Normal transactions - receive', () async {
           const address = '0x734Ac651Dd95a339c633cdEd410228515F97fAfF';
           const contractAddress = '0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39';
           final response = await GetTransactions.ethereumERC20Blockbook(
@@ -63,6 +63,26 @@ void main() {
                 '0x8f09f5b0ae75e4b15fc36af09a1641733991d9054e1217db9a37d535056d34b3',
             'networkFee': '7014891000000000',
             'unixTime': 1585781289,
+            'confirmed': true
+          });
+        });
+        test('Normal transactions - receive', () async {
+          const address = '0x8022C6E37Dc45F3AB24c962F2D4E9B6F0d89e670';
+          const contractAddress = '0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39';
+          final response = await GetTransactions.ethereumERC20Blockbook(
+            address: address,
+            contractAddress: contractAddress,
+            apiEndpoint: 'https://ethblockexplorer.org/',
+          );
+          var responseJson = response[response.length - 6].toJson();
+          expect(responseJson, {
+            'txType': 'send',
+            'address': '0xA64916f1235455fB8b9b97a5a2CD9b3B48879629',
+            'amount': '25000000000000',
+            'txid':
+                '0xccd0d6b2bc9022647ea31064469aa578d9abe7386f4be9057a6952e0e8ce6af8',
+            'networkFee': '2715054200000000',
+            'unixTime': 1651409940,
             'confirmed': true
           });
         });
