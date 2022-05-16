@@ -45,6 +45,52 @@ void main() {
           expect(exception, isA<Exception>());
         }
       });
+      group('ERC20 Tokens - ', () {
+        test('Normal transactions', () async {
+          const address = '0x734Ac651Dd95a339c633cdEd410228515F97fAfF';
+          const contractAddress = '0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39';
+          final response = await GetTransactions.ethereumERC20Blockbook(
+            address: address,
+            contractAddress: contractAddress,
+            apiEndpoint: 'https://ethblockexplorer.org/',
+          );
+          var responseJson = response[response.length - 1].toJson();
+          expect(responseJson, {
+            'txType': 'receive',
+            'address': '0x0b795E585Ec0436E4572Cc9B24FC5DA1faf9cFC6',
+            'amount': '10000000000',
+            'txid':
+                '0x8f09f5b0ae75e4b15fc36af09a1641733991d9054e1217db9a37d535056d34b3',
+            'networkFee': '7014891000000000',
+            'unixTime': 1585781289,
+            'confirmed': true
+          });
+        });
+        test('No transactions', () async {
+          const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
+          const contractAddress = '0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39';
+          final response = await GetTransactions.ethereumERC20Blockbook(
+            address: address,
+            contractAddress: contractAddress,
+            apiEndpoint: 'https://eth2.trezor.io/',
+            transactions: '1',
+          );
+          expect(response, []);
+        });
+        test('Error', () async {
+          const address = '0x6A86087Ee103DCC2494cA2804e4934b913df';
+          const contractAddress = '0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39';
+          try {
+            await GetTransactions.ethereumERC20Blockbook(
+              address: address,
+              contractAddress: contractAddress,
+              apiEndpoint: 'https://eth1.trezor.io/',
+            );
+          } catch (exception) {
+            expect(exception, isA<Exception>());
+          }
+        });
+      });
     });
   });
   group('Get transactions for Solana - ', () {

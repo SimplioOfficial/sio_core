@@ -109,6 +109,75 @@ class GetTransactions {
     return txList;
   }
 
+  /// Get BEP-20, ETC-20 or ERC-20 Token transactions from mainnet.
+  ///
+  /// Works with Blockbook:
+  /// * https://bscxplorer.com/
+  /// * https://etcblockexplorer.com/ or https://etc1.trezor.io/
+  /// * https://ethblockexplorer.org/ or https://eth1.trezor.io/
+  static Future<List<_Tx>> ethereumERC20Blockbook({
+    required String address,
+    required String contractAddress,
+    required String apiEndpoint,
+    String page = '1',
+    String transactions = '1000',
+  }) async {
+    List<_Tx> txList = [];
+    final request = await getRequest(apiEndpoint +
+        'api/v2/address/' +
+        address +
+        '?details=txs&page=' +
+        page +
+        '&pageSize=' +
+        transactions +
+        '&contract=' +
+        contractAddress);
+    if (jsonDecode(request.body)['error'] != null) {
+      throw Exception(jsonDecode(request.body)['error']);
+    }
+    if (jsonDecode(request.body)['txs'] == 0) {
+      return [];
+    }
+    if (jsonDecode(request.body)['transactions'] is List) {
+      final List _txList = jsonDecode(request.body)['transactions'];
+      for (var txIndex = 0; txIndex < _txList.length; txIndex++) {
+        var tx = _Tx(
+          txid: _txList[txIndex]['txid'],
+          networkFee: _txList[txIndex]['fees'],
+          unixTime: _txList[txIndex]['blockTime'],
+          confirmed: _txList[txIndex]['confirmations'] > 0,
+        );
+
+        final List _tokenTransfers = _txList[txIndex]['tokenTransfers'];
+        for (var tokenTxIndex = 0;
+            tokenTxIndex < _tokenTransfers.length;
+            tokenTxIndex++) {
+          if (_tokenTransfers[tokenTxIndex]['token'] == contractAddress) {
+            if (_tokenTransfers[tokenTxIndex]['from'] == address) {
+              tx.txType = TxType.send;
+              tx.amount = _tokenTransfers[tokenTxIndex]['value'];
+              tx.address = _tokenTransfers[tokenTxIndex]['to'];
+              break;
+            }
+            if (_tokenTransfers[tokenTxIndex]['to'] == address &&
+                tx.txType == null) {
+              tx.txType = TxType.receive;
+              tx.amount = _tokenTransfers[tokenTxIndex]['value'];
+              tx.address = _tokenTransfers[tokenTxIndex]['from'];
+              break;
+            }
+          }
+        }
+
+        if (tx.txType != null) {
+          txList.add(tx);
+        }
+      }
+    }
+
+    return txList;
+  }
+
   /// Get Solana transactions from mainnet, testnet, devnet
   /// depending on whatever apiEndpoint is used:
   /// * https://api.mainnet-beta.solana.com/
