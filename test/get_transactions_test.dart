@@ -5,6 +5,51 @@ import 'package:sio_core/src/utils_internal.dart';
 import 'package:test/test.dart';
 
 void main() {
+  group('Get transactions for Cosmos - ', () {
+    group('Osmosis - ', () {
+      test('Normal transactions', () async {
+        const address = 'osmo1ryfjy25gmqxkggyxjrz93lrv5tc9q3rz2dyua3';
+        final response = await GetTransactions.cosmos(
+          address: address,
+          apiEndpoint: 'https://api-osmosis-chain.imperator.co/',
+          denomination: 'uosmo',
+        );
+        var responseJson = response[response.length - 1].toJson();
+        expect(responseJson, {
+          'txType': 'send',
+          'address': 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn',
+          'amount': '10000',
+          'txid':
+              'CC98A4B664215BEA994C6677DC23A9F44CB21F97276E4E3E36367DCDC0C02E33',
+          'networkFee': '0',
+          'unixTime': 1649840292,
+          'confirmed': true
+        });
+      });
+      test('No transactions', () async {
+        const address = 'osmo13tw489fdjvp4w0k5r6glq9uwqctfvgap6vhcs9';
+        final response = await GetTransactions.cosmos(
+          address: address,
+          apiEndpoint: 'https://api-osmosis-chain.imperator.co/',
+          denomination: 'uosmo',
+        );
+        expect(response, []);
+      });
+      test('Error', () async {
+        const address = 'omo13tw489fdjvp4w0k5r6glq9uwqctfvgap6vhcs9';
+        try {
+          await GetTransactions.cosmos(
+            address: address,
+            apiEndpoint: 'https://api-osmosis-chain.imperator.co/',
+            denomination: 'uosmo',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
+    });
+  });
+
   group('Get transactions for Ethereum - ', () {
     group('', () {
       test('Normal transactions', () async {

@@ -42,6 +42,67 @@ class _Tx {
 
 /// Class that returns transaction object for different coins and tokens.
 class GetTransactions {
+  /// Get ATOM, LUNA, OSMO balance from mainnet.
+  ///
+  /// Works with LCD api providers:
+  /// * https://api.cosmos.network/
+  /// * https://lcd.terra.dev/
+  /// * https://lcd-osmosis.keplr.app/
+  static Future<List<_Tx>> cosmos({
+    required String address,
+    required String apiEndpoint,
+    required String denomination,
+    String limit = '100',
+    String offset = '0',
+  }) async {
+    const milliseconds = 1000;
+    List<_Tx> txList = [];
+    final request = await getRequest(apiEndpoint +
+        'txs/v1/tx/address/' +
+        address +
+        '?type=cosmos.bank.v1beta1.MsgSend&limit=' +
+        limit +
+        '&offset=' +
+        offset +
+        '&decode=false');
+    if (jsonDecode(request.body).runtimeType != List) {
+      throw Exception(request.body);
+    }
+    final List _txList = jsonDecode(request.body);
+    if (_txList.isEmpty) {
+      return [];
+    }
+    for (var txIndex = 0; txIndex < _txList.length; txIndex++) {
+      final Map<String, dynamic> _tx = _txList[txIndex]['tx_response'];
+      var tx = _Tx(
+        amount: _tx['tx']['body']['messages'][0]['amount'][0]['denom'] ==
+                denomination
+            ? _tx['tx']['body']['messages'][0]['amount'][0]['amount']
+            : '0',
+        txid: _tx['txhash'],
+        networkFee:
+            _tx['tx']['auth_info']['fee']['amount'][0]['denom'] == denomination
+                ? _tx['tx']['auth_info']['fee']['amount'][0]['amount']
+                : null,
+        unixTime: (DateTime.parse(_tx['timestamp']).millisecondsSinceEpoch /
+                milliseconds)
+            .round(),
+        confirmed: _tx['code'] == 0 ? true : false,
+      );
+      if (_tx['tx']['body']['messages'][0]['from_address'] == address) {
+        tx.txType = TxType.send;
+        tx.address = _tx['tx']['body']['messages'][0]['to_address'];
+      }
+      if (_tx['tx']['body']['messages'][0]['to_address'] == address &&
+          tx.txType == null) {
+        tx.txType = TxType.receive;
+        tx.address = _tx['tx']['body']['messages'][0]['from_address'];
+      }
+      txList.add(tx);
+    }
+    return txList;
+  }
+
   /// Get BNB (Smart Chain), ETC or ETH transactions from mainnet.
   ///
   /// Works with Blockbook:
