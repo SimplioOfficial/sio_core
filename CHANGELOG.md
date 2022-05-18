@@ -1,3 +1,6 @@
+## 0.0.9
+* Implement transactions history for all supported coin and tokens.
+
 ## 0.0.8
 * Refactor get balance and broadcast to chain types.
 * Refactor get balance for all supported coins and tokens to return value in
