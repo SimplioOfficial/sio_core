@@ -7,7 +7,26 @@ import 'package:test/test.dart';
 void main() {
   group('Get transactions for Cosmos - ', () {
     group('Osmosis - ', () {
-      test('Normal transactions', () async {
+      test('Normal transactions - receive', () async {
+        const address = 'osmo107tgltdk7gen60agckp7d44jvja84uxscppy4z';
+        final response = await GetTransactions.cosmos(
+          address: address,
+          apiEndpoint: 'https://api-osmosis-chain.imperator.co/',
+          denomination: 'uosmo',
+        );
+        var responseJson = response[response.length - 1].toJson();
+        expect(responseJson, {
+          'txType': 'receive',
+          'address': 'osmo1ryfjy25gmqxkggyxjrz93lrv5tc9q3rz2dyua3',
+          'amount': '94000000',
+          'txid':
+              '490D484B0F6C41BD6D4204AD729AAAD85AB189D87936F48A09BB0E46D29BAB01',
+          'networkFee': '0',
+          'unixTime': 1652075783,
+          'confirmed': true
+        });
+      });
+      test('Normal transactions - send', () async {
         const address = 'osmo1ryfjy25gmqxkggyxjrz93lrv5tc9q3rz2dyua3';
         final response = await GetTransactions.cosmos(
           address: address,
@@ -111,7 +130,7 @@ void main() {
             'confirmed': true
           });
         });
-        test('Normal transactions - receive', () async {
+        test('Normal transactions - send', () async {
           const address = '0x8022C6E37Dc45F3AB24c962F2D4E9B6F0d89e670';
           const contractAddress = '0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39';
           final response = await GetTransactions.ethereumERC20Blockbook(
