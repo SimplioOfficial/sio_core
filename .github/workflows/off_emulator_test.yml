@@ -1,6 +1,6 @@
 name: Run unit tests - off emulator
 env:
-  FLUTTER_VERSION: "2.10.5"
+  FLUTTER_VERSION: "3.0.0"
 
 on: push
 

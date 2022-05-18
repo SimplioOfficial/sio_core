@@ -43,8 +43,8 @@ class GetBalance {
   /// * https://etcblockexplorer.com/ or https://etc1.trezor.io/
   /// * https://ethblockexplorer.org/ or https://eth1.trezor.io/
   static Future<BigInt> ethereumBlockbook({
-    required String apiEndpoint,
     required String address,
+    required String apiEndpoint,
   }) async {
     final request = await getRequest(
         apiEndpoint + 'api/v2/address/' + address + '?details=basic');
@@ -200,11 +200,11 @@ class GetBalance {
     if (jsonDecode(request.body)['error'] != null) {
       throw Exception(jsonDecode(request.body)['error']);
     }
-    final List accounts = jsonDecode(request.body)['result']['value'];
-    if (accounts.isEmpty) {
+    final List account = jsonDecode(request.body)['result']['value'];
+    if (account.isEmpty) {
       return BigInt.zero;
     } else {
-      return BigInt.parse(accounts[0]['account']['data']['parsed']['info']
+      return BigInt.parse(account[0]['account']['data']['parsed']['info']
           ['tokenAmount']['amount']);
     }
   }
@@ -220,8 +220,8 @@ class GetBalance {
   /// * https://ltc1.simplio.io/
   /// * https://zec1.simplio.io/
   static Future<BigInt> utxoCoinBlockbook({
-    required String apiEndpoint,
     required String address,
+    required String apiEndpoint,
   }) async {
     final request = await getRequest(
         apiEndpoint + 'api/v2/address/' + address + '?details=basic');
@@ -237,8 +237,8 @@ class GetBalance {
   /// Works with Insight:
   /// * https://explorer.runonflux.io/
   static Future<BigInt> utxoCoinInsight({
-    required String apiEndpoint,
     required String address,
+    required String apiEndpoint,
   }) async {
     final request =
         await getRequest(apiEndpoint + 'api/addr/' + address + '/balance');

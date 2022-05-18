@@ -69,7 +69,7 @@ void main() {
     const toAddress = '0x3E26e7F73A80444e67b7bE654A38aB85ccb6ea47';
     const amount = '924400';
     const tokenContract = '0x26Fc591feCC4948c4288d95B6AAdAB00eBa4e72A';
-    test('BSC native transaction length', () {
+    test('BSC native transaction', () {
       final signedBscTx = BuildTransaction.bnbSmartChain(
         wallet: wallet,
         amount: amount,
@@ -77,18 +77,10 @@ void main() {
         nonce: '0',
       );
       expect(hex.decode(signedBscTx).length, 110);
-    });
-    test('BSC native transaction hash', () {
-      final signedBscTx = BuildTransaction.bnbSmartChain(
-        wallet: wallet,
-        amount: amount,
-        toAddress: toAddress,
-        nonce: '0',
-      );
       expect(signedBscTx,
           'f86c8085032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a16000808194a0d2c6acce01755661bf4dceee0826d0b7962b018b7a298ec443ad5587e310baefa020a3ffd793ff276af6676bad45887551508c6e98eb07faa9d1bd29a1844f1f8b');
     });
-    test('BSC token transaction length', () {
+    test('BSC token transaction', () {
       final signedBscTx = BuildTransaction.bnbSmartChainBEP20Token(
         wallet: wallet,
         amount: amount,
@@ -97,19 +89,10 @@ void main() {
         nonce: '0',
       );
       expect(hex.decode(signedBscTx).length, 171);
-    });
-    test('BSC token transaction hash', () {
-      final signedBscTx = BuildTransaction.bnbSmartChainBEP20Token(
-        wallet: wallet,
-        amount: amount,
-        tokenContract: tokenContract,
-        toAddress: toAddress,
-        nonce: '0',
-      );
       expect(signedBscTx,
           'f8a98084d693a4008252089426fc591fecc4948c4288d95b6aadab00eba4e72a80b844a9059cbb0000000000000000000000003e26e7f73a80444e67b7be654a38ab85ccb6ea4700000000000000000000000000000000000000000000000000000000000e1af08194a0cad73e551edf5e537ee7bad6cdf3e5454c70566b6ea7471b4df4360c364087afa02cfcc1d078171ebc87fc36b725d50f172d9414e50c15c87f59508101b8ae40ea');
     });
-    test('Ethereum native transaction length', () {
+    test('Ethereum native transaction', () {
       final signedEthTx = BuildTransaction.ethereum(
         wallet: wallet,
         amount: amount,
@@ -117,18 +100,10 @@ void main() {
         nonce: '0',
       );
       expect(hex.decode(signedEthTx).length, 109);
-    });
-    test('Ethereum native transaction hash', () {
-      final signedEthTx = BuildTransaction.ethereum(
-        wallet: wallet,
-        amount: amount,
-        toAddress: toAddress,
-        nonce: '0',
-      );
       expect(signedEthTx,
           'f86b8085032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a160008026a002280d6ed62e1157127ef9a90dfb4b377697d36759e10a3015e33aa7e870ebd5a0483f537fb6c687dc29f60a0b9e861af09ce5d223d339c06c8b7af408277f487f');
     });
-    test('Ethereum ERC20 token transaction length', () {
+    test('Ethereum ERC20 token transaction', () {
       final signedEthTx = BuildTransaction.ethereumERC20Token(
         wallet: wallet,
         amount: amount,
@@ -137,19 +112,10 @@ void main() {
         nonce: '0',
       );
       expect(hex.decode(signedEthTx).length, 170);
-    });
-    test('Ethereum ERC20 token transaction hash', () {
-      final signedEthTx = BuildTransaction.ethereumERC20Token(
-        wallet: wallet,
-        amount: amount,
-        tokenContract: tokenContract,
-        toAddress: toAddress,
-        nonce: '0',
-      );
       expect(signedEthTx,
           'f8a88084d693a4008252089426fc591fecc4948c4288d95b6aadab00eba4e72a80b844a9059cbb0000000000000000000000003e26e7f73a80444e67b7be654a38ab85ccb6ea4700000000000000000000000000000000000000000000000000000000000e1af026a04dd4b00c74f726118d64219380a9bb1331ebeade4293f86cd6ef5fe930130804a05e8bf5a014cbff501f143aaa2d4f71bfe2fb9006f93755015229d881c6c8e940');
     });
-    test('Ethereum Classic native transaction length', () {
+    test('Ethereum Classic native transaction', () {
       final signedEtcTx = BuildTransaction.ethereumClassic(
         wallet: wallet,
         amount: amount,
@@ -157,14 +123,6 @@ void main() {
         nonce: '0',
       );
       expect(hex.decode(signedEtcTx).length, 110);
-    });
-    test('Ethereum Classic native transaction hash', () {
-      final signedEtcTx = BuildTransaction.ethereumClassic(
-        wallet: wallet,
-        amount: amount,
-        toAddress: toAddress,
-        nonce: '0',
-      );
       expect(signedEtcTx,
           'f86c8085032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a1600080819da00a977cf89f7a84522aa0a87f7504bbc3a18d0a87c8a2c030d96e89427846331ba07da98ce74f7a8214864ed0a4e4f018dbfe8c40518658be51fcfb987218b5f67e');
     });
@@ -175,7 +133,7 @@ void main() {
     const tokenMintAddress = 'SioTkQxHyAs98ouRiyi1YDv3gLMSrX3eNBg61GH7NrM';
     const amount = '4000';
     const decimals = 8;
-    test('Solana native transaction length', () async {
+    test('Native transaction', () async {
       final signedSolanaTx = BuildTransaction.solana(
         wallet: wallet,
         recipient: toAddress,
@@ -183,20 +141,12 @@ void main() {
         latestBlockHash: '11111111111111111111111111111111',
       );
       expect(base58.decode(signedSolanaTx).length, 215);
-    });
-    test('Solana native transaction hash', () {
-      final signedSolanaTx = BuildTransaction.solana(
-        wallet: wallet,
-        recipient: toAddress,
-        amount: amount,
-        latestBlockHash: '11111111111111111111111111111111',
-      );
       expect(
           signedSolanaTx,
           equals(
               '3zWUJPKRuoYY39TFcezbAxEgnYQ6vdhxHrKR9AfHBwe1jqVeAEREwoSWC1JyuyayggHvMjBjpBzR4EGyAFeR4cYTDB2ivdKmRM56P2vEgZkmEAt57LTxwtVM1isG88Fo9fqkT14vnrkke1tRbD8ivG6BEwhDvYURy1Z9RyKe3QozAKcP28mUyaCeBdjd4LgvmyDNCvstDmT2DADeD6qYoZZHxVNGxpjnR7rQfuG8UgfNWcixZFJkQB7k5SkDE5GuTxZqnHy4M87QdvCc7qKWrGGnmD9j8sQeycJk7'));
     });
-    test('Solana token transaction length', () async {
+    test('Token transaction', () async {
       final signedSolanaTokenTx = BuildTransaction.solanaToken(
         wallet: wallet,
         recipientSolanaAddress: toAddress,
@@ -206,16 +156,6 @@ void main() {
         latestBlockHash: '11111111111111111111111111111111',
       );
       expect(base58.decode(signedSolanaTokenTx).length, 279);
-    });
-    test('Solana token transaction hash', () {
-      final signedSolanaTokenTx = BuildTransaction.solanaToken(
-        wallet: wallet,
-        recipientSolanaAddress: toAddress,
-        tokenMintAddress: tokenMintAddress,
-        amount: amount,
-        decimals: decimals,
-        latestBlockHash: '11111111111111111111111111111111',
-      );
       expect(
           signedSolanaTokenTx,
           equals(
@@ -283,6 +223,8 @@ void main() {
         utxo: utxo,
       );
       expect(hex.decode(signedUtxoCoinTx).length, 223);
+      expect(signedUtxoCoinTx,
+          '01000000000101f59ead966057be1c871f50f98cf21428c078eff962ae7efcf79ed8de55f473f800000000000000000002a861000000000000160014bb8ef6a40ab316da000090c989372ac48f233fd7c70a000000000000160014ac9a7a96a4e4fd16539f53b1fa062afe0dbd6ba902483045022100ad22e6db78e625ab2f1ee12e73222d1ddcab8cc6f3e4f806217bcf18dd74aca102201f013317e42e5a9c87e9a590045bdd209c60b41b052c08b3ecf3f33515df8244012102a91d09121aff91972942758b4e827f18c27305af2085459555f989fbf105d49600000000');
     });
     test('Valid utxoCoin transaction one additional utxo add', () async {
       const coin = TWCoinType.TWCoinTypeLitecoin;
@@ -302,6 +244,58 @@ void main() {
         utxo: utxo,
       );
       expect(hex.decode(signedUtxoCoinTx).length, 222);
+      expect(signedUtxoCoinTx,
+          '01000000000101f59ead966057be1c871f50f98cf21428c078eff962ae7efcf79ed8de55f473f8000000000000000000020f27000000000000160014bb8ef6a40ab316da000090c989372ac48f233fd76045000000000000160014ac9a7a96a4e4fd16539f53b1fa062afe0dbd6ba9024730440220044a1392212fb469afb6dfa71c9644eeaa8568d73cc50d08318e1994d5b929a402205251975b001f3be28d1186b3307d5d5361c25e4d9e94d50ec3342f5cce9692b4012102a91d09121aff91972942758b4e827f18c27305af2085459555f989fbf105d49600000000');
+    });
+  });
+
+  group('Get transactions for Solana - ', () {
+    group('Token - ', () {
+      test('Normal transactions', () async {
+        const address = '3fTR8GGL2mniGyHtd3Qy2KDVhZ9LHbW59rCc7A3RtBWk';
+        const tokenMintAddress = '7udMmYXh6cuWVY6qQVCd9b429wDVn2J71r5BdxHkQADY';
+        final response = await GetTransactions.solanaToken(
+          apiEndpoint: 'https://api.mainnet-beta.solana.com/',
+          address: address,
+          tokenMintAddress: tokenMintAddress,
+          txLimit: 1000,
+        );
+        var responseJson = response[response.length - 1].toJson();
+        expect(responseJson, {
+          "txType": null,
+          "address": null,
+          "amount": null,
+          "txid":
+              "3Hd7uCYjh9u5Wej4GF5eLQjwnkbeKjXoj9FbEvRK19LZCCDAt35rRaspZb43UEdwQU5M5ahPFbUaMhWsfrUb6Ts2",
+          "networkFee": null,
+          "unixTime": 1650368200,
+          "confirmed": true
+        });
+      });
+      test('No transactions', () async {
+        const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJCu4f';
+        const tokenMintAddress = '7udMmYXh6cuWVY6qQVCd9b429wDVn2J71r5BdxHkQADY';
+        final response = await GetTransactions.solanaToken(
+          apiEndpoint: 'https://api.mainnet-beta.solana.com/',
+          address: address,
+          tokenMintAddress: tokenMintAddress,
+          txLimit: 1,
+        );
+        expect(response, []);
+      });
+      test('Error', () async {
+        const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJCu4f';
+        const tokenMintAddress = '7udMmYXh6cuWVY6qQVCd9b429wDVn2J71r5BdxHkQ';
+        try {
+          await GetTransactions.solanaToken(
+            apiEndpoint: 'https://api.mainnet-beta.solana.com/',
+            address: address,
+            tokenMintAddress: tokenMintAddress,
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
     });
   });
 }
