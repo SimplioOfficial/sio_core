@@ -92,7 +92,7 @@ void main() {
       test('No transactions', () async {
         const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
         final transactions = await GetTransactions.ethereumBlockbook(
-          apiEndpoint: 'https://eth2.trezor.io/',
+          apiEndpoint: 'https://ethblockexplorer.org/',
           address: address,
           transactions: '1',
         );
@@ -102,7 +102,7 @@ void main() {
         const address = '0x6A86087Ee103DCC2494cA2804e4934b913df';
         try {
           await GetTransactions.ethereumBlockbook(
-            apiEndpoint: 'https://eth1.trezor.io/',
+            apiEndpoint: 'https://ethblockexplorer.org/',
             address: address,
           );
         } catch (exception) {
@@ -156,7 +156,7 @@ void main() {
           final transactions = await GetTransactions.ethereumERC20Blockbook(
             address: address,
             contractAddress: contractAddress,
-            apiEndpoint: 'https://eth2.trezor.io/',
+            apiEndpoint: 'https://ethblockexplorer.org/',
             transactions: '1',
           );
           expect(transactions, []);
@@ -168,7 +168,7 @@ void main() {
             await GetTransactions.ethereumERC20Blockbook(
               address: address,
               contractAddress: contractAddress,
-              apiEndpoint: 'https://eth1.trezor.io/',
+              apiEndpoint: 'https://ethblockexplorer.org/',
             );
           } catch (exception) {
             expect(exception, isA<Exception>());

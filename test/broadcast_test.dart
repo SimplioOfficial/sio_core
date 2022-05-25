@@ -13,7 +13,7 @@ void main() {
         apiEndpoint: 'https://api.cosmos.network/',
       );
       expect(jsonDecode(request), isMap);
-      expect(jsonDecode(request)["tx_request"]["txhash"],
+      expect(jsonDecode(request)["tx_response"]["txhash"],
           'D7D0253C4687BABA5687057D4B084FF5895E929B7BD5AF69457493CEEBCA3A4C');
     });
     test('Osmosis', () async {
@@ -24,7 +24,7 @@ void main() {
         apiEndpoint: 'https://lcd-osmosis.keplr.app/',
       );
       expect(jsonDecode(request), isMap);
-      expect(jsonDecode(request)["tx_request"]["txhash"],
+      expect(jsonDecode(request)["tx_response"]["txhash"],
           'BAB563D0784B60E3C95BCCA53A0D083781A928BE403DCA6D3D51AF47C37CC944');
     });
     test('Terra', () async {
@@ -35,7 +35,7 @@ void main() {
         apiEndpoint: 'https://lcd.terra.dev/',
       );
       expect(jsonDecode(request), isMap);
-      expect(jsonDecode(request)["tx_request"]["txhash"],
+      expect(jsonDecode(request)["tx_response"]["txhash"],
           'D1D9AD275913333D4BE577FBF5C233C313CE3EAB76EB0F4ADCD00977182BD9FA');
     });
   });
