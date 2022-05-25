@@ -30,7 +30,7 @@ String cosmosDenomination({
 /// Example:
 /// * https://lcd-osmosis.keplr.app/cosmos/auth/v1beta1/accounts/osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn
 /// ```
-/// final response = await getCosmosAccountDetails(
+/// final request = await getCosmosAccountDetails(
 ///   address: 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn',
 ///   apiEndpoint: 'https://lcd-osmosis.keplr.app/',
 /// );

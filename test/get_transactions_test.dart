@@ -9,13 +9,13 @@ void main() {
     group('Osmosis - ', () {
       test('Normal transactions - receive', () async {
         const address = 'osmo107tgltdk7gen60agckp7d44jvja84uxscppy4z';
-        final response = await GetTransactions.cosmos(
+        final transactions = await GetTransactions.cosmos(
           address: address,
           apiEndpoint: 'https://api-osmosis-chain.imperator.co/',
           denomination: 'uosmo',
         );
-        var responseJson = response[response.length - 1].toJson();
-        expect(responseJson, {
+        var transactionsJson = transactions[transactions.length - 1].toJson();
+        expect(transactionsJson, {
           'txType': 'receive',
           'address': 'osmo1ryfjy25gmqxkggyxjrz93lrv5tc9q3rz2dyua3',
           'amount': '94000000',
@@ -28,13 +28,13 @@ void main() {
       });
       test('Normal transactions - send', () async {
         const address = 'osmo1ryfjy25gmqxkggyxjrz93lrv5tc9q3rz2dyua3';
-        final response = await GetTransactions.cosmos(
+        final transactions = await GetTransactions.cosmos(
           address: address,
           apiEndpoint: 'https://api-osmosis-chain.imperator.co/',
           denomination: 'uosmo',
         );
-        var responseJson = response[response.length - 1].toJson();
-        expect(responseJson, {
+        var transactionsJson = transactions[transactions.length - 1].toJson();
+        expect(transactionsJson, {
           'txType': 'send',
           'address': 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn',
           'amount': '10000',
@@ -47,12 +47,12 @@ void main() {
       });
       test('No transactions', () async {
         const address = 'osmo13tw489fdjvp4w0k5r6glq9uwqctfvgap6vhcs9';
-        final response = await GetTransactions.cosmos(
+        final transactions = await GetTransactions.cosmos(
           address: address,
           apiEndpoint: 'https://api-osmosis-chain.imperator.co/',
           denomination: 'uosmo',
         );
-        expect(response, []);
+        expect(transactions, []);
       });
       test('Error', () async {
         const address = 'omo13tw489fdjvp4w0k5r6glq9uwqctfvgap6vhcs9';
@@ -73,12 +73,12 @@ void main() {
     group('', () {
       test('Normal transactions', () async {
         const address = '0x7611615553cD85be3A3c86a1508b8437eFcD7193';
-        final response = await GetTransactions.ethereumBlockbook(
+        final transactions = await GetTransactions.ethereumBlockbook(
           apiEndpoint: 'https://ethblockexplorer.org/',
           address: address,
         );
-        var responseJson = response[response.length - 1].toJson();
-        expect(responseJson, {
+        var transactionsJson = transactions[transactions.length - 1].toJson();
+        expect(transactionsJson, {
           'txType': 'receive',
           'address': '0x00192Fb10dF37c9FB26829eb2CC623cd1BF599E8',
           'amount': '50789876000000000',
@@ -91,12 +91,12 @@ void main() {
       });
       test('No transactions', () async {
         const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
-        final response = await GetTransactions.ethereumBlockbook(
+        final transactions = await GetTransactions.ethereumBlockbook(
           apiEndpoint: 'https://eth2.trezor.io/',
           address: address,
           transactions: '1',
         );
-        expect(response, []);
+        expect(transactions, []);
       });
       test('Error', () async {
         const address = '0x6A86087Ee103DCC2494cA2804e4934b913df';
@@ -113,13 +113,13 @@ void main() {
         test('Normal transactions - receive', () async {
           const address = '0x734Ac651Dd95a339c633cdEd410228515F97fAfF';
           const contractAddress = '0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39';
-          final response = await GetTransactions.ethereumERC20Blockbook(
+          final transactions = await GetTransactions.ethereumERC20Blockbook(
             address: address,
             contractAddress: contractAddress,
             apiEndpoint: 'https://ethblockexplorer.org/',
           );
-          var responseJson = response[response.length - 1].toJson();
-          expect(responseJson, {
+          var transactionsJson = transactions[transactions.length - 1].toJson();
+          expect(transactionsJson, {
             'txType': 'receive',
             'address': '0x0b795E585Ec0436E4572Cc9B24FC5DA1faf9cFC6',
             'amount': '10000000000',
@@ -133,13 +133,13 @@ void main() {
         test('Normal transactions - send', () async {
           const address = '0x8022C6E37Dc45F3AB24c962F2D4E9B6F0d89e670';
           const contractAddress = '0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39';
-          final response = await GetTransactions.ethereumERC20Blockbook(
+          final transactions = await GetTransactions.ethereumERC20Blockbook(
             address: address,
             contractAddress: contractAddress,
             apiEndpoint: 'https://ethblockexplorer.org/',
           );
-          var responseJson = response[response.length - 6].toJson();
-          expect(responseJson, {
+          var transactionsJson = transactions[transactions.length - 6].toJson();
+          expect(transactionsJson, {
             'txType': 'send',
             'address': '0xA64916f1235455fB8b9b97a5a2CD9b3B48879629',
             'amount': '25000000000000',
@@ -153,13 +153,13 @@ void main() {
         test('No transactions', () async {
           const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
           const contractAddress = '0x2b591e99afE9f32eAA6214f7B7629768c40Eeb39';
-          final response = await GetTransactions.ethereumERC20Blockbook(
+          final transactions = await GetTransactions.ethereumERC20Blockbook(
             address: address,
             contractAddress: contractAddress,
             apiEndpoint: 'https://eth2.trezor.io/',
             transactions: '1',
           );
-          expect(response, []);
+          expect(transactions, []);
         });
         test('Error', () async {
           const address = '0x6A86087Ee103DCC2494cA2804e4934b913df';
@@ -181,13 +181,13 @@ void main() {
     group('', () {
       test('Normal transactions', () async {
         const address = '3fTR8GGL2mniGyHtd3Qy2KDVhZ9LHbW59rCc7A3RtBWk';
-        final response = await GetTransactions.solana(
+        final transactions = await GetTransactions.solana(
           apiEndpoint: 'https://api.mainnet-beta.solana.com/',
           address: address,
           txLimit: 1000,
         );
-        var responseJson = response[response.length - 1].toJson();
-        expect(responseJson, {
+        var transactionsJson = transactions[transactions.length - 1].toJson();
+        expect(transactionsJson, {
           "txType": null,
           "address": null,
           "amount": null,
@@ -200,12 +200,12 @@ void main() {
       });
       test('No transactions', () async {
         const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJCu4f';
-        final response = await GetTransactions.solana(
+        final transactions = await GetTransactions.solana(
           apiEndpoint: 'https://api.mainnet-beta.solana.com/',
           address: address,
           txLimit: 1,
         );
-        expect(response, []);
+        expect(transactions, []);
       });
       test('Error', () async {
         const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJ';
@@ -225,11 +225,11 @@ void main() {
     group('Blockbook - ', () {
       test('Bitcoin - No transactions', () async {
         const address = 'bc1qwquauyfgqgwh2gc9td8dhrf00432duh77wvxy5';
-        final response = await GetTransactions.utxoCoinBlockbook(
+        final transactions = await GetTransactions.utxoCoinBlockbook(
           apiEndpoint: 'https://btc1.simplio.io/',
           address: address,
         );
-        expect(response, []);
+        expect(transactions, []);
       });
 
       test('Bitcoin - Error', () async {
@@ -245,12 +245,12 @@ void main() {
       });
       test('Litecoin - Standard transactions', () async {
         const address = 'ltc1qulzv02h8nmsuqxaqas3dv22cl244r7vs0smssh';
-        final response = await GetTransactions.utxoCoinBlockbook(
+        final transactions = await GetTransactions.utxoCoinBlockbook(
           apiEndpoint: 'https://ltc1.simplio.io/',
           address: address,
         );
-        var responseJson = [...response.map((tx) => tx.toJson())];
-        expect(responseJson, [
+        var transactionsJson = [...transactions.map((tx) => tx.toJson())];
+        expect(transactionsJson, [
           {
             "txType": "receive",
             "address": "ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z",
@@ -275,13 +275,13 @@ void main() {
       });
       test('Litecoin - Send to self transaction', () async {
         const address = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
-        final response = await GetTransactions.utxoCoinBlockbook(
+        final transactions = await GetTransactions.utxoCoinBlockbook(
           apiEndpoint: 'https://ltc1.simplio.io/',
           address: address,
           transactions: '9',
         );
-        var responseJson = response[response.length - 9].toJson();
-        expect(responseJson, {
+        var transactionsJson = transactions[transactions.length - 9].toJson();
+        expect(transactionsJson, {
           "txType": "send",
           "address": "ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z",
           "amount": "1915711",
@@ -294,32 +294,32 @@ void main() {
       });
       test('Litecoin - Generated coins', () async {
         const address = 'LfmssDyX6iZvbVqHv6t9P6JWXia2JG7mdb';
-        final response = await GetTransactions.utxoCoinBlockbook(
+        final transactions = await GetTransactions.utxoCoinBlockbook(
           apiEndpoint: 'https://ltc1.simplio.io/',
           address: address,
           page: '1000',
         );
-        expect(response[response.length - 1].txid,
+        expect(transactions[transactions.length - 1].txid,
             '4eb47c6c53e4b4decb0ee36bfc928267de9a189f10359c8bfe495e57960f6762');
       });
       test('Dash - Composed transactions', () async {
         const address = 'XognSnGYoqaNiL2v24hRMwc6QdWfuRoQz7';
-        final response = await GetTransactions.utxoCoinBlockbook(
+        final transactions = await GetTransactions.utxoCoinBlockbook(
           apiEndpoint: 'https://dash1.trezor.io/',
           address: address,
         );
-        expect(response[response.length - 1].txid,
+        expect(transactions[transactions.length - 1].txid,
             '24ba935d8ecd2d89873c9e23ea46581de950b14b8b23b1ef08ac6d000265d088');
       });
     });
     group('Insight - ', () {
       test('Flux - No transactions', () async {
         const address = 't1amMB14YTcUktfjHrz42XcDb2tdHmjgMQd';
-        final response = await GetTransactions.utxoCoinInsight(
+        final transactions = await GetTransactions.utxoCoinInsight(
           apiEndpoint: 'https://explorer.runonflux.io/',
           address: address,
         );
-        expect(response, []);
+        expect(transactions, []);
       });
 
       test('Flux - Error', () async {
@@ -335,12 +335,12 @@ void main() {
       });
       test('Flux - Standard transactions', () async {
         const address = 't1T7TSPDRrJ8aEvK17gyYMjJyWj6eJpD1de';
-        final response = await GetTransactions.utxoCoinInsight(
+        final transactions = await GetTransactions.utxoCoinInsight(
           apiEndpoint: 'https://explorer.runonflux.io/',
           address: address,
         );
-        var responseJson = [...response.map((tx) => tx.toJson())];
-        expect(responseJson, [
+        var transactionsJson = [...transactions.map((tx) => tx.toJson())];
+        expect(transactionsJson, [
           {
             "txType": "send",
             "address": "t1T7TSPDRrJ8aEvK17gyYMjJyWj6eJpD1de",
@@ -365,12 +365,12 @@ void main() {
       });
       test('Flux - Send to self transaction', () async {
         const address = 't1T7TSPDRrJ8aEvK17gyYMjJyWj6eJpD1de';
-        final response = await GetTransactions.utxoCoinInsight(
+        final transactions = await GetTransactions.utxoCoinInsight(
           apiEndpoint: 'https://explorer.runonflux.io/',
           address: address,
         );
-        var responseJson = response[response.length - 2].toJson();
-        expect(responseJson, {
+        var transactionsJson = transactions[transactions.length - 2].toJson();
+        expect(transactionsJson, {
           "txType": "send",
           "address": "t1T7TSPDRrJ8aEvK17gyYMjJyWj6eJpD1de",
           "amount": "99980800",
@@ -387,14 +387,14 @@ void main() {
             'https://explorer.runonflux.io/api/addrs/t1fRRoTEWgoCUwSYSkFmr9V5mmTNRJedtUX/txs?from=0&to=1');
         final int totalItems = jsonDecode(tempResp.body)['totalItems'];
 
-        final response = await GetTransactions.utxoCoinInsight(
+        final transactions = await GetTransactions.utxoCoinInsight(
           apiEndpoint: 'https://explorer.runonflux.io/',
           address: address,
           fromTx: (totalItems - 8).toString(),
           toTx: (totalItems - 7).toString(),
         );
-        var responseJson = [...response.map((tx) => tx.toJson())];
-        expect(responseJson, [
+        var transactionsJson = [...transactions.map((tx) => tx.toJson())];
+        expect(transactionsJson, [
           {
             "txType": "generate",
             "address": "No Inputs (Newly Generated Coins)",
@@ -409,14 +409,14 @@ void main() {
       });
       test('Dash - Composed transactions', () async {
         const address = 'XognSnGYoqaNiL2v24hRMwc6QdWfuRoQz7';
-        final response = await GetTransactions.utxoCoinInsight(
+        final transactions = await GetTransactions.utxoCoinInsight(
           apiEndpoint: 'https://dash1.trezor.io/',
           address: address,
           customEndpoint:
               'https://insight.dash.org/insight-api/addrs/XognSnGYoqaNiL2v24hRMwc6QdWfuRoQz7/txs',
         );
-        var responseJson = [...response.map((tx) => tx.toJson())];
-        expect(responseJson, [
+        var transactionsJson = [...transactions.map((tx) => tx.toJson())];
+        expect(transactionsJson, [
           {
             "txType": "send",
             "address": "XbBoBA8uaKpoaMEDo6HARx7eScJCYuF6tE",

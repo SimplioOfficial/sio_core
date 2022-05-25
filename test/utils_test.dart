@@ -7,14 +7,14 @@ import 'package:bs58/bs58.dart';
 void main() {
   group('Utils internal - ', () {
     test('Create get request', () async {
-      final response =
+      final request =
           await getRequest('https://jsonplaceholder.typicode.com/todos/1/');
-      expect(jsonDecode(response.body)['id'], 1);
+      expect(jsonDecode(request.body)['id'], 1);
     });
     test('Create post request', () async {
-      final response = await postEncodedRequest(
+      final request = await postEncodedRequest(
           'https://jsonplaceholder.typicode.com/todos/', {});
-      expect(jsonDecode(response.body)['id'], 201);
+      expect(jsonDecode(request.body)['id'], 201);
     });
   });
 
@@ -43,31 +43,31 @@ void main() {
       }
     });
     test('Create get cosmos account details request', () async {
-      final response = await getCosmosAccountDetails(
+      final request = await getCosmosAccountDetails(
         address: 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn',
         apiEndpoint: 'https://lcd-osmosis.keplr.app/',
       );
-      expect(jsonDecode(response), isMap);
-      expect(jsonDecode(response)['account']['account_number'], '456069');
+      expect(jsonDecode(request), isMap);
+      expect(jsonDecode(request)['account']['account_number'], '456069');
     });
     test('Create get nonce request', () async {
-      final response = await getNonce(
+      final request = await getNonce(
         address: '0x6A86087Ee103DCC2494cA2804e4934b913df84E8',
         apiEndpoint: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
       );
-      expect(jsonDecode(response), isMap);
-      expect(jsonDecode(response)['result'], '0xa');
+      expect(jsonDecode(request), isMap);
+      expect(jsonDecode(request)['result'], '0xa');
     });
     test('Create get utxo request', () async {
-      final response = await getUtxo(
+      final request = await getUtxo(
           apiEndpoint: 'https://jsonplaceholder.typicode.com/todos/1/');
-      expect(jsonDecode(response)['id'], 1);
+      expect(jsonDecode(request)['id'], 1);
     });
     test('Create latest block hash request', () async {
-      final response = await latestBlockHashRequest(
+      final request = await latestBlockHashRequest(
           apiEndpoint: 'https://api.devnet.solana.com/');
       final String blockHash =
-          jsonDecode(response)['result']['value']['blockhash'];
+          jsonDecode(request)['result']['value']['blockhash'];
       expect(base58.decode(blockHash).length, 32);
     });
   });

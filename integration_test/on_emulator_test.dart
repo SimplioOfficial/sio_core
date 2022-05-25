@@ -254,14 +254,14 @@ void main() {
       test('Normal transactions', () async {
         const address = '3fTR8GGL2mniGyHtd3Qy2KDVhZ9LHbW59rCc7A3RtBWk';
         const tokenMintAddress = '7udMmYXh6cuWVY6qQVCd9b429wDVn2J71r5BdxHkQADY';
-        final response = await GetTransactions.solanaToken(
+        final transactions = await GetTransactions.solanaToken(
           apiEndpoint: 'https://api.mainnet-beta.solana.com/',
           address: address,
           tokenMintAddress: tokenMintAddress,
           txLimit: 1000,
         );
-        var responseJson = response[response.length - 1].toJson();
-        expect(responseJson, {
+        final transactionsJson = transactions[transactions.length - 1].toJson();
+        expect(transactionsJson, {
           "txType": null,
           "address": null,
           "amount": null,
@@ -275,13 +275,13 @@ void main() {
       test('No transactions', () async {
         const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJCu4f';
         const tokenMintAddress = '7udMmYXh6cuWVY6qQVCd9b429wDVn2J71r5BdxHkQADY';
-        final response = await GetTransactions.solanaToken(
+        final transactions = await GetTransactions.solanaToken(
           apiEndpoint: 'https://api.mainnet-beta.solana.com/',
           address: address,
           tokenMintAddress: tokenMintAddress,
           txLimit: 1,
         );
-        expect(response, []);
+        expect(transactions, []);
       });
       test('Error', () async {
         const address = 'HnVnY6kD8BqTXo2G2yDmckKnN2H821pkWhvRsheJCu4f';
