@@ -13,14 +13,6 @@ Future<Response> getRequest(String apiEndpoint) async {
 }
 
 @internal
-Future<Response> postRequest(String apiEndpoint, String data) async {
-  return post(
-    Uri.parse(apiEndpoint),
-    body: data,
-  );
-}
-
-@internal
 Future<Response> postEncodedRequest(String apiEndpoint, data) async {
   return post(
     Uri.parse(apiEndpoint),
@@ -28,5 +20,13 @@ Future<Response> postEncodedRequest(String apiEndpoint, data) async {
       'Content-Type': 'application/json; charset=UTF-8',
     },
     body: jsonEncode(data),
+  );
+}
+
+@internal
+Future<Response> postRequest(String apiEndpoint, String data) async {
+  return post(
+    Uri.parse(apiEndpoint),
+    body: data,
   );
 }
