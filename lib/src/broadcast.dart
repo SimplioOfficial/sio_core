@@ -75,13 +75,13 @@ class Broadcast {
   /// Broadcast BTC, BCH, DASH, DGB, DOGE, LTC, ZEC transactions on mainnet.
   ///
   /// Works with Blockbook.
-  /// * https://btc1.simplio.io/
-  /// * https://bch1.simplio.io/
-  /// * https://dash1.simplio.io/
-  /// * https://dgb1.simplio.io/
-  /// * https://doge1.simplio.io/
-  /// * https://ltc1.simplio.io/
-  /// * https://zec1.simplio.io/
+  /// * https://btc1.simplio.io/ or https://btc1.trezor.io/
+  /// * https://bch1.simplio.io/ or https://bch1.trezor.io/
+  /// * https://dash1.simplio.io/ or https://dash1.trezor.io/
+  /// * https://dgb1.simplio.io/ or https://dgb1.trezor.io/
+  /// * https://doge1.simplio.io/ or https://doge1.trezor.io/
+  /// * https://ltc1.simplio.io/ or https://ltc1.trezor.io/
+  /// * https://zec1.simplio.io/ or https://zec1.trezor.io/
   static Future<String> utxoCoinBlockbook({
     required String signedTxEncoded,
     required String apiEndpoint,
