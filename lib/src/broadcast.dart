@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:sio_core/src/utils_internal.dart';
 
 /// Class that broadcast messages into different platforms.
@@ -15,7 +17,10 @@ class Broadcast {
     final broadcast = await postRequest(
         apiEndpoint + 'cosmos/tx/v1beta1/txs', signedTxSerialized);
 
-    return broadcast.body;
+    if (jsonDecode(broadcast.body)['tx_response']['code'] != 0) {
+      throw Exception(jsonDecode(broadcast.body)['tx_response']['raw_log']);
+    }
+    return jsonDecode(broadcast.body)['tx_response']['txhash'];
   }
 
   /// Broadcast BNB (Smart Chain), ETC or ETH transactions on mainnet.
@@ -31,7 +36,10 @@ class Broadcast {
     final broadcast =
         await getRequest(apiEndpoint + 'api/v2/sendtx/0x' + signedTxEncoded);
 
-    return broadcast.body;
+    if (jsonDecode(broadcast.body)['error'] != null) {
+      throw Exception(jsonDecode(broadcast.body)['error']);
+    }
+    return jsonDecode(broadcast.body)['result'];
   }
 
   /// Broadcast BNB (Smart Chain), ETC, ETH transactions on mainnet, testnet.
@@ -51,7 +59,10 @@ class Broadcast {
       "params": ["0x" + signedTxEncoded]
     });
 
-    return broadcast.body;
+    if (jsonDecode(broadcast.body)['error'] != null) {
+      throw Exception(jsonDecode(broadcast.body)['error']);
+    }
+    return jsonDecode(broadcast.body)['result'];
   }
 
   /// Broadcast Solana and Solana Tokens transactions into mainnet, testnet,
@@ -69,7 +80,10 @@ class Broadcast {
       "params": [signedTxEncoded]
     });
 
-    return broadcast.body;
+    if (jsonDecode(broadcast.body)['error'] != null) {
+      throw Exception(jsonDecode(broadcast.body)['error']);
+    }
+    return jsonDecode(broadcast.body)['result'];
   }
 
   /// Broadcast BTC, BCH, DASH, DGB, DOGE, LTC, ZEC transactions on mainnet.
@@ -89,7 +103,10 @@ class Broadcast {
     final broadcast =
         await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
 
-    return broadcast.body;
+    if (jsonDecode(broadcast.body)['error'] != null) {
+      throw Exception(jsonDecode(broadcast.body)['error']);
+    }
+    return jsonDecode(broadcast.body)['result'];
   }
 
   /// Broadcast FLUX transactions on mainnet.
@@ -104,6 +121,6 @@ class Broadcast {
       "rawtx": signedTxEncoded,
     });
 
-    return broadcast.body;
+    return jsonDecode(broadcast.body)['txid'];
   }
 }
