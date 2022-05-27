@@ -27,18 +27,18 @@ void main() {
         expect(exception, isA<Exception>());
       }
     });
-    test('Terra', () async {
-      const signedTxSerialized =
-          '{"mode":"BROADCAST_MODE_BLOCK","tx_bytes":"Co4BCosBChwvY29zbW9zLmJhbmsudjFiZXRhMS5Nc2dTZW5kEmsKLHRlcnJhMXJ2YTlhNzB4YzN2cHZkZXpuNjBqZXJ6NHl3cWE1dWV5N25lZnBzEix0ZXJyYTFzdmM2M3l4d2xxdjJjcG16bWEwZWhjODh6a2Zwa25yYWw5ajZhNBoNCgV1bHVuYRIENzgwMBJmClAKRgofL2Nvc21vcy5jcnlwdG8uc2VjcDI1NmsxLlB1YktleRIjCiEDYPiVIhGbxRWKBJ2ly5K2TpgPeQJfiPaVjTZ/KGjQvA0SBAoCCAEYBRISCgwKBXVsdW5hEgMxMDAQwJoMGkB7eQSdCXKSHMC1fzFDWX3aE3tw0IapUvMpq71GbyiZdg23yDhNMwSnXEc8M8CF5B+QL+pKTXMv09ANe6d+StMP"}';
-      try {
-        await Broadcast.cosmos(
-          signedTxSerialized: signedTxSerialized,
-          apiEndpoint: 'https://lcd.terra.dev/',
-        );
-      } catch (exception) {
-        expect(exception, isA<Exception>());
-      }
-    });
+    // test('Terra', () async {
+    //   const signedTxSerialized =
+    //       '{"mode":"BROADCAST_MODE_BLOCK","tx_bytes":"Co4BCosBChwvY29zbW9zLmJhbmsudjFiZXRhMS5Nc2dTZW5kEmsKLHRlcnJhMXJ2YTlhNzB4YzN2cHZkZXpuNjBqZXJ6NHl3cWE1dWV5N25lZnBzEix0ZXJyYTFzdmM2M3l4d2xxdjJjcG16bWEwZWhjODh6a2Zwa25yYWw5ajZhNBoNCgV1bHVuYRIENzgwMBJmClAKRgofL2Nvc21vcy5jcnlwdG8uc2VjcDI1NmsxLlB1YktleRIjCiEDYPiVIhGbxRWKBJ2ly5K2TpgPeQJfiPaVjTZ/KGjQvA0SBAoCCAEYBRISCgwKBXVsdW5hEgMxMDAQwJoMGkB7eQSdCXKSHMC1fzFDWX3aE3tw0IapUvMpq71GbyiZdg23yDhNMwSnXEc8M8CF5B+QL+pKTXMv09ANe6d+StMP"}';
+    //   try {
+    //     await Broadcast.cosmos(
+    //       signedTxSerialized: signedTxSerialized,
+    //       apiEndpoint: 'https://lcd.terra.dev/',
+    //     );
+    //   } catch (exception) {
+    //     expect(exception, isA<Exception>());
+    //   }
+    // });
   });
 
   group('Broadcast Ethereum coin - ', () {
