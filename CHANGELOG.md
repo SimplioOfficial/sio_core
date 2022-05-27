@@ -1,3 +1,7 @@
+## 0.0.10
+* Implement decimals request for supported coin and tokens.
+* Refactor broadcast transactions for supported coins and tokens.
+* Implemented get smallest denomination for cosmos blockchains.
 ## 0.0.9
 * Implement transactions history for all supported coin and tokens.
 ## 0.0.8
