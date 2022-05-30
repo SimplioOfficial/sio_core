@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:sio_core/src/utils_internal.dart';
 
 /// Class that broadcast messages into different platforms.
@@ -15,7 +17,10 @@ class Broadcast {
     final broadcast = await postRequest(
         apiEndpoint + 'cosmos/tx/v1beta1/txs', signedTxSerialized);
 
-    return broadcast.body;
+    if (jsonDecode(broadcast.body)['tx_response']['code'] != 0) {
+      throw Exception(jsonDecode(broadcast.body)['tx_response']['raw_log']);
+    }
+    return jsonDecode(broadcast.body)['tx_response']['txhash'];
   }
 
   /// Broadcast BNB (Smart Chain), ETC or ETH transactions on mainnet.
@@ -31,7 +36,10 @@ class Broadcast {
     final broadcast =
         await getRequest(apiEndpoint + 'api/v2/sendtx/0x' + signedTxEncoded);
 
-    return broadcast.body;
+    if (jsonDecode(broadcast.body)['error'] != null) {
+      throw Exception(jsonDecode(broadcast.body)['error']);
+    }
+    return jsonDecode(broadcast.body)['result'];
   }
 
   /// Broadcast BNB (Smart Chain), ETC, ETH transactions on mainnet, testnet.
@@ -51,7 +59,10 @@ class Broadcast {
       "params": ["0x" + signedTxEncoded]
     });
 
-    return broadcast.body;
+    if (jsonDecode(broadcast.body)['error'] != null) {
+      throw Exception(jsonDecode(broadcast.body)['error']);
+    }
+    return jsonDecode(broadcast.body)['result'];
   }
 
   /// Broadcast Solana and Solana Tokens transactions into mainnet, testnet,
@@ -69,19 +80,22 @@ class Broadcast {
       "params": [signedTxEncoded]
     });
 
-    return broadcast.body;
+    if (jsonDecode(broadcast.body)['error'] != null) {
+      throw Exception(jsonDecode(broadcast.body)['error']);
+    }
+    return jsonDecode(broadcast.body)['result'];
   }
 
   /// Broadcast BTC, BCH, DASH, DGB, DOGE, LTC, ZEC transactions on mainnet.
   ///
   /// Works with Blockbook.
-  /// * https://btc1.simplio.io/
-  /// * https://bch1.simplio.io/
-  /// * https://dash1.simplio.io/
-  /// * https://dgb1.simplio.io/
-  /// * https://doge1.simplio.io/
-  /// * https://ltc1.simplio.io/
-  /// * https://zec1.simplio.io/
+  /// * https://btc1.simplio.io/ or https://btc1.trezor.io/
+  /// * https://bch1.simplio.io/ or https://bch1.trezor.io/
+  /// * https://dash1.simplio.io/ or https://dash1.trezor.io/
+  /// * https://dgb1.simplio.io/ or https://dgb1.trezor.io/
+  /// * https://doge1.simplio.io/ or https://doge1.trezor.io/
+  /// * https://ltc1.simplio.io/ or https://ltc1.trezor.io/
+  /// * https://zec1.simplio.io/ or https://zec1.trezor.io/
   static Future<String> utxoCoinBlockbook({
     required String signedTxEncoded,
     required String apiEndpoint,
@@ -89,7 +103,10 @@ class Broadcast {
     final broadcast =
         await postRequest(apiEndpoint + 'api/v2/sendtx/', signedTxEncoded);
 
-    return broadcast.body;
+    if (jsonDecode(broadcast.body)['error'] != null) {
+      throw Exception(jsonDecode(broadcast.body)['error']);
+    }
+    return jsonDecode(broadcast.body)['result'];
   }
 
   /// Broadcast FLUX transactions on mainnet.
@@ -104,6 +121,6 @@ class Broadcast {
       "rawtx": signedTxEncoded,
     });
 
-    return broadcast.body;
+    return jsonDecode(broadcast.body)['txid'];
   }
 }
