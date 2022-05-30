@@ -12,8 +12,16 @@ void main() {
         apiEndpoint: 'https://api.cosmos.network/',
         denomination: 'uatom',
       );
-
       expect(balance, BigInt.zero);
+    });
+    test('Cosmos existent positive', () async {
+      const address = 'cosmos1ryfjy25gmqxkggyxjrz93lrv5tc9q3rzzkhvtr';
+      final balance = await GetBalance.cosmos(
+        address: address,
+        apiEndpoint: 'https://api.cosmos.network/',
+        denomination: 'uatom',
+      );
+      expect(balance, greaterThan(BigInt.parse('-1')));
     });
     test('Osmosis', () async {
       const address = 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn';
@@ -54,15 +62,15 @@ void main() {
     //   );
     //   expect(balance, BigInt.zero);
     // });
-    test('Terra existent positive', () async {
-      const address = 'terra1whevxvk66j7p4c0rgm0fzzep4hywrm6sytfh0j';
-      final balance = await GetBalance.cosmos(
-        address: address,
-        apiEndpoint: 'https://lcd.terra.dev/',
-        denomination: 'uluna',
-      );
-      expect(balance, greaterThan(BigInt.parse('-1')));
-    });
+    // test('Terra existent positive', () async {
+    //   const address = 'terra1whevxvk66j7p4c0rgm0fzzep4hywrm6sytfh0j';
+    //   final balance = await GetBalance.cosmos(
+    //     address: address,
+    //     apiEndpoint: 'https://lcd.terra.dev/',
+    //     denomination: 'uluna',
+    //   );
+    //   expect(balance, greaterThan(BigInt.parse('-1')));
+    // });
   });
 
   group('Get balance for Ethereum coin - ', () {
