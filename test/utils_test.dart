@@ -32,43 +32,55 @@ void main() {
       expect(
           bigIntToBytes(BigInt.parse('100000000000')), [23, 72, 118, 232, 0]);
     });
-    test('Cosmos Denomination', () {
-      expect(cosmosDenomination(ticker: 'ATOM'), 'uatom');
-      expect(cosmosDenomination(ticker: 'LUNA'), 'uluna');
-      expect(cosmosDenomination(ticker: 'OSMO'), 'uosmo');
-      try {
-        cosmosDenomination(ticker: 'AMI');
-      } catch (exception) {
-        expect(exception, isA<Exception>());
-      }
+
+    group('Cosmos - ', () {
+      test('Cosmos Denomination', () {
+        expect(UtilsCosmos.cosmosDenomination(ticker: 'ATOM'), 'uatom');
+        expect(UtilsCosmos.cosmosDenomination(ticker: 'LUNA'), 'uluna');
+        expect(UtilsCosmos.cosmosDenomination(ticker: 'OSMO'), 'uosmo');
+        try {
+          UtilsCosmos.cosmosDenomination(ticker: 'AMI');
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
+      test('Create get cosmos account details request', () async {
+        final request = await UtilsCosmos.getCosmosAccountDetails(
+          address: 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn',
+          apiEndpoint: 'https://lcd-osmosis.keplr.app/',
+        );
+        expect(jsonDecode(request), isMap);
+        expect(jsonDecode(request)['account']['account_number'], '456069');
+      });
     });
-    test('Create get cosmos account details request', () async {
-      final request = await getCosmosAccountDetails(
-        address: 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn',
-        apiEndpoint: 'https://lcd-osmosis.keplr.app/',
-      );
-      expect(jsonDecode(request), isMap);
-      expect(jsonDecode(request)['account']['account_number'], '456069');
+
+    group('Ethereum - ', () {
+      test('Create get nonce request', () async {
+        final request = await UtilsEthereum.getNonce(
+          address: '0x6A86087Ee103DCC2494cA2804e4934b913df84E8',
+          apiEndpoint: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+        );
+        expect(jsonDecode(request), isMap);
+        expect(jsonDecode(request)['result'], '0xa');
+      });
     });
-    test('Create get nonce request', () async {
-      final request = await getNonce(
-        address: '0x6A86087Ee103DCC2494cA2804e4934b913df84E8',
-        apiEndpoint: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
-      );
-      expect(jsonDecode(request), isMap);
-      expect(jsonDecode(request)['result'], '0xa');
+
+    group('Solana - ', () {
+      test('Create latest block hash request', () async {
+        final request = await UtilsSolana.latestBlockHashRequest(
+            apiEndpoint: 'https://api.devnet.solana.com/');
+        final String blockHash =
+            jsonDecode(request)['result']['value']['blockhash'];
+        expect(base58.decode(blockHash).length, 32);
+      });
     });
-    test('Create get utxo request', () async {
-      final request = await getUtxo(
-          apiEndpoint: 'https://jsonplaceholder.typicode.com/todos/1/');
-      expect(jsonDecode(request)['id'], 1);
-    });
-    test('Create latest block hash request', () async {
-      final request = await latestBlockHashRequest(
-          apiEndpoint: 'https://api.devnet.solana.com/');
-      final String blockHash =
-          jsonDecode(request)['result']['value']['blockhash'];
-      expect(base58.decode(blockHash).length, 32);
+
+    group('utxoCoin - ', () {
+      test('Create get utxo request', () async {
+        final request = await UtilsUtxo.getUtxo(
+            apiEndpoint: 'https://jsonplaceholder.typicode.com/todos/1/');
+        expect(jsonDecode(request)['id'], 1);
+      });
     });
   });
 }
