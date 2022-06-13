@@ -1,4 +1,4 @@
-name: Unit tests - on emulator
+name: Unit tests on emulator
 env:
   FLUTTER_VERSION: "3.0.1"
 
