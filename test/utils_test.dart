@@ -45,23 +45,21 @@ void main() {
         }
       });
       test('Create get cosmos account details request', () async {
-        final request = await UtilsCosmos.getCosmosAccountDetails(
+        final cosmosAccountDetails = await UtilsCosmos.getCosmosAccountDetails(
           address: 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn',
           apiEndpoint: 'https://lcd-osmosis.keplr.app/',
         );
-        expect(jsonDecode(request), isMap);
-        expect(jsonDecode(request)['account']['account_number'], '456069');
+        expect(cosmosAccountDetails.toJson()['accountNumber'], '456069');
       });
     });
 
     group('Ethereum - ', () {
       test('Create get nonce request', () async {
-        final request = await UtilsEthereum.getNonce(
+        final nonce = await UtilsEthereum.getNonce(
           address: '0x6A86087Ee103DCC2494cA2804e4934b913df84E8',
-          apiEndpoint: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+          apiEndpoint: 'https://bsc-dataseed.binance.org/',
         );
-        expect(jsonDecode(request), isMap);
-        expect(jsonDecode(request)['result'], '0xa');
+        expect(nonce, '0x0');
       });
     });
 

@@ -1,5 +1,24 @@
+import 'dart:convert';
+
 import 'package:convert/convert.dart';
 import 'package:sio_core/src/utils_internal.dart';
+
+class _CosmosAccountDetails {
+  final String? accountNumber;
+  final String? sequence;
+
+  _CosmosAccountDetails({
+    this.accountNumber,
+    this.sequence,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'accountNumber': accountNumber,
+      'sequence': sequence,
+    };
+  }
+}
 
 /// Converts BigInt numbers into list of bytes.
 ///
@@ -38,13 +57,20 @@ class UtilsCosmos {
   ///   apiEndpoint: 'https://lcd-osmosis.keplr.app/',
   /// );
   /// ```
-  static Future<String> getCosmosAccountDetails({
+  static Future<_CosmosAccountDetails> getCosmosAccountDetails({
     required String address,
     required String apiEndpoint,
   }) async {
     final request = await getRequest(
         apiEndpoint + 'cosmos/auth/v1beta1/accounts/' + address);
-    return request.body;
+    if (jsonDecode(request.body)['account'] == null) {
+      throw Exception(request.body);
+    }
+    final cosmosAccountDetails = _CosmosAccountDetails(
+      accountNumber: jsonDecode(request.body)['account']['account_number'],
+      sequence: jsonDecode(request.body)['account']['sequence'],
+    );
+    return cosmosAccountDetails;
   }
 }
 
@@ -63,7 +89,10 @@ class UtilsEthereum {
       "method": "eth_getTransactionCount",
       "params": [address, "latest"]
     });
-    return request.body;
+    if (jsonDecode(request.body)['error'] != null) {
+      throw Exception(jsonDecode(request.body)['error']);
+    }
+    return jsonDecode(request.body)['result'];
   }
 }
 

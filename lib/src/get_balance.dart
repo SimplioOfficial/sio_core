@@ -58,7 +58,7 @@ class GetBalance {
   /// Get BNB (Smart Chain), ETC, ETH balance from mainnet, testnet.
   ///
   /// Works with any rpc endpoints from:
-  /// * https://docs.binance.org/smart-chain/developer/rpc.html
+  /// * https://docs.bnbchain.org/docs/rpc/
   /// * https://www.ethercluster.com/etc
   /// * https://infura.io/
   static Future<BigInt> ethereumRPC({
