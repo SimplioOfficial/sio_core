@@ -1,4 +1,4 @@
-name: Unit tests on emulator
+name: Unit tests - on emulator
 env:
   FLUTTER_VERSION: "3.0.1"
 
@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - name: checkout
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
