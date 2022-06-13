@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:convert/convert.dart';
+import 'package:http/http.dart';
 import 'package:sio_core/src/utils_internal.dart';
 
 class _CosmosAccountDetails {
@@ -115,22 +116,40 @@ class UtilsSolana {
         }
       ]
     });
-    return request.body;
+    if (jsonDecode(request.body)['error'] != null) {
+      throw Exception(jsonDecode(request.body)['error']);
+    }
+    return jsonDecode(request.body)['result']['value']['blockhash'];
   }
 }
 
 /// Class that helps returning multiple arguments needed to build a utxoCoin
 /// transaction.
 class UtilsUtxo {
-  /// Get the list of utxo for utxoCoin.
+  /// Get the list of utxo for utxoCoin for blockbook or insight explorers.
   ///
   /// Example:
-  /// * https://ltc1.simplio.io/api/v2/utxo/ltc1q4jd8494yun73v5ul2wcl5p32lcxm66afx4efr6 for blockbook
-  /// * https://explorer.runonflux.io/api/addr/t1amMB14YTcUktfjHrz42XcDb2tdHmjgMQd/utxo for insight
+  /// * `apiEndpoint` as `https://ltc1.simplio.io/` or `https://explorer.runonflux.io/`
+  ///
+  /// `explorerType` argument is:
+  /// * implicit (`blockbook`) for blockbook explorers
+  /// * `insight` for insight explorers
   static Future<String> getUtxo({
+    required String address,
     required String apiEndpoint,
+    String explorerType = 'blockbook',
   }) async {
-    final request = await getRequest(apiEndpoint);
+    late final Response request;
+    if (explorerType == 'blockbook') {
+      request = await getRequest(apiEndpoint + 'api/v2/utxo/' + address);
+    } else if (explorerType == 'insight') {
+      request = await getRequest(apiEndpoint + 'api/addr/' + address + '/utxo');
+    } else {
+      throw Exception('Invalid explorerType');
+    }
+    if (jsonDecode(request.body) is! List) {
+      throw Exception(request.body);
+    }
     return request.body;
   }
 }

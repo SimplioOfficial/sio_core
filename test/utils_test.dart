@@ -65,19 +65,27 @@ void main() {
 
     group('Solana - ', () {
       test('Create latest block hash request', () async {
-        final request = await UtilsSolana.latestBlockHashRequest(
-            apiEndpoint: 'https://api.devnet.solana.com/');
-        final String blockHash =
-            jsonDecode(request)['result']['value']['blockhash'];
+        final blockHash = await UtilsSolana.latestBlockHashRequest(
+            apiEndpoint: 'https://api.mainnet-beta.solana.com/');
         expect(base58.decode(blockHash).length, 32);
       });
     });
 
     group('utxoCoin - ', () {
-      test('Create get utxo request', () async {
-        final request = await UtilsUtxo.getUtxo(
-            apiEndpoint: 'https://jsonplaceholder.typicode.com/todos/1/');
-        expect(jsonDecode(request)['id'], 1);
+      test('Create get utxo request for blockbook', () async {
+        final utxo = await UtilsUtxo.getUtxo(
+          apiEndpoint: 'https://ltc1.trezor.io/',
+          address: 'ltc1q4jd8494yun73v5ul2wcl5p32lcxm66afx4efr6',
+        );
+        expect(jsonDecode(utxo), []);
+      });
+      test('Create get utxo request for insight', () async {
+        final utxo = await UtilsUtxo.getUtxo(
+          apiEndpoint: 'https://explorer.runonflux.io/',
+          address: 't1amMB14YTcUktfjHrz42XcDb2tdHmjgMQd',
+          explorerType: 'insight',
+        );
+        expect(jsonDecode(utxo), []);
       });
     });
   });

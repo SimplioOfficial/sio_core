@@ -1,4 +1,4 @@
-name: Run unit tests - off emulator
+name: Unit tests - off emulator
 env:
   FLUTTER_VERSION: "3.0.1"
 
