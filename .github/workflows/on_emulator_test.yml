@@ -12,7 +12,8 @@ jobs:
         api-level: [31]
 
     steps:
-      - uses: actions/checkout@v2
+      - name: checkout
+      - uses: actions/checkout@v3
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
@@ -49,7 +50,7 @@ jobs:
           script: echo "Generated AVD snapshot for caching."
 
       - name: Run Unit Tests Under Android Emulator Runner
-        uses: ReactiveCircus/android-emulator-runner@v2.23.0
+        uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
           force-avd-creation: false
