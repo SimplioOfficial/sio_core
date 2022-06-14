@@ -21,6 +21,26 @@ class _CosmosAccountDetails {
   }
 }
 
+class _CosmosFeeDetails {
+  final String? chainId;
+  final String? gas;
+  final String? minFee;
+
+  _CosmosFeeDetails({
+    this.chainId,
+    this.gas,
+    this.minFee,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'chainId': chainId,
+      'gas': gas,
+      'minFee': minFee,
+    };
+  }
+}
+
 /// Converts BigInt numbers into list of bytes.
 ///
 /// Example:
@@ -41,10 +61,10 @@ class UtilsCosmos {
   static String cosmosDenomination({
     required String ticker,
   }) {
-    if (ticker == 'ATOM') return 'uatom';
-    if (ticker == 'LUNA') return 'uluna';
-    if (ticker == 'OSMO') return 'uosmo';
-    throw Exception('coin TICKER is not supported');
+    if (ticker == 'atom') return 'uatom';
+    if (ticker == 'luna') return 'uluna';
+    if (ticker == 'osmo') return 'uosmo';
+    throw Exception('coin ticker is not supported');
   }
 
   /// Get the account details from a cosmos ecosystem address.
@@ -72,6 +92,22 @@ class UtilsCosmos {
       sequence: jsonDecode(request.body)['account']['sequence'],
     );
     return cosmosAccountDetails;
+  }
+
+  static Future<_CosmosFeeDetails> getCosmosFeeDetails({
+    required String apiEndpoint,
+    required String ticker,
+  }) async {
+    final request = await getRequest(apiEndpoint + 'cosmos');
+    if (jsonDecode(request.body)[ticker] == null) {
+      throw Exception('Ticker not supported! Details:' + request.body);
+    }
+    final cosmosFeeDetails = _CosmosFeeDetails(
+      chainId: jsonDecode(request.body)[ticker]['chainId'],
+      gas: jsonDecode(request.body)[ticker]['gas'],
+      minFee: jsonDecode(request.body)[ticker]['minFee'],
+    );
+    return cosmosFeeDetails;
   }
 }
 

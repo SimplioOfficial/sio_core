@@ -35,11 +35,11 @@ void main() {
 
     group('Cosmos - ', () {
       test('Cosmos Denomination', () {
-        expect(UtilsCosmos.cosmosDenomination(ticker: 'ATOM'), 'uatom');
-        expect(UtilsCosmos.cosmosDenomination(ticker: 'LUNA'), 'uluna');
-        expect(UtilsCosmos.cosmosDenomination(ticker: 'OSMO'), 'uosmo');
+        expect(UtilsCosmos.cosmosDenomination(ticker: 'atom'), 'uatom');
+        expect(UtilsCosmos.cosmosDenomination(ticker: 'luna'), 'uluna');
+        expect(UtilsCosmos.cosmosDenomination(ticker: 'osmo'), 'uosmo');
         try {
-          UtilsCosmos.cosmosDenomination(ticker: 'AMI');
+          UtilsCosmos.cosmosDenomination(ticker: 'ami');
         } catch (exception) {
           expect(exception, isA<Exception>());
         }
@@ -50,6 +50,27 @@ void main() {
           apiEndpoint: 'https://lcd-osmosis.keplr.app/',
         );
         expect(cosmosAccountDetails.toJson()['accountNumber'], '456069');
+        try {
+          await UtilsCosmos.getCosmosAccountDetails(
+            address: 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpwn',
+            apiEndpoint: 'https://lcd-osmosis.keplr.app/',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
+      test('Create get cosmos fee details request', () async {
+        final cosmosFeeDetails = await UtilsCosmos.getCosmosFeeDetails(
+            apiEndpoint: 'http://fees.amitabha.xyz/', ticker: 'atom');
+        expect(cosmosFeeDetails.toJson()['chainId'], 'cosmoshub-4');
+        try {
+          await UtilsCosmos.getCosmosFeeDetails(
+            apiEndpoint: 'http://fees.amitabha.xyz/',
+            ticker: 'ami',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
       });
     });
 
@@ -60,6 +81,14 @@ void main() {
           apiEndpoint: 'https://bsc-dataseed.binance.org/',
         );
         expect(nonce, '0x0');
+        try {
+          await UtilsEthereum.getNonce(
+            address: '0x6A86087Ee103DCC2494cA2804e4934b913df8',
+            apiEndpoint: 'https://bsc-dataseed.binance.org/',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
       });
     });
 
@@ -68,6 +97,13 @@ void main() {
         final blockHash = await UtilsSolana.latestBlockHashRequest(
             apiEndpoint: 'https://api.mainnet-beta.solana.com/');
         expect(base58.decode(blockHash).length, 32);
+        try {
+          await UtilsSolana.latestBlockHashRequest(
+            apiEndpoint: 'https://api.mainnet-beta.solana.com/',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
       });
     });
 
@@ -86,6 +122,27 @@ void main() {
           explorerType: 'insight',
         );
         expect(jsonDecode(utxo), []);
+      });
+      test('Create get utxo request for inexistent explorer type', () async {
+        try {
+          await UtilsUtxo.getUtxo(
+            apiEndpoint: 'https://ltc1.trezor.io/',
+            address: 't1amMB14YTcUktfjHrz42XcDb2tdHmjgMQd',
+            explorerType: 'flower',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
+      test('Create get utxo request for wrong explorer type', () async {
+        try {
+          await UtilsUtxo.getUtxo(
+            apiEndpoint: 'https://explorer.runonflux.io/',
+            address: 't1amMB14YTcUktfjHrz42XcDb2tdHmjgMQd',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
       });
     });
   });
