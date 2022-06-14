@@ -389,15 +389,18 @@ class BuildTransaction {
     if (utxo.isEmpty) {
       throw NoUtxoAvailableException();
     }
-    utxo.sort((map1, map2) =>
-        int.parse(map1['value']).compareTo(int.parse(map2['value'])));
+    utxo.sort((map1, map2) => map1['value'] != null
+        ? int.parse(map1['value']).compareTo(int.parse(map2['value']))
+        : (map1['satoshis'] as int).compareTo(map2['satoshis'] as int));
 
     var minUtxoNeed = 0;
     var minUtxoAmountNeed = 0;
     for (var tx in utxo) {
       if (minUtxoAmountNeed < int.parse(amount)) {
         minUtxoNeed++;
-        minUtxoAmountNeed += int.parse(tx['value']);
+        minUtxoAmountNeed += tx['value'] != null
+            ? int.parse(tx['value'])
+            : tx['satoshis'] as int;
       } else {
         break;
       }
@@ -407,7 +410,9 @@ class BuildTransaction {
     List<bitcoin_pb.UnspentTransaction> utxoParsed = [];
     for (var index = 0; index < minUtxo.length; index++) {
       final txParsed = bitcoin_pb.UnspentTransaction(
-        amount: $fixnum.Int64.parseInt(minUtxo[index]['value']),
+        amount: minUtxo[index]['value'] != null
+            ? $fixnum.Int64.parseInt(minUtxo[index]['value'])
+            : $fixnum.Int64(minUtxo[index]['satoshis']),
         outPoint: bitcoin_pb.OutPoint(
           hash: hex.decode(minUtxo[index]['txid']).reversed.toList(),
           index: minUtxo[index]['vout'],
@@ -439,7 +444,9 @@ class BuildTransaction {
                 transactionPlan.fee.toInt() == 0) &&
             minUtxoNeed < utxo.length) {
       final txParsed = bitcoin_pb.UnspentTransaction(
-        amount: $fixnum.Int64.parseInt(utxo[minUtxoNeed]['value']),
+        amount: utxo[minUtxoNeed]['value'] != null
+            ? $fixnum.Int64.parseInt(utxo[minUtxoNeed]['value'])
+            : $fixnum.Int64(utxo[minUtxoNeed]['satoshis']),
         outPoint: bitcoin_pb.OutPoint(
           hash: hex.decode(utxo[minUtxoNeed]['txid']).reversed.toList(),
           index: utxo[minUtxoNeed]['vout'],
@@ -450,7 +457,9 @@ class BuildTransaction {
             .toList(),
       );
       utxoParsed.add(txParsed);
-      minUtxoAmountNeed += int.parse(utxo[minUtxoNeed]['value']);
+      minUtxoAmountNeed += utxo[minUtxoNeed]['value'] != null
+          ? int.parse(utxo[minUtxoNeed]['value'])
+          : utxo[minUtxoNeed]['satoshis'] as int;
       minUtxoNeed++;
       signingInput = bitcoin_pb.SigningInput(
         amount: $fixnum.Int64.parseInt(amount),
