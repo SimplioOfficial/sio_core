@@ -90,7 +90,7 @@ class UtilsCosmos {
     throw Exception('coin ticker is not supported');
   }
 
-  /// Get the account details from a cosmos ecosystem address.
+  /// Get the account details for a cosmos ecosystem address.
   /// The result is an object that contains `accountNumber` and `sequence`.
   ///
   /// Example:
@@ -117,7 +117,7 @@ class UtilsCosmos {
     return cosmosAccountDetails;
   }
 
-  /// Get the fee details from a cosmos ecosystem blockchain.
+  /// Get the fee details for a cosmos ecosystem blockchain.
   /// The result is an object that contains the `chainId`, `minFee` and `gas`.
   ///
   /// Example:
@@ -166,7 +166,7 @@ class UtilsEthereum {
     return jsonDecode(request.body)['result'];
   }
 
-  /// Get the fee details from a ethereum type blockchains.
+  /// Get the fee details for an ethereum type blockchain.
   /// The result is an object that contains the `safeGasPrice`,
   /// `proposeGasPrice`, `fastGasPrice` and `gasLimit`.
   ///
@@ -219,6 +219,27 @@ class UtilsSolana {
       throw Exception(jsonDecode(request.body)['error']);
     }
     return jsonDecode(request.body)['result']['value']['blockhash'];
+  }
+
+  /// Get the fee for solana blockchain.
+  ///
+  /// Example:
+  /// * http://fees.amitabha.xyz/solana
+  /// ```
+  /// final request = await UtilsSolana.getSolanaFee(
+  ///   apiEndpoint: 'http://fees.amitabha.xyz/',
+  /// );
+  /// ```
+  static Future<String> getSolanaFee(
+      {required String apiEndpoint,
+      String ending = 'solana' // used for tests and coverage only.
+      }) async {
+    final request = await getRequest(apiEndpoint + ending);
+    if (jsonDecode(request.body)['sol'] == null) {
+      throw Exception(
+          'There is an error with apiEndpoint! Details:' + request.body);
+    }
+    return jsonDecode(request.body)['sol']['fee'];
   }
 }
 

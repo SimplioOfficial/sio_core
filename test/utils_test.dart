@@ -62,7 +62,7 @@ void main() {
       test('Create get cosmos fee details request', () async {
         final cosmosFeeDetails = await UtilsCosmos.getCosmosFeeDetails(
             apiEndpoint: 'http://fees.amitabha.xyz/', ticker: 'atom');
-        expect(cosmosFeeDetails.toJson()['chainId'], 'cosmoshub-4');
+        expect(cosmosFeeDetails.chainId, 'cosmoshub-4');
         try {
           await UtilsCosmos.getCosmosFeeDetails(
             apiEndpoint: 'http://fees.amitabha.xyz/',
@@ -93,7 +93,7 @@ void main() {
       test('Create get ethereum fee details request', () async {
         final ethereumFeeDetails = await UtilsEthereum.getEthereumFeeDetails(
             apiEndpoint: 'http://fees.amitabha.xyz/', ticker: 'etc');
-        expect(ethereumFeeDetails.toJson()['gasLimit'], '21000');
+        expect(ethereumFeeDetails.gasLimit, '21000');
         try {
           await UtilsEthereum.getEthereumFeeDetails(
             apiEndpoint: 'http://fees.amitabha.xyz/',
@@ -114,6 +114,17 @@ void main() {
           await UtilsSolana.latestBlockHashRequest(
             apiEndpoint: 'https://api.mainnet-beta.solana.com/',
           );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
+      test('Create get solana fee request', () async {
+        final solanaFee = await UtilsSolana.getSolanaFee(
+            apiEndpoint: 'http://fees.amitabha.xyz/');
+        expect(solanaFee, '5000');
+        try {
+          await UtilsSolana.getSolanaFee(
+              apiEndpoint: 'http://fees.amitabha.xyz/', ending: 'cosmos');
         } catch (exception) {
           expect(exception, isA<Exception>());
         }
