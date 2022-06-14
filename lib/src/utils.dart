@@ -41,6 +41,29 @@ class _CosmosFeeDetails {
   }
 }
 
+class _EthereumFeeDetails {
+  final String? safeGasPrice;
+  final String? proposeGasPrice;
+  final String? fastGasPrice;
+  final String? gasLimit;
+
+  _EthereumFeeDetails({
+    this.safeGasPrice,
+    this.proposeGasPrice,
+    this.fastGasPrice,
+    this.gasLimit,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'safeGasPrice': safeGasPrice,
+      'proposeGasPrice': proposeGasPrice,
+      'fastGasPrice': fastGasPrice,
+      'gasLimit': gasLimit,
+    };
+  }
+}
+
 /// Converts BigInt numbers into list of bytes.
 ///
 /// Example:
@@ -68,12 +91,12 @@ class UtilsCosmos {
   }
 
   /// Get the account details from a cosmos ecosystem address.
-  /// The result can be parsed to get the account number and the sequence.
+  /// The result is an object that contains `accountNumber` and `sequence`.
   ///
   /// Example:
   /// * https://lcd-osmosis.keplr.app/cosmos/auth/v1beta1/accounts/osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn
   /// ```
-  /// final request = await getCosmosAccountDetails(
+  /// final request = await UtilsCosmos.getCosmosAccountDetails(
   ///   address: 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn',
   ///   apiEndpoint: 'https://lcd-osmosis.keplr.app/',
   /// );
@@ -94,6 +117,17 @@ class UtilsCosmos {
     return cosmosAccountDetails;
   }
 
+  /// Get the fee details from a cosmos ecosystem blockchain.
+  /// The result is an object that contains the `chainId`, `minFee` and `gas`.
+  ///
+  /// Example:
+  /// * http://fees.amitabha.xyz/cosmos
+  /// ```
+  /// final request = await UtilsCosmos.getCosmosFeeDetails(
+  ///   apiEndpoint: 'http://fees.amitabha.xyz/',
+  ///   ticker: 'atom',
+  /// );
+  /// ```
   static Future<_CosmosFeeDetails> getCosmosFeeDetails({
     required String apiEndpoint,
     required String ticker,
@@ -130,6 +164,35 @@ class UtilsEthereum {
       throw Exception(jsonDecode(request.body)['error']);
     }
     return jsonDecode(request.body)['result'];
+  }
+
+  /// Get the fee details from a ethereum type blockchains.
+  /// The result is an object that contains the `safeGasPrice`,
+  /// `proposeGasPrice`, `fastGasPrice` and `gasLimit`.
+  ///
+  /// Example:
+  /// * http://fees.amitabha.xyz/ethereum
+  /// ```
+  /// final request = await UtilsEthereum.getEthereumFeeDetails(
+  ///   apiEndpoint: 'http://fees.amitabha.xyz/',
+  ///   ticker: 'eth',
+  /// );
+  /// ```
+  static Future<_EthereumFeeDetails> getEthereumFeeDetails({
+    required String apiEndpoint,
+    required String ticker,
+  }) async {
+    final request = await getRequest(apiEndpoint + 'ethereum');
+    if (jsonDecode(request.body)[ticker] == null) {
+      throw Exception('Ticker not supported! Details:' + request.body);
+    }
+    final ethereumFeeDetails = _EthereumFeeDetails(
+      safeGasPrice: jsonDecode(request.body)[ticker]['safeGasPrice'],
+      proposeGasPrice: jsonDecode(request.body)[ticker]['proposeGasPrice'],
+      fastGasPrice: jsonDecode(request.body)[ticker]['fastGasPrice'],
+      gasLimit: jsonDecode(request.body)[ticker]['gasLimit'],
+    );
+    return ethereumFeeDetails;
   }
 }
 

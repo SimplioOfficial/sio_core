@@ -90,6 +90,19 @@ void main() {
           expect(exception, isA<Exception>());
         }
       });
+      test('Create get ethereum fee details request', () async {
+        final ethereumFeeDetails = await UtilsEthereum.getEthereumFeeDetails(
+            apiEndpoint: 'http://fees.amitabha.xyz/', ticker: 'etc');
+        expect(ethereumFeeDetails.toJson()['gasLimit'], '21000');
+        try {
+          await UtilsEthereum.getEthereumFeeDetails(
+            apiEndpoint: 'http://fees.amitabha.xyz/',
+            ticker: 'ami',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
     });
 
     group('Solana - ', () {
