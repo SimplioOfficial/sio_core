@@ -8,20 +8,20 @@ class GetDecimals {
   static int cosmos({
     required String ticker,
   }) {
-    if (ticker == 'ATOM') return 6;
-    if (ticker == 'LUNA') return 6;
-    if (ticker == 'OSMO') return 6;
-    throw Exception('coin TICKER is not supported');
+    if (ticker == 'atom') return 6;
+    if (ticker == 'luna') return 6;
+    if (ticker == 'osmo') return 6;
+    throw Exception('coin ticker is not supported');
   }
 
   /// Get BNB (Smart Chain - BSC), ETC or ETH decimals on mainnet.
   static int ethereum({
     required String ticker,
   }) {
-    if (ticker == 'BSC') return 18;
-    if (ticker == 'ETC') return 18;
-    if (ticker == 'ETH') return 18;
-    throw Exception('coin TICKER is not supported');
+    if (ticker == 'bsc') return 18;
+    if (ticker == 'etc') return 18;
+    if (ticker == 'eth') return 18;
+    throw Exception('coin ticker is not supported');
   }
 
   /// Get BEP-20, ETC-20 or ERC-20 Token decimals on mainnet.
@@ -76,14 +76,14 @@ class GetDecimals {
   static int utxoCoin({
     required String ticker,
   }) {
-    if (ticker == 'BTC') return 8;
-    if (ticker == 'BCH') return 8;
-    if (ticker == 'DASH') return 8;
-    if (ticker == 'DGB') return 8;
-    if (ticker == 'DOGE') return 8;
-    if (ticker == 'FLUX') return 8;
-    if (ticker == 'LTC') return 8;
-    if (ticker == 'ZEC') return 8;
+    if (ticker == 'btc') return 8;
+    if (ticker == 'bch') return 8;
+    if (ticker == 'dash') return 8;
+    if (ticker == 'dgb') return 8;
+    if (ticker == 'doge') return 8;
+    if (ticker == 'flux') return 8;
+    if (ticker == 'ltc') return 8;
+    if (ticker == 'zec') return 8;
     throw Exception('coin TICKER is not supported');
   }
 }

@@ -1,6 +1,6 @@
-name: Run unit tests - on emulator
+name: Unit tests - on emulator
 env:
-  FLUTTER_VERSION: "3.0.1"
+  FLUTTER_VERSION: "3.0.2"
 
 on: push
 
@@ -9,10 +9,11 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        api-level: [28]
+        api-level: [31]
 
     steps:
-      - uses: actions/checkout@v2
+      - name: checkout
+        uses: actions/checkout@v3
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2
@@ -43,15 +44,17 @@ jobs:
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
+          arch: x86_64
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
 
       - name: Run Unit Tests Under Android Emulator Runner
-        uses: ReactiveCircus/android-emulator-runner@v2.23.0
+        uses: ReactiveCircus/android-emulator-runner@v2
         with:
           api-level: ${{ matrix.api-level }}
+          arch: x86_64
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true

@@ -8,6 +8,23 @@ import 'package:trust_wallet_core_lib/protobuf/Cosmos.pb.dart' as cosmos_pb;
 import 'package:trust_wallet_core_lib/protobuf/Ethereum.pb.dart' as ethereum_pb;
 import 'package:trust_wallet_core_lib/protobuf/Solana.pb.dart' as solana_pb;
 
+class _Transaction {
+  final String? rawTx;
+  final BigInt? networkFee;
+
+  _Transaction({
+    this.rawTx,
+    this.networkFee,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'txid': rawTx,
+      'networkFee': networkFee.toString(),
+    };
+  }
+}
+
 /// Class that builds transactions and return OutputTx ready for broadcasting.
 class BuildTransaction {
   /// BNB Smart Chain native transactions.
@@ -15,7 +32,7 @@ class BuildTransaction {
   /// `amount` value in gwei.
   ///
   /// `gasPrice` and `gasLimit` values in wei.
-  static String bnbSmartChain({
+  static _Transaction bnbSmartChain({
     required HDWallet wallet,
     // value in gwei (10^9 wei)
     required String amount,
@@ -45,7 +62,11 @@ class BuildTransaction {
     final sign = AnySigner.sign(
         signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);
     final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
-    return hex.encode(signingOutput.encoded);
+    final transaction = _Transaction(
+      rawTx: hex.encode(signingOutput.encoded),
+      networkFee: BigInt.parse(gasPrice) * BigInt.parse(gasLimit),
+    );
+    return transaction;
   }
 
   /// BNB Smart Chain token transactions.
@@ -53,7 +74,7 @@ class BuildTransaction {
   /// `amount` value in smallest denomination.
   ///
   /// `gasPrice` and `gasLimit` values in wei.
-  static String bnbSmartChainBEP20Token({
+  static _Transaction bnbSmartChainBEP20Token({
     required HDWallet wallet,
     // value in smallest denomination
     required String amount,
@@ -87,7 +108,11 @@ class BuildTransaction {
     final sign = AnySigner.sign(
         signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);
     final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
-    return hex.encode(signingOutput.encoded);
+    final transaction = _Transaction(
+      rawTx: hex.encode(signingOutput.encoded),
+      networkFee: BigInt.parse(gasPrice) * BigInt.parse(gasLimit),
+    );
+    return transaction;
   }
 
   /// Cosmos native transactions.
@@ -97,7 +122,7 @@ class BuildTransaction {
   /// ChainId of OSMO: `osmosis-1`.
   ///
   /// BroadcastMode enum: `0-BLOCK`, `1-SYNC`, `2-ASYNC`.
-  static String cosmos({
+  static _Transaction cosmos({
     required HDWallet wallet,
     required int coin,
     required String amount,
@@ -141,7 +166,11 @@ class BuildTransaction {
     );
     final sign = AnySigner.sign(signingInput.writeToBuffer(), coin);
     final signingOutput = cosmos_pb.SigningOutput.fromBuffer(sign);
-    return signingOutput.serialized;
+    final transaction = _Transaction(
+      rawTx: signingOutput.serialized,
+      networkFee: BigInt.parse(fee),
+    );
+    return transaction;
   }
 
   /// Ethereum native transactions.
@@ -149,7 +178,7 @@ class BuildTransaction {
   /// `amount` value in gwei.
   ///
   /// `gasPrice` and `gasLimit` values in wei.
-  static String ethereum({
+  static _Transaction ethereum({
     required HDWallet wallet,
     // value in gwei (10^9 wei)
     required String amount,
@@ -178,7 +207,11 @@ class BuildTransaction {
     final sign = AnySigner.sign(
         signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);
     final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
-    return hex.encode(signingOutput.encoded);
+    final transaction = _Transaction(
+      rawTx: hex.encode(signingOutput.encoded),
+      networkFee: BigInt.parse(gasPrice) * BigInt.parse(gasLimit),
+    );
+    return transaction;
   }
 
   /// Ethereum ERC20 token transactions.
@@ -186,7 +219,7 @@ class BuildTransaction {
   /// `amount` value in smallest denomination.
   ///
   /// `gasPrice` and `gasLimit` values in wei.
-  static String ethereumERC20Token({
+  static _Transaction ethereumERC20Token({
     required HDWallet wallet,
     // value in smallest denomination
     required String amount,
@@ -219,7 +252,11 @@ class BuildTransaction {
     final sign = AnySigner.sign(
         signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);
     final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
-    return hex.encode(signingOutput.encoded);
+    final transaction = _Transaction(
+      rawTx: hex.encode(signingOutput.encoded),
+      networkFee: BigInt.parse(gasPrice) * BigInt.parse(gasLimit),
+    );
+    return transaction;
   }
 
   /// Ethereum Classic native transactions.
@@ -227,7 +264,7 @@ class BuildTransaction {
   /// `amount` value in gwei.
   ///
   /// `gasPrice` and `gasLimit` values in wei.
-  static String ethereumClassic({
+  static _Transaction ethereumClassic({
     required HDWallet wallet,
     // value in gwei (10^9 wei)
     required String amount,
@@ -256,15 +293,20 @@ class BuildTransaction {
     final sign = AnySigner.sign(
         signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);
     final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
-    return hex.encode(signingOutput.encoded);
+    final transaction = _Transaction(
+      rawTx: hex.encode(signingOutput.encoded),
+      networkFee: BigInt.parse(gasPrice) * BigInt.parse(gasLimit),
+    );
+    return transaction;
   }
 
   /// Solana native transaction.
-  static String solana({
+  static _Transaction solana({
     required HDWallet wallet,
     required String recipient,
     required String amount,
     required String latestBlockHash,
+    String fee = '5000',
   }) {
     final secretPrivateKey = wallet.getKeyForCoin(TWCoinType.TWCoinTypeSolana);
 
@@ -282,18 +324,22 @@ class BuildTransaction {
       TWCoinType.TWCoinTypeSolana,
     );
     final signingOutput = solana_pb.SigningOutput.fromBuffer(sign);
-
-    return signingOutput.encoded;
+    final transaction = _Transaction(
+      rawTx: signingOutput.encoded,
+      networkFee: BigInt.parse(fee),
+    );
+    return transaction;
   }
 
   /// Solana token transaction.
-  static String solanaToken({
+  static _Transaction solanaToken({
     required HDWallet wallet,
     required String recipientSolanaAddress,
     required String tokenMintAddress,
     required String amount,
     required int decimals,
     required String latestBlockHash,
+    String fee = '5000',
   }) {
     final secretPrivateKey = wallet.getKeyForCoin(TWCoinType.TWCoinTypeSolana);
 
@@ -323,12 +369,15 @@ class BuildTransaction {
       TWCoinType.TWCoinTypeSolana,
     );
     final signingOutput = solana_pb.SigningOutput.fromBuffer(sign);
-
-    return signingOutput.encoded;
+    final transaction = _Transaction(
+      rawTx: signingOutput.encoded,
+      networkFee: BigInt.parse(fee),
+    );
+    return transaction;
   }
 
   /// Utxo coins transaction.
-  static String utxoCoin({
+  static _Transaction utxoCoin({
     required HDWallet wallet,
     required int coin,
     required String toAddress,
@@ -429,7 +478,10 @@ class BuildTransaction {
 
     final sign = AnySigner.sign(signingInput.writeToBuffer(), coin);
     final signingOutput = bitcoin_pb.SigningOutput.fromBuffer(sign);
-
-    return hex.encode(signingOutput.encoded);
+    final transaction = _Transaction(
+      rawTx: hex.encode(signingOutput.encoded),
+      networkFee: BigInt.parse(transactionPlan.fee.toString()),
+    );
+    return transaction;
   }
 }

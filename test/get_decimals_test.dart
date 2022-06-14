@@ -3,21 +3,21 @@ import 'package:test/test.dart';
 
 void main() {
   test('Cosmos decimals', () {
-    expect(GetDecimals.cosmos(ticker: 'ATOM'), 6);
-    expect(GetDecimals.cosmos(ticker: 'LUNA'), 6);
-    expect(GetDecimals.cosmos(ticker: 'OSMO'), 6);
+    expect(GetDecimals.cosmos(ticker: 'atom'), 6);
+    expect(GetDecimals.cosmos(ticker: 'luna'), 6);
+    expect(GetDecimals.cosmos(ticker: 'osmo'), 6);
     try {
-      GetDecimals.cosmos(ticker: 'AMI');
+      GetDecimals.cosmos(ticker: 'ami');
     } catch (exception) {
       expect(exception, isA<Exception>());
     }
   });
   test('Ethereum decimals', () {
-    expect(GetDecimals.ethereum(ticker: 'BSC'), 18);
-    expect(GetDecimals.ethereum(ticker: 'ETC'), 18);
-    expect(GetDecimals.ethereum(ticker: 'ETH'), 18);
+    expect(GetDecimals.ethereum(ticker: 'bsc'), 18);
+    expect(GetDecimals.ethereum(ticker: 'etc'), 18);
+    expect(GetDecimals.ethereum(ticker: 'eth'), 18);
     try {
-      GetDecimals.ethereum(ticker: 'AMI');
+      GetDecimals.ethereum(ticker: 'ami');
     } catch (exception) {
       expect(exception, isA<Exception>());
     }
@@ -116,16 +116,16 @@ void main() {
     }
   });
   test('UtxoCoin decimals', () {
-    expect(GetDecimals.utxoCoin(ticker: 'BTC'), 8);
-    expect(GetDecimals.utxoCoin(ticker: 'BCH'), 8);
-    expect(GetDecimals.utxoCoin(ticker: 'DASH'), 8);
-    expect(GetDecimals.utxoCoin(ticker: 'DGB'), 8);
-    expect(GetDecimals.utxoCoin(ticker: 'DOGE'), 8);
-    expect(GetDecimals.utxoCoin(ticker: 'FLUX'), 8);
-    expect(GetDecimals.utxoCoin(ticker: 'LTC'), 8);
-    expect(GetDecimals.utxoCoin(ticker: 'ZEC'), 8);
+    expect(GetDecimals.utxoCoin(ticker: 'btc'), 8);
+    expect(GetDecimals.utxoCoin(ticker: 'bch'), 8);
+    expect(GetDecimals.utxoCoin(ticker: 'dash'), 8);
+    expect(GetDecimals.utxoCoin(ticker: 'dgb'), 8);
+    expect(GetDecimals.utxoCoin(ticker: 'doge'), 8);
+    expect(GetDecimals.utxoCoin(ticker: 'flux'), 8);
+    expect(GetDecimals.utxoCoin(ticker: 'ltc'), 8);
+    expect(GetDecimals.utxoCoin(ticker: 'zec'), 8);
     try {
-      GetDecimals.utxoCoin(ticker: 'AMI');
+      GetDecimals.utxoCoin(ticker: 'ami');
     } catch (exception) {
       expect(exception, isA<Exception>());
     }

@@ -1,6 +1,6 @@
-name: Run unit tests - off emulator
+name: Unit tests - off emulator
 env:
-  FLUTTER_VERSION: "3.0.1"
+  FLUTTER_VERSION: "3.0.2"
 
 on: push
 
@@ -9,7 +9,8 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: checkout
+        uses: actions/checkout@v3
 
       - name: Install Flutter
         uses: subosito/flutter-action@v2

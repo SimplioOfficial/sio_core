@@ -44,10 +44,9 @@ class _Tx {
 class GetTransactions {
   /// Get ATOM, LUNA, OSMO balance from mainnet.
   ///
-  /// Works with LCD api providers:
-  /// * https://api.cosmos.network/
-  /// * https://lcd.terra.dev/
-  /// * https://lcd-osmosis.keplr.app/
+  /// Works with REST api providers:
+  /// * https://api-osmosis-chain.imperator.co/ for OSMO
+  /// * did not find for the moment providers for LUNA and ATOM
   static Future<List<_Tx>> cosmos({
     required String address,
     required String apiEndpoint,

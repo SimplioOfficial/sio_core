@@ -32,43 +32,156 @@ void main() {
       expect(
           bigIntToBytes(BigInt.parse('100000000000')), [23, 72, 118, 232, 0]);
     });
-    test('Cosmos Denomination', () {
-      expect(cosmosDenomination(ticker: 'ATOM'), 'uatom');
-      expect(cosmosDenomination(ticker: 'LUNA'), 'uluna');
-      expect(cosmosDenomination(ticker: 'OSMO'), 'uosmo');
-      try {
-        cosmosDenomination(ticker: 'AMI');
-      } catch (exception) {
-        expect(exception, isA<Exception>());
-      }
+
+    group('Cosmos - ', () {
+      test('Cosmos Denomination', () {
+        expect(UtilsCosmos.cosmosDenomination(ticker: 'atom'), 'uatom');
+        expect(UtilsCosmos.cosmosDenomination(ticker: 'luna'), 'uluna');
+        expect(UtilsCosmos.cosmosDenomination(ticker: 'osmo'), 'uosmo');
+        try {
+          UtilsCosmos.cosmosDenomination(ticker: 'ami');
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
+      test('Create get cosmos account details request', () async {
+        final cosmosAccountDetails = await UtilsCosmos.getCosmosAccountDetails(
+          address: 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn',
+          apiEndpoint: 'https://lcd-osmosis.keplr.app/',
+        );
+        expect(cosmosAccountDetails.toJson()['accountNumber'], '456069');
+        try {
+          await UtilsCosmos.getCosmosAccountDetails(
+            address: 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpwn',
+            apiEndpoint: 'https://lcd-osmosis.keplr.app/',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
+      test('Create get cosmos fee details request', () async {
+        final cosmosFeeDetails = await UtilsCosmos.getCosmosFeeDetails(
+            apiEndpoint: 'http://fees.amitabha.xyz/', ticker: 'atom');
+        expect(cosmosFeeDetails.chainId, 'cosmoshub-4');
+        try {
+          await UtilsCosmos.getCosmosFeeDetails(
+            apiEndpoint: 'http://fees.amitabha.xyz/',
+            ticker: 'ami',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
     });
-    test('Create get cosmos account details request', () async {
-      final request = await getCosmosAccountDetails(
-        address: 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn',
-        apiEndpoint: 'https://lcd-osmosis.keplr.app/',
-      );
-      expect(jsonDecode(request), isMap);
-      expect(jsonDecode(request)['account']['account_number'], '456069');
+
+    group('Ethereum - ', () {
+      test('Create get nonce request', () async {
+        final nonce = await UtilsEthereum.getNonce(
+          address: '0x6A86087Ee103DCC2494cA2804e4934b913df84E8',
+          apiEndpoint: 'https://bsc-dataseed.binance.org/',
+        );
+        expect(nonce, '0x0');
+        try {
+          await UtilsEthereum.getNonce(
+            address: '0x6A86087Ee103DCC2494cA2804e4934b913df8',
+            apiEndpoint: 'https://bsc-dataseed.binance.org/',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
+      test('Create get ethereum fee details request', () async {
+        final ethereumFeeDetails = await UtilsEthereum.getEthereumFeeDetails(
+            apiEndpoint: 'http://fees.amitabha.xyz/', ticker: 'etc');
+        expect(ethereumFeeDetails.gasLimit, '21000');
+        try {
+          await UtilsEthereum.getEthereumFeeDetails(
+            apiEndpoint: 'http://fees.amitabha.xyz/',
+            ticker: 'ami',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
     });
-    test('Create get nonce request', () async {
-      final request = await getNonce(
-        address: '0x6A86087Ee103DCC2494cA2804e4934b913df84E8',
-        apiEndpoint: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
-      );
-      expect(jsonDecode(request), isMap);
-      expect(jsonDecode(request)['result'], '0xa');
+
+    group('Solana - ', () {
+      test('Create latest block hash request', () async {
+        final blockHash = await UtilsSolana.latestBlockHashRequest(
+            apiEndpoint: 'https://api.mainnet-beta.solana.com/');
+        expect(base58.decode(blockHash).length, 32);
+        try {
+          await UtilsSolana.latestBlockHashRequest(
+            apiEndpoint: 'https://api.mainnet-beta.solana.com/',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
+      test('Create get solana fee request', () async {
+        final solanaFee = await UtilsSolana.getSolanaFee(
+            apiEndpoint: 'http://fees.amitabha.xyz/');
+        expect(solanaFee, '5000');
+        try {
+          await UtilsSolana.getSolanaFee(
+              apiEndpoint: 'http://fees.amitabha.xyz/', ending: 'cosmos');
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
     });
-    test('Create get utxo request', () async {
-      final request = await getUtxo(
-          apiEndpoint: 'https://jsonplaceholder.typicode.com/todos/1/');
-      expect(jsonDecode(request)['id'], 1);
-    });
-    test('Create latest block hash request', () async {
-      final request = await latestBlockHashRequest(
-          apiEndpoint: 'https://api.devnet.solana.com/');
-      final String blockHash =
-          jsonDecode(request)['result']['value']['blockhash'];
-      expect(base58.decode(blockHash).length, 32);
+
+    group('utxoCoin - ', () {
+      test('Create get utxo request for blockbook', () async {
+        final utxo = await UtilsUtxo.getUtxo(
+          apiEndpoint: 'https://ltc1.trezor.io/',
+          address: 'ltc1q4jd8494yun73v5ul2wcl5p32lcxm66afx4efr6',
+        );
+        expect(jsonDecode(utxo), []);
+      });
+      test('Create get utxo request for insight', () async {
+        final utxo = await UtilsUtxo.getUtxo(
+          apiEndpoint: 'https://explorer.runonflux.io/',
+          address: 't1amMB14YTcUktfjHrz42XcDb2tdHmjgMQd',
+          explorerType: 'insight',
+        );
+        expect(jsonDecode(utxo), []);
+      });
+      test('Create get utxo request for inexistent explorer type', () async {
+        try {
+          await UtilsUtxo.getUtxo(
+            apiEndpoint: 'https://ltc1.trezor.io/',
+            address: 't1amMB14YTcUktfjHrz42XcDb2tdHmjgMQd',
+            explorerType: 'flower',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
+      test('Create get utxo request for wrong explorer type', () async {
+        try {
+          await UtilsUtxo.getUtxo(
+            apiEndpoint: 'https://explorer.runonflux.io/',
+            address: 't1amMB14YTcUktfjHrz42XcDb2tdHmjgMQd',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
+
+      test('Create get utxoCoin fee  request', () async {
+        final utxoCoinFee = await UtilsUtxo.getUtxoCoinFee(
+            apiEndpoint: 'http://fees.amitabha.xyz/', ticker: 'zec');
+        expect(utxoCoinFee, '2');
+        try {
+          await UtilsUtxo.getUtxoCoinFee(
+            apiEndpoint: 'http://fees.amitabha.xyz/',
+            ticker: 'ami',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
     });
   });
 }
