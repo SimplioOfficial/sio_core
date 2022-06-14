@@ -221,7 +221,7 @@ class UtilsSolana {
     return jsonDecode(request.body)['result']['value']['blockhash'];
   }
 
-  /// Get the fee for solana blockchain.
+  /// Get the `fee` for solana blockchain.
   ///
   /// Example:
   /// * http://fees.amitabha.xyz/solana
@@ -271,5 +271,26 @@ class UtilsUtxo {
       throw Exception(request.body);
     }
     return request.body;
+  }
+
+  /// Get the `minFee` for an utxoCoin type blockchain.
+  ///
+  /// Example:
+  /// * http://fees.amitabha.xyz/utxoCoins
+  /// ```
+  /// final request = await UtilsUtxo.getUtxoCoinFee(
+  ///   apiEndpoint: 'http://fees.amitabha.xyz/',
+  ///   ticker: 'btc',
+  /// );
+  /// ```
+  static Future<String> getUtxoCoinFee({
+    required String apiEndpoint,
+    required String ticker,
+  }) async {
+    final request = await getRequest(apiEndpoint + 'utxoCoins');
+    if (jsonDecode(request.body)[ticker] == null) {
+      throw Exception('Ticker not supported! Details:' + request.body);
+    }
+    return jsonDecode(request.body)[ticker]['minFee'];
   }
 }

@@ -168,6 +168,20 @@ void main() {
           expect(exception, isA<Exception>());
         }
       });
+
+      test('Create get utxoCoin fee  request', () async {
+        final utxoCoinFee = await UtilsUtxo.getUtxoCoinFee(
+            apiEndpoint: 'http://fees.amitabha.xyz/', ticker: 'zec');
+        expect(utxoCoinFee, '2');
+        try {
+          await UtilsUtxo.getUtxoCoinFee(
+            apiEndpoint: 'http://fees.amitabha.xyz/',
+            ticker: 'ami',
+          );
+        } catch (exception) {
+          expect(exception, isA<Exception>());
+        }
+      });
     });
   });
 }
