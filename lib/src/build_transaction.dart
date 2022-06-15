@@ -480,7 +480,7 @@ class BuildTransaction {
         (transactionPlan.fee.toInt() == 0 ||
             int.parse(amount) + transactionPlan.fee.toInt() >
                 minUtxoAmountNeed)) {
-      throw LowTotalAmountPLusFeeException();
+      throw LowTotalAmountPlusFeeException();
     }
     signingInput.plan = transactionPlan;
     signingInput.amount = transactionPlan.amount;
