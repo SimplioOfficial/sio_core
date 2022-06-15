@@ -11,6 +11,6 @@ class NoUtxoAvailableException implements Exception {
 /// needed to execute this transaction.
 ///
 /// Try to lower the amount to be sent.
-class LowTotalAmountPLusFeeException implements Exception {
-  LowTotalAmountPLusFeeException();
+class LowTotalAmountPlusFeeException implements Exception {
+  LowTotalAmountPlusFeeException();
 }

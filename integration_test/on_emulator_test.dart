@@ -183,7 +183,7 @@ void main() {
   });
 
   group('UtxoCoin transaction tests - ', () {
-    test('No utxo available', () async {
+    test('No utxo available - blockbook', () async {
       const coin = TWCoinType.TWCoinTypeDogecoin;
       const toAddress = 'DK3AhJvD57AfUqFCp5MUV62GE6K4enGxSw';
       const amount = '1005000';
@@ -203,7 +203,8 @@ void main() {
         expect(exception, isA<NoUtxoAvailableException>());
       }
     });
-    test('Total amount < amount + estimated fee (1000 sats)', () async {
+    test('Total amount < amount + estimated fee (1000 sats) - blockbook',
+        () async {
       const coin = TWCoinType.TWCoinTypeLitecoin;
       const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
       const amount = '38900';
@@ -221,10 +222,31 @@ void main() {
           utxo: utxo,
         );
       } catch (exception) {
-        expect(exception, isA<LowTotalAmountPLusFeeException>());
+        expect(exception, isA<LowTotalAmountPlusFeeException>());
       }
     });
-    test('Valid utxoCoin transaction', () async {
+    test('Total amount < amount + estimated fee (1000 sats) - insight',
+        () async {
+      const coin = TWCoinType.TWCoinTypeLitecoin;
+      const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
+      const amount = '38900';
+      const utxoString =
+          '[{"txid":"f873f455ded89ef7fc7eae62f9ef78c02814f28cf9501f871cbe576096ad9ef5","vout":0,"satoshis":29169,"height":2252921,"confirmations":683},{"txid":"6e5da8e54a0d785a9c3ec9eb0848d14a4011782cf93491404599e0a4cb5a1c67","vout":0,"satoshis":10000,"height":2252920,"confirmations":684}]';
+      List utxo = jsonDecode(utxoString);
+      try {
+        BuildTransaction.utxoCoin(
+          wallet: wallet,
+          coin: coin,
+          toAddress: toAddress,
+          amount: amount,
+          byteFee: '10',
+          utxo: utxo,
+        );
+      } catch (exception) {
+        expect(exception, isA<LowTotalAmountPlusFeeException>());
+      }
+    });
+    test('Valid utxoCoin transaction - blockbook', () async {
       const coin = TWCoinType.TWCoinTypeLitecoin;
       const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
       const amount = '25000';
@@ -248,13 +270,62 @@ void main() {
         'networkFee': '1410'
       });
     });
-    test('Valid utxoCoin transaction one additional utxo add', () async {
+    test('Valid utxoCoin transaction - insight', () async {
+      const coin = TWCoinType.TWCoinTypeZelcash;
+      const toAddress = 't1byktNheu1vBB5YkwKY1zvQDcAt5c44v8w';
+      const amount = '4000';
+      // https://explorer.runonflux.io/api/addr/t1byktNheu1vBB5YkwKY1zvQDcAt5c44v8w/utxo
+      const utxoString =
+          '[{"address":"t1byktNheu1vBB5YkwKY1zvQDcAt5c44v8w","txid":"d44de5df6f6e6581dd5a8a16f3b2f1dcd4e2637699d38864d29a9e1b050496ef","vout":0,"scriptPubKey":"76a914c69c2c2a50ddd8fc960a0ef0cc3cdac9a3d995bc88ac","amount":0.000114,"satoshis":11400,"height":1142791,"confirmations":69}]';
+      List utxo = jsonDecode(utxoString);
+
+      final signedUtxoCoinTx = BuildTransaction.utxoCoin(
+        wallet: wallet,
+        coin: coin,
+        toAddress: toAddress,
+        amount: amount,
+        byteFee: '10',
+        utxo: utxo,
+      );
+      expect(hex.decode(signedUtxoCoinTx.rawTx as String).length, 245);
+      expect(signedUtxoCoinTx.toJson(), {
+        'txid':
+            '0400008085202f8901ef9604051b9e9ad26488d3997663e2d4dcf1b2f3168a5add81656e6fdfe54dd4000000006b4830450221008cf8ebe7b4cb60890bf04a1f004d4b75c9740d64b760a7dc6167a10d321e71b2022013f750b6746ba9287b2cea199afb69b977b4b89805d076ce0d340ab5edbbe22f012103c177cbfeb3f360aeb36e65c2ef70e4dcbd7a033faabd8f9a4ab100cb73b341fc0000000002a00f0000000000001976a914c69c2c2a50ddd8fc960a0ef0cc3cdac9a3d995bc88ac14140000000000001976a914b94b42a358f3dc8ec231d90eac15a59481d9440988ac00000000000000000000000000000000000000',
+        'networkFee': '2260'
+      });
+    });
+    test('Valid utxoCoin transaction one additional utxo add - blockbook',
+        () async {
       const coin = TWCoinType.TWCoinTypeLitecoin;
       const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
       const amount = '9999';
       // https://ltc1.simplio.io/api/v2/utxo/ltc1qulzv02h8nmsuqxaqas3dv22cl244r7vs0smssh
       const utxoString =
           '[{"txid":"f873f455ded89ef7fc7eae62f9ef78c02814f28cf9501f871cbe576096ad9ef5","vout":0,"value":"29169","height":2252921,"confirmations":683},{"txid":"6e5da8e54a0d785a9c3ec9eb0848d14a4011782cf93491404599e0a4cb5a1c67","vout":0,"value":"10000","height":2252920,"confirmations":684}]';
+      List utxo = jsonDecode(utxoString);
+
+      final signedUtxoCoinTx = BuildTransaction.utxoCoin(
+        wallet: wallet,
+        coin: coin,
+        toAddress: toAddress,
+        amount: amount,
+        byteFee: '10',
+        utxo: utxo,
+      );
+      expect(hex.decode(signedUtxoCoinTx.rawTx as String).length, 222);
+      expect(signedUtxoCoinTx.toJson(), {
+        'txid':
+            '01000000000101f59ead966057be1c871f50f98cf21428c078eff962ae7efcf79ed8de55f473f8000000000000000000020f27000000000000160014bb8ef6a40ab316da000090c989372ac48f233fd76045000000000000160014ac9a7a96a4e4fd16539f53b1fa062afe0dbd6ba9024730440220044a1392212fb469afb6dfa71c9644eeaa8568d73cc50d08318e1994d5b929a402205251975b001f3be28d1186b3307d5d5361c25e4d9e94d50ec3342f5cce9692b4012102a91d09121aff91972942758b4e827f18c27305af2085459555f989fbf105d49600000000',
+        'networkFee': '1410'
+      });
+    });
+    test('Valid utxoCoin transaction one additional utxo add - insight',
+        () async {
+      const coin = TWCoinType.TWCoinTypeLitecoin;
+      const toAddress = 'ltc1qhw80dfq2kvtd5qqqjrycjde2cj8jx07h98rj0z';
+      const amount = '9999';
+      const utxoString =
+          '[{"txid":"f873f455ded89ef7fc7eae62f9ef78c02814f28cf9501f871cbe576096ad9ef5","vout":0,"satoshis":29169,"height":2252921,"confirmations":683},{"txid":"6e5da8e54a0d785a9c3ec9eb0848d14a4011782cf93491404599e0a4cb5a1c67","vout":0,"satoshis":10000,"height":2252920,"confirmations":684}]';
       List utxo = jsonDecode(utxoString);
 
       final signedUtxoCoinTx = BuildTransaction.utxoCoin(

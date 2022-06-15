@@ -49,6 +49,7 @@ void main() {
           address: 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn',
           apiEndpoint: 'https://lcd-osmosis.keplr.app/',
         );
+        expect(cosmosAccountDetails.accountNumber, '456069');
         expect(cosmosAccountDetails.toJson()['accountNumber'], '456069');
         try {
           await UtilsCosmos.getCosmosAccountDetails(
@@ -63,6 +64,7 @@ void main() {
         final cosmosFeeDetails = await UtilsCosmos.getCosmosFeeDetails(
             apiEndpoint: 'http://fees.amitabha.xyz/', ticker: 'atom');
         expect(cosmosFeeDetails.chainId, 'cosmoshub-4');
+        expect(cosmosFeeDetails.toJson()['chainId'], 'cosmoshub-4');
         try {
           await UtilsCosmos.getCosmosFeeDetails(
             apiEndpoint: 'http://fees.amitabha.xyz/',
@@ -94,6 +96,7 @@ void main() {
         final ethereumFeeDetails = await UtilsEthereum.getEthereumFeeDetails(
             apiEndpoint: 'http://fees.amitabha.xyz/', ticker: 'etc');
         expect(ethereumFeeDetails.gasLimit, '21000');
+        expect(ethereumFeeDetails.toJson()['gasLimit'], '21000');
         try {
           await UtilsEthereum.getEthereumFeeDetails(
             apiEndpoint: 'http://fees.amitabha.xyz/',
