@@ -1,3 +1,11 @@
+## 0.0.11
+* Refactor BuildTransaction so it returns also fee estimation for the built transaction.
+* Get Fee and Gas Price need for transactions broadcasting.
+* Utils requests have been properly parsed and error handled.
+* Additional needed util functions.
+* Add table of supported coins.
+* Increase CI emulator API to 31 on x86_64.
+* Fix utxos parsing for insight explorers
 ## 0.0.10
 * Implement decimals request for supported coin and tokens.
 * Refactor broadcast transactions for supported coins and tokens.
