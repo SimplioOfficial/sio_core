@@ -300,6 +300,90 @@ class BuildTransaction {
     return transaction;
   }
 
+  /// Polygon (MATIC) native transactions.
+  ///
+  /// `amount` value in gwei.
+  ///
+  /// `gasPrice` and `gasLimit` values in wei.
+  static _Transaction polygon({
+    required HDWallet wallet,
+    // value in gwei (10^9 wei)
+    required String amount,
+    required String toAddress,
+    required String nonce,
+    // value in wei = 10^(-18) BNB (or 10^(-9) gwei)
+    String gasPrice = '3600000000',
+    // price in wei = 10^(-18) BNB (or 10^(-9) gwei)
+    String gasLimit = '21000',
+    int chainId = 137,
+  }) {
+    final secretPrivateKey = wallet.getKeyForCoin(TWCoinType.TWCoinTypePolygon);
+    final tx = ethereum_pb.Transaction_Transfer(
+      amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
+    );
+    final signingInput = ethereum_pb.SigningInput(
+      chainId: [chainId],
+      gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
+      gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
+      toAddress: toAddress,
+      transaction: ethereum_pb.Transaction(transfer: tx),
+      privateKey: secretPrivateKey.data(),
+      nonce: bigIntToBytes(BigInt.parse(nonce)),
+    );
+    final sign = AnySigner.sign(
+        signingInput.writeToBuffer(), TWCoinType.TWCoinTypePolygon);
+    final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
+    final transaction = _Transaction(
+      rawTx: hex.encode(signingOutput.encoded),
+      networkFee: BigInt.parse(gasPrice) * BigInt.parse(gasLimit),
+    );
+    return transaction;
+  }
+
+  /// Polygon (MATIC) token transactions.
+  ///
+  /// `amount` value in smallest denomination.
+  ///
+  /// `gasPrice` and `gasLimit` values in wei.
+  static _Transaction polygonERC20Token({
+    required HDWallet wallet,
+    // value in smallest denomination
+    required String amount,
+    required String tokenContract,
+    required String toAddress,
+    required String nonce,
+    // value in wei = 10^(-18) BNB (or 10^(-9) gwei)
+    String gasPrice = '3600000000',
+    // price in wei = 10^(-18) BNB (or 10^(-9) gwei)
+    String gasLimit = '21000',
+    int chainId = 137,
+  }) {
+    final secretPrivateKey = wallet.getKeyForCoin(TWCoinType.TWCoinTypePolygon);
+
+    final tx = ethereum_pb.Transaction_ERC20Transfer(
+      amount: bigIntToBytes(BigInt.parse(amount)),
+      to: toAddress,
+    );
+
+    final signingInput = ethereum_pb.SigningInput(
+      chainId: [chainId],
+      gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
+      gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
+      toAddress: tokenContract, // yes here must be tokenContract (crazy right?)
+      transaction: ethereum_pb.Transaction(erc20Transfer: tx),
+      privateKey: secretPrivateKey.data(),
+      nonce: bigIntToBytes(BigInt.parse(nonce)),
+    );
+    final sign = AnySigner.sign(
+        signingInput.writeToBuffer(), TWCoinType.TWCoinTypePolygon);
+    final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
+    final transaction = _Transaction(
+      rawTx: hex.encode(signingOutput.encoded),
+      networkFee: BigInt.parse(gasPrice) * BigInt.parse(gasLimit),
+    );
+    return transaction;
+  }
+
   /// Solana native transaction.
   static _Transaction solana({
     required HDWallet wallet,

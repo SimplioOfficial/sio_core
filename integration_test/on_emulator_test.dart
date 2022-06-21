@@ -143,6 +143,35 @@ void main() {
         'networkFee': '285600000000000'
       });
     });
+    test('Polygon native transaction', () {
+      final signedEthTx = BuildTransaction.ethereum(
+        wallet: wallet,
+        amount: amount,
+        toAddress: toAddress,
+        nonce: '0',
+      );
+      expect(hex.decode(signedEthTx.rawTx as String).length, 109);
+      expect(signedEthTx.toJson(), {
+        'txid':
+            'f86b8085032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a160008026a002280d6ed62e1157127ef9a90dfb4b377697d36759e10a3015e33aa7e870ebd5a0483f537fb6c687dc29f60a0b9e861af09ce5d223d339c06c8b7af408277f487f',
+        'networkFee': '285600000000000'
+      });
+    });
+    test('Polygon ERC20 token transaction', () {
+      final signedEthTx = BuildTransaction.ethereumERC20Token(
+        wallet: wallet,
+        amount: amount,
+        tokenContract: tokenContract,
+        toAddress: toAddress,
+        nonce: '0',
+      );
+      expect(hex.decode(signedEthTx.rawTx as String).length, 170);
+      expect(signedEthTx.toJson(), {
+        'txid':
+            'f8a88084d693a4008252089426fc591fecc4948c4288d95b6aadab00eba4e72a80b844a9059cbb0000000000000000000000003e26e7f73a80444e67b7be654a38ab85ccb6ea4700000000000000000000000000000000000000000000000000000000000e1af026a04dd4b00c74f726118d64219380a9bb1331ebeade4293f86cd6ef5fe930130804a05e8bf5a014cbff501f143aaa2d4f71bfe2fb9006f93755015229d881c6c8e940',
+        'networkFee': '75600000000000'
+      });
+    });
   });
 
   group('Solana transactions tests - ', () {
