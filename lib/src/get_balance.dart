@@ -55,12 +55,13 @@ class GetBalance {
     return BigInt.parse(jsonDecode(request.body)['balance']);
   }
 
-  /// Get BNB (Smart Chain), ETC, ETH balance from mainnet, testnet.
+  /// Get BNB (Smart Chain), ETC, ETH, MATIC balance from mainnet, testnet.
   ///
   /// Works with any rpc endpoints from:
   /// * https://docs.bnbchain.org/docs/rpc/
   /// * https://www.ethercluster.com/etc
   /// * https://infura.io/
+  /// * https://polygon-rpc.com/
   static Future<BigInt> ethereumRPC({
     required String address,
     required String apiEndpoint,
@@ -105,10 +106,11 @@ class GetBalance {
   }
 
   /// Get BEP-20 or ERC-20 Token balance from mainnet.
-  /// Works with https://api.bscscan.com/ or https://api.etherscan.com/.
+  /// Works with https://api.bscscan.com/, https://api.etherscan.com/ or https://polygonscan.com/.
   ///
   /// Use apiEndpoint like:
   /// * "https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=YourApiKeyToken"
+  /// * "https://api.etherscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=YourApiKeyToken"
   /// * "https://api.etherscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=YourApiKeyToken"
   static Future<BigInt> ethereumERC20Scan({
     required String address,
