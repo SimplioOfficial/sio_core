@@ -42,12 +42,13 @@ class Broadcast {
     return jsonDecode(broadcast.body)['result'];
   }
 
-  /// Broadcast BNB (Smart Chain), ETC, ETH transactions on mainnet, testnet.
+  /// Broadcast BNB (Smart Chain), ETC, ETH, MATIC transactions on mainnet, testnet.
   ///
   /// Works with any rpc endpoints from:
   /// * https://docs.bnbchain.org/docs/rpc/
   /// * https://www.ethercluster.com/etc
   /// * https://infura.io/
+  /// * https://polygon-rpc.com/
   static Future<String> ethereumRPC({
     required String signedTxEncoded,
     required String apiEndpoint,
