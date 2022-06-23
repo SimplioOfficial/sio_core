@@ -29,9 +29,8 @@ class _Transaction {
 class BuildTransaction {
   /// BNB Smart Chain native transactions.
   ///
-  /// `amount` value in gwei.
-  ///
-  /// `gasPrice` and `gasLimit` values in wei.
+  /// * `amount` value in gwei.
+  /// * `gasPrice` and `gasLimit` values in wei.
   static _Transaction bnbSmartChain({
     required HDWallet wallet,
     // value in gwei (10^9 wei)
@@ -71,9 +70,8 @@ class BuildTransaction {
 
   /// BNB Smart Chain token transactions.
   ///
-  /// `amount` value in smallest denomination.
-  ///
-  /// `gasPrice` and `gasLimit` values in wei.
+  /// * `amount` value in gwei.
+  /// * `gasPrice` and `gasLimit` values in wei.
   static _Transaction bnbSmartChainBEP20Token({
     required HDWallet wallet,
     // value in smallest denomination
@@ -175,9 +173,10 @@ class BuildTransaction {
 
   /// Ethereum native transactions.
   ///
-  /// `amount` value in gwei.
-  ///
-  /// `gasPrice` and `gasLimit` values in wei.
+  /// * `amount` value in gwei.
+  /// * `maxInclusionFeePerGas`, `maxFeePerGas`  and `gasLimit` values in wei.
+  /// * `maxInclusionFeePerGas` = `Max Priority Fee Per Gas`
+  /// * `maxFeePerGas` = `Base Fee Per Gas` + `Max Priority Fee Per Gas`
   static _Transaction ethereum({
     required HDWallet wallet,
     // value in gwei (10^9 wei)
@@ -185,7 +184,8 @@ class BuildTransaction {
     required String toAddress,
     required String nonce,
     // value in wei = 10^(-18) ETH (or 10^(-9) gwei)
-    String gasPrice = '13600000000',
+    String maxInclusionFeePerGas = '2000000000',
+    String maxFeePerGas = '70000000000',
     // price in wei = 10^(-18) ETH (or 10^(-9) gwei)
     String gasLimit = '21000',
     int chainId = 1,
@@ -197,7 +197,9 @@ class BuildTransaction {
     );
     final signingInput = ethereum_pb.SigningInput(
       chainId: [chainId],
-      gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
+      txMode: ethereum_pb.TransactionMode.Enveloped,
+      maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
+      maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
       gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
       toAddress: toAddress,
       transaction: ethereum_pb.Transaction(transfer: tx),
@@ -209,16 +211,16 @@ class BuildTransaction {
     final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
     final transaction = _Transaction(
       rawTx: hex.encode(signingOutput.encoded),
-      networkFee: BigInt.parse(gasPrice) * BigInt.parse(gasLimit),
+      networkFee: BigInt.parse(maxFeePerGas) * BigInt.parse(gasLimit),
     );
     return transaction;
   }
 
   /// Ethereum ERC20 token transactions.
   ///
-  /// `amount` value in smallest denomination.
-  ///
-  /// `gasPrice` and `gasLimit` values in wei.
+  /// * `maxInclusionFeePerGas`, `maxFeePerGas`  and `gasLimit` values in wei.
+  /// * `maxInclusionFeePerGas` = `Max Priority Fee Per Gas`
+  /// * `maxFeePerGas` = `Base Fee Per Gas` + `Max Priority Fee Per Gas`
   static _Transaction ethereumERC20Token({
     required HDWallet wallet,
     // value in smallest denomination
@@ -227,7 +229,8 @@ class BuildTransaction {
     required String toAddress,
     required String nonce,
     // value in wei = 10^(-18) ETH (or 10^(-9) gwei)
-    String gasPrice = '3600000000',
+    String maxInclusionFeePerGas = '2000000000',
+    String maxFeePerGas = '70000000000',
     // price in wei = 10^(-18) ETH (or 10^(-9) gwei)
     String gasLimit = '21000',
     int chainId = 1,
@@ -242,7 +245,9 @@ class BuildTransaction {
 
     final signingInput = ethereum_pb.SigningInput(
       chainId: [chainId],
-      gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
+      txMode: ethereum_pb.TransactionMode.Enveloped,
+      maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
+      maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
       gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
       toAddress: tokenContract, // yes here must be tokenContract (crazy right?)
       transaction: ethereum_pb.Transaction(erc20Transfer: tx),
@@ -254,16 +259,15 @@ class BuildTransaction {
     final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
     final transaction = _Transaction(
       rawTx: hex.encode(signingOutput.encoded),
-      networkFee: BigInt.parse(gasPrice) * BigInt.parse(gasLimit),
+      networkFee: BigInt.parse(maxFeePerGas) * BigInt.parse(gasLimit),
     );
     return transaction;
   }
 
   /// Ethereum Classic native transactions.
   ///
-  /// `amount` value in gwei.
-  ///
-  /// `gasPrice` and `gasLimit` values in wei.
+  /// * `amount` value in gwei.
+  /// * `gasPrice` and `gasLimit` values in wei.
   static _Transaction ethereumClassic({
     required HDWallet wallet,
     // value in gwei (10^9 wei)
@@ -271,7 +275,7 @@ class BuildTransaction {
     required String toAddress,
     required String nonce,
     // value in wei = 10^(-18) ETC (or 10^(-9) gwei)
-    String gasPrice = '13600000000',
+    String gasPrice = '5000000000',
     // price in wei = 10^(-18) ETC (or 10^(-9) gwei)
     String gasLimit = '21000',
     int chainId = 61,
@@ -302,18 +306,20 @@ class BuildTransaction {
 
   /// Polygon (MATIC) native transactions.
   ///
-  /// `amount` value in gwei.
-  ///
-  /// `gasPrice` and `gasLimit` values in wei.
+  /// * `amount` value in gwei.
+  /// * `maxInclusionFeePerGas`, `maxFeePerGas`  and `gasLimit` values in wei.
+  /// * `maxInclusionFeePerGas` = `Max Priority Fee Per Gas`
+  /// * `maxFeePerGas` = `Base Fee Per Gas` + `Max Priority Fee Per Gas`
   static _Transaction polygon({
     required HDWallet wallet,
     // value in gwei (10^9 wei)
     required String amount,
     required String toAddress,
     required String nonce,
-    // value in wei = 10^(-18) BNB (or 10^(-9) gwei)
-    String gasPrice = '3600000000',
-    // price in wei = 10^(-18) BNB (or 10^(-9) gwei)
+    // value in wei = 10^(-18) MATIC (or 10^(-9) gwei)
+    String maxInclusionFeePerGas = '30000000000',
+    String maxFeePerGas = '40000000000',
+    // price in wei = 10^(-18) MATIC (or 10^(-9) gwei)
     String gasLimit = '21000',
     int chainId = 137,
   }) {
@@ -323,7 +329,9 @@ class BuildTransaction {
     );
     final signingInput = ethereum_pb.SigningInput(
       chainId: [chainId],
-      gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
+      txMode: ethereum_pb.TransactionMode.Enveloped,
+      maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
+      maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
       gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
       toAddress: toAddress,
       transaction: ethereum_pb.Transaction(transfer: tx),
@@ -335,16 +343,16 @@ class BuildTransaction {
     final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
     final transaction = _Transaction(
       rawTx: hex.encode(signingOutput.encoded),
-      networkFee: BigInt.parse(gasPrice) * BigInt.parse(gasLimit),
+      networkFee: BigInt.parse(maxFeePerGas) * BigInt.parse(gasLimit),
     );
     return transaction;
   }
 
   /// Polygon (MATIC) token transactions.
   ///
-  /// `amount` value in smallest denomination.
-  ///
-  /// `gasPrice` and `gasLimit` values in wei.
+  /// * `maxInclusionFeePerGas`, `maxFeePerGas`  and `gasLimit` values in wei.
+  /// * `maxInclusionFeePerGas` = `Max Priority Fee Per Gas`
+  /// * `maxFeePerGas` = `Base Fee Per Gas` + `Max Priority Fee Per Gas`
   static _Transaction polygonERC20Token({
     required HDWallet wallet,
     // value in smallest denomination
@@ -353,7 +361,8 @@ class BuildTransaction {
     required String toAddress,
     required String nonce,
     // value in wei = 10^(-18) BNB (or 10^(-9) gwei)
-    String gasPrice = '3600000000',
+    String maxInclusionFeePerGas = '30000000000',
+    String maxFeePerGas = '40000000000',
     // price in wei = 10^(-18) BNB (or 10^(-9) gwei)
     String gasLimit = '21000',
     int chainId = 137,
@@ -367,7 +376,9 @@ class BuildTransaction {
 
     final signingInput = ethereum_pb.SigningInput(
       chainId: [chainId],
-      gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
+      txMode: ethereum_pb.TransactionMode.Enveloped,
+      maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
+      maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
       gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
       toAddress: tokenContract, // yes here must be tokenContract (crazy right?)
       transaction: ethereum_pb.Transaction(erc20Transfer: tx),
@@ -379,7 +390,7 @@ class BuildTransaction {
     final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
     final transaction = _Transaction(
       rawTx: hex.encode(signingOutput.encoded),
-      networkFee: BigInt.parse(gasPrice) * BigInt.parse(gasLimit),
+      networkFee: BigInt.parse(maxFeePerGas) * BigInt.parse(gasLimit),
     );
     return transaction;
   }

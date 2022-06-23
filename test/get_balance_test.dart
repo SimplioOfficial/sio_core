@@ -24,7 +24,7 @@ void main() {
       expect(balance, greaterThan(BigInt.parse('-1')));
     });
     test('Osmosis', () async {
-      const address = 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn';
+      const address = 'osmo18ue9y4nwmqm3qp4fh3vyxyle8qq3xr4hevmvgw';
       final balance = await GetBalance.cosmos(
         address: address,
         apiEndpoint: 'https://lcd-osmosis.keplr.app/',
