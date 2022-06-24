@@ -47,6 +47,22 @@ class GetDecimals {
     return jsonDecode(request.body)['tokens'][0]['decimals'];
   }
 
+  /// Get BEP-20 or ERC-20 Token decimals on mainnet.
+  /// Works with http://decimals.amitabha.xyz/.
+  static Future<int> ethereumERC20Ami({
+    required String ticker,
+    required String contractAddress,
+    required String apiEndpoint,
+  }) async {
+    final request = await getRequest(apiEndpoint +
+        'token/decimal?ticker=' +
+        ticker +
+        '&contractAddress=' +
+        contractAddress);
+
+    return int.parse(request.body);
+  }
+
   /// Get SOL decimals on mainnet, testnet, devnet.
   static int get solana {
     return 9;

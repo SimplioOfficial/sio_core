@@ -95,6 +95,15 @@ void main() {
         expect(exception, isA<Exception>());
       }
     });
+    test('ERC-20 - Polygon', () async {
+      const apiEndpoint = 'http://decimals.amitabha.xyz/';
+      final decimals = await GetDecimals.ethereumERC20Ami(
+        ticker: 'matic',
+        contractAddress: '0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174',
+        apiEndpoint: apiEndpoint,
+      );
+      expect(decimals, 6);
+    });
   });
   test('Solana decimals', () {
     expect(GetDecimals.solana, 9);
