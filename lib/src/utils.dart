@@ -184,7 +184,7 @@ class UtilsEthereum {
     return jsonDecode(request.body)['result'];
   }
 
-  /// Get the fee details for an ethereum type blockchain.
+  /// Get the legacy fee details for an ethereum type blockchain.
   /// The result is an object that contains the `safeGasPrice`,
   /// `proposeGasPrice`, `fastGasPrice` and `gasLimit`.
   ///
@@ -215,13 +215,13 @@ class UtilsEthereum {
     return ethereumFeeDetails;
   }
 
-  /// Get the fee details for an ethereum type blockchain.
+  /// Get the EIP-1559 fee details for an ethereum type blockchain.
   /// The result is an object that contains the `safeMaxInclusionFeePerGas`,
   /// `proposeMaxInclusionFeePerGas`, `fastMaxInclusionFeePerGas`,
   /// `safeMaxFeePerGas`, `proposeMaxFeePerGas`, `fastMaxFeePerGas`
   /// and `gasLimit`.
   ///
-  /// Legacy chains supported: BSC, ETC
+  /// EIP-1559 chains supported: ETH, MATIC
   ///
   /// Example:
   /// * http://fees.amitabha.xyz/ethereum
