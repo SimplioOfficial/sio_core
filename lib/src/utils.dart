@@ -45,12 +45,24 @@ class _EthereumFeeDetails {
   final String? safeGasPrice;
   final String? proposeGasPrice;
   final String? fastGasPrice;
+  final String? safeMaxInclusionFeePerGas;
+  final String? proposeMaxInclusionFeePerGas;
+  final String? fastMaxInclusionFeePerGas;
+  final String? safeMaxFeePerGas;
+  final String? proposeMaxFeePerGas;
+  final String? fastMaxFeePerGas;
   final String? gasLimit;
 
   _EthereumFeeDetails({
     this.safeGasPrice,
     this.proposeGasPrice,
     this.fastGasPrice,
+    this.safeMaxInclusionFeePerGas,
+    this.proposeMaxInclusionFeePerGas,
+    this.fastMaxInclusionFeePerGas,
+    this.safeMaxFeePerGas,
+    this.proposeMaxFeePerGas,
+    this.fastMaxFeePerGas,
     this.gasLimit,
   });
 
@@ -59,6 +71,12 @@ class _EthereumFeeDetails {
       'safeGasPrice': safeGasPrice,
       'proposeGasPrice': proposeGasPrice,
       'fastGasPrice': fastGasPrice,
+      'safeMaxInclusionFeePerGas': safeMaxInclusionFeePerGas,
+      'proposeMaxInclusionFeePerGas': proposeMaxInclusionFeePerGas,
+      'fastMaxInclusionFeePerGas': fastMaxInclusionFeePerGas,
+      'safeMaxFeePerGas': safeMaxFeePerGas,
+      'proposeMaxFeePerGas': proposeMaxFeePerGas,
+      'fastMaxFeePerGas': fastMaxFeePerGas,
       'gasLimit': gasLimit,
     };
   }
@@ -170,15 +188,17 @@ class UtilsEthereum {
   /// The result is an object that contains the `safeGasPrice`,
   /// `proposeGasPrice`, `fastGasPrice` and `gasLimit`.
   ///
+  /// Legacy chains supported: BSC, ETC
+  ///
   /// Example:
   /// * http://fees.amitabha.xyz/ethereum
   /// ```
   /// final request = await UtilsEthereum.getEthereumFeeDetails(
   ///   apiEndpoint: 'http://fees.amitabha.xyz/',
-  ///   ticker: 'eth',
+  ///   ticker: 'bsc',
   /// );
   /// ```
-  static Future<_EthereumFeeDetails> getEthereumFeeDetails({
+  static Future<_EthereumFeeDetails> getEthereumFeeDetailsLegacy({
     required String apiEndpoint,
     required String ticker,
   }) async {
@@ -190,6 +210,46 @@ class UtilsEthereum {
       safeGasPrice: jsonDecode(request.body)[ticker]['safeGasPrice'],
       proposeGasPrice: jsonDecode(request.body)[ticker]['proposeGasPrice'],
       fastGasPrice: jsonDecode(request.body)[ticker]['fastGasPrice'],
+      gasLimit: jsonDecode(request.body)[ticker]['gasLimit'],
+    );
+    return ethereumFeeDetails;
+  }
+
+  /// Get the fee details for an ethereum type blockchain.
+  /// The result is an object that contains the `safeMaxInclusionFeePerGas`,
+  /// `proposeMaxInclusionFeePerGas`, `fastMaxInclusionFeePerGas`,
+  /// `safeMaxFeePerGas`, `proposeMaxFeePerGas`, `fastMaxFeePerGas`
+  /// and `gasLimit`.
+  ///
+  /// Legacy chains supported: BSC, ETC
+  ///
+  /// Example:
+  /// * http://fees.amitabha.xyz/ethereum
+  /// ```
+  /// final request = await UtilsEthereum.getEthereumFeeDetails(
+  ///   apiEndpoint: 'http://fees.amitabha.xyz/',
+  ///   ticker: 'eth',
+  /// );
+  /// ```
+  static Future<_EthereumFeeDetails> getEthereumFeeDetailsEIP1559({
+    required String apiEndpoint,
+    required String ticker,
+  }) async {
+    final request = await getRequest(apiEndpoint + 'ethereum');
+    if (jsonDecode(request.body)[ticker] == null) {
+      throw Exception('Ticker not supported! Details:' + request.body);
+    }
+    final ethereumFeeDetails = _EthereumFeeDetails(
+      safeMaxInclusionFeePerGas: jsonDecode(request.body)[ticker]
+          ['safeMaxInclusionFeePerGas'],
+      proposeMaxInclusionFeePerGas: jsonDecode(request.body)[ticker]
+          ['proposeMaxInclusionFeePerGas'],
+      fastMaxInclusionFeePerGas: jsonDecode(request.body)[ticker]
+          ['fastMaxInclusionFeePerGas'],
+      safeMaxFeePerGas: jsonDecode(request.body)[ticker]['safeMaxFeePerGas'],
+      proposeMaxFeePerGas: jsonDecode(request.body)[ticker]
+          ['proposeMaxFeePerGas'],
+      fastMaxFeePerGas: jsonDecode(request.body)[ticker]['fastMaxFeePerGas'],
       gasLimit: jsonDecode(request.body)[ticker]['gasLimit'],
     );
     return ethereumFeeDetails;
