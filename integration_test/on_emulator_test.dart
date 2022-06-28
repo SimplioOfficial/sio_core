@@ -144,32 +144,32 @@ void main() {
       });
     });
     test('Polygon native transaction', () {
-      final signedEthTx = BuildTransaction.ethereum(
+      final signedEthTx = BuildTransaction.polygon(
         wallet: wallet,
         amount: amount,
         toAddress: toAddress,
         nonce: '0',
       );
-      expect(hex.decode(signedEthTx.rawTx as String).length, 117);
+      expect(hex.decode(signedEthTx.rawTx as String).length, 119);
       expect(signedEthTx.toJson(), {
         'txid':
-            '02f8720180847735940085104c533c00825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a1600080c080a026f518b68b0aceb7168490743185606f267f2db9b0762fcf1525060fc4f9bd10a04e77b5defdd2ac6baba503fb540ee7e94cbbd57d6fdf0b5063c371bb24896186',
-        'networkFee': '1470000000000000'
+            '02f8748189808506fc23ac008509502f9000825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a1600080c080a0e43117a6a9943bf8abb462c9c41842f1f16645e5f94d72299bdaf71d07e3d0d0a046dc725ee88aa0eec11ac8b9cd4f32f78829148ceaa5d1e10bb9427f3689cd49',
+        'networkFee': '840000000000000'
       });
     });
     test('Polygon ERC20 token transaction', () {
-      final signedEthTx = BuildTransaction.ethereumERC20Token(
+      final signedEthTx = BuildTransaction.polygonERC20Token(
         wallet: wallet,
         amount: amount,
         tokenContract: tokenContract,
         toAddress: toAddress,
         nonce: '0',
       );
-      expect(hex.decode(signedEthTx.rawTx as String).length, 178);
+      expect(hex.decode(signedEthTx.rawTx as String).length, 181);
       expect(signedEthTx.toJson(), {
         'txid':
-            '02f8af0180847735940085104c533c008252089426fc591fecc4948c4288d95b6aadab00eba4e72a80b844a9059cbb0000000000000000000000003e26e7f73a80444e67b7be654a38ab85ccb6ea4700000000000000000000000000000000000000000000000000000000000e1af0c0019f167aba1c67d36ff746999a00c1e63925bb3d742e1ea2011ad9daa24bcf400ba059efe11b45173f678264e72b89efa480500aa4e4c8cce18a25c6897e96a25732',
-        'networkFee': '1470000000000000'
+            '02f8b28189808506fc23ac008509502f90008252089426fc591fecc4948c4288d95b6aadab00eba4e72a80b844a9059cbb0000000000000000000000003e26e7f73a80444e67b7be654a38ab85ccb6ea4700000000000000000000000000000000000000000000000000000000000e1af0c001a0472ab70dffd909bbbbafa44d3a4667007e1d31f05c7fa9db3e01420a910a3e66a01aee0ed1f99a0196fc3cad6076a41b0cc8bea07eac7ac937d75af2f0049fd17f',
+        'networkFee': '840000000000000'
       });
     });
   });
