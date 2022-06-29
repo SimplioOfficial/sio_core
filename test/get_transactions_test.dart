@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:sio_core/src/get_transactions.dart';
@@ -259,15 +260,17 @@ void main() {
               transactions: '4',
             );
             var transactionsJson = transactions[1].toJson();
-            expect(transactionsJson, {
-              'txType': 'receive',
-              'address': '0x2bb25175d9b0f8965780209eb558cc3b56ca6d32',
-              'amount': '10949780364609273272',
-              'txid':
-                  '0x636b3dcf495774e3f84ab243ef119fb0cc31f5f1442d57b59f2e67725858d6cc',
-              'networkFee': '328285707307276',
-              'unixTime': 1643889382,
-              'confirmed': true
+            Timer(const Duration(seconds: 2), () {
+              expect(transactionsJson, {
+                'txType': 'receive',
+                'address': '0x2bb25175d9b0f8965780209eb558cc3b56ca6d32',
+                'amount': '10949780364609273272',
+                'txid':
+                    '0x636b3dcf495774e3f84ab243ef119fb0cc31f5f1442d57b59f2e67725858d6cc',
+                'networkFee': '328285707307276',
+                'unixTime': 1643889382,
+                'confirmed': true
+              });
             });
           });
           test('Token transactions - send', () async {
