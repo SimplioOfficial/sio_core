@@ -90,6 +90,24 @@ void main() {
             'confirmed': true
           });
         });
+        test('Transaction to self', () async {
+          const address = '0x3E26e7F73A80444e67b7bE654A38aB85ccb6ea47';
+          final transactions = await GetTransactions.ethereumBlockbook(
+            apiEndpoint: 'https://bscxplorer.com/',
+            address: address,
+          );
+          var transactionsJson = transactions[transactions.length - 2].toJson();
+          expect(transactionsJson, {
+            'txType': 'send',
+            'address': '0x3E26e7F73A80444e67b7bE654A38aB85ccb6ea47',
+            'amount': '10000000000000000',
+            'txid':
+                '0x006869f07ce6f2abc462f400012a496f878371f54231e6098de8913b2063949a',
+            'networkFee': '105000000000000',
+            'unixTime': 1656573972,
+            'confirmed': true
+          });
+        });
         test('No transactions', () async {
           const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
           final transactions = await GetTransactions.ethereumBlockbook(
@@ -311,7 +329,7 @@ void main() {
             const contractAddress =
                 '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
             try {
-              await GetTransactions.ethereumERC20Blockbook(
+              await GetTransactions.ethereumERC20Scan(
                 address: address,
                 contractAddress: contractAddress,
                 apiEndpoint:
