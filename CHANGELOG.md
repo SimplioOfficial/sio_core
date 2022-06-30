@@ -1,3 +1,6 @@
+## 0.0.12
+* Implement MATIC native transactions and MATIC token transactions.
+* Now supports EIP-1559 Transaction Type as well as Legacy Transactions.
 ## 0.0.11
 * Refactor BuildTransaction so it returns also fee estimation for the built transaction.
 * Get Fee and Gas Price need for transactions broadcasting.
