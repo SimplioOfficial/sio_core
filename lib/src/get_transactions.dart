@@ -20,6 +20,7 @@ class _Tx {
   bool? confirmed;
 
   _Tx({
+    this.txType,
     this.amount,
     this.txid,
     this.networkFee,
@@ -232,6 +233,132 @@ class GetTransactions {
         if (tx.txType != null) {
           txList.add(tx);
         }
+      }
+    }
+
+    return txList;
+  }
+
+  /// Get BNB (Smart Chain), ETH or MATIC transactions from mainnet.
+  /// Works with https://api.bscscan.com/, https://api.etherscan.com/ or https://polygonscan.com/.
+  ///
+  /// Use apiEndpoint like:
+  /// * "https://api.bscscan.com/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
+  /// * "https://api.etherscan.com/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
+  /// * "https://api.polygonscan.com/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
+  static Future<List<_Tx>> ethereumScan({
+    required String address,
+    required String apiEndpoint,
+    String startblock = '0',
+    String endblock = '99999999',
+    String page = '1',
+    String transactions = '20',
+  }) async {
+    List<_Tx> txList = [];
+    final request = await getRequest(
+      apiEndpoint
+          .replaceFirst('<address>', address)
+          .replaceFirst('<startblock>', startblock)
+          .replaceFirst('<endblock>', endblock)
+          .replaceFirst('<page>', page)
+          .replaceFirst('<transactions>', transactions),
+    );
+    if (jsonDecode(request.body)['status'] == '0' &&
+        jsonDecode(request.body)['message'] == 'No transactions found') {
+      return [];
+    }
+    if (jsonDecode(request.body)['status'] == '0') {
+      throw Exception(jsonDecode(request.body)['result']);
+    }
+
+    if (jsonDecode(request.body)['result'] is List) {
+      final List _txList = jsonDecode(request.body)['result'];
+      for (var txIndex = 0; txIndex < _txList.length; txIndex++) {
+        var tx = _Tx(
+          txType: (_txList[txIndex]['from'] as String).toLowerCase() ==
+                  address.toLowerCase()
+              ? TxType.send
+              : TxType.receive,
+          amount: _txList[txIndex]['value'],
+          txid: _txList[txIndex]['hash'],
+          networkFee: (BigInt.parse(_txList[txIndex]['gasUsed']) *
+                  BigInt.parse(_txList[txIndex]['gasPrice']))
+              .toString(),
+          unixTime: int.parse(_txList[txIndex]['timeStamp']),
+          confirmed: int.parse(_txList[txIndex]['confirmations']) > 0,
+        );
+
+        if (tx.txType == TxType.send) {
+          tx.address = _txList[txIndex]['to'];
+        }
+        if (tx.txType == TxType.receive) {
+          tx.address = _txList[txIndex]['from'];
+        }
+        txList.add(tx);
+      }
+    }
+
+    return txList;
+  }
+
+  /// Get BEP-20 or ERC-20 Token transactions from mainnet.
+  /// Works with https://api.bscscan.com/, https://api.etherscan.com/ or https://polygonscan.com/.
+  ///
+  /// Use apiEndpoint like:
+  /// * "https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
+  /// * "https://api.etherscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
+  /// * "https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
+  static Future<List<_Tx>> ethereumERC20Scan({
+    required String address,
+    required String contractAddress,
+    required String apiEndpoint,
+    String startblock = '0',
+    String endblock = '99999999',
+    String page = '1',
+    String transactions = '20',
+  }) async {
+    List<_Tx> txList = [];
+    final request = await getRequest(
+      apiEndpoint
+          .replaceFirst('<address>', address)
+          .replaceFirst('<contractAddress>', contractAddress)
+          .replaceFirst('<startblock>', startblock)
+          .replaceFirst('<endblock>', endblock)
+          .replaceFirst('<page>', page)
+          .replaceFirst('<transactions>', transactions),
+    );
+    if (jsonDecode(request.body)['status'] == '0' &&
+        jsonDecode(request.body)['message'] == 'No transactions found') {
+      return [];
+    }
+    if (jsonDecode(request.body)['status'] == '0') {
+      throw Exception(jsonDecode(request.body)['result']);
+    }
+
+    if (jsonDecode(request.body)['result'] is List) {
+      final List _txList = jsonDecode(request.body)['result'];
+      for (var txIndex = 0; txIndex < _txList.length; txIndex++) {
+        var tx = _Tx(
+          txType: (_txList[txIndex]['from'] as String).toLowerCase() ==
+                  address.toLowerCase()
+              ? TxType.send
+              : TxType.receive,
+          amount: _txList[txIndex]['value'],
+          txid: _txList[txIndex]['hash'],
+          networkFee: (BigInt.parse(_txList[txIndex]['gasUsed']) *
+                  BigInt.parse(_txList[txIndex]['gasPrice']))
+              .toString(),
+          unixTime: int.parse(_txList[txIndex]['timeStamp']),
+          confirmed: int.parse(_txList[txIndex]['confirmations']) > 0,
+        );
+
+        if (tx.txType == TxType.send) {
+          tx.address = _txList[txIndex]['to'];
+        }
+        if (tx.txType == TxType.receive) {
+          tx.address = _txList[txIndex]['from'];
+        }
+        txList.add(tx);
       }
     }
 

@@ -24,7 +24,7 @@ void main() {
       expect(balance, greaterThan(BigInt.parse('-1')));
     });
     test('Osmosis', () async {
-      const address = 'osmo1rlwemt45ryzc8ynakzwgfkltm7jy8lswpnfswn';
+      const address = 'osmo18ue9y4nwmqm3qp4fh3vyxyle8qq3xr4hevmvgw';
       final balance = await GetBalance.cosmos(
         address: address,
         apiEndpoint: 'https://lcd-osmosis.keplr.app/',
@@ -135,6 +135,25 @@ void main() {
         contractAddress: contractAddress,
         apiEndpoint:
             'https://api.etherscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=J6CAMARJ1QMXIIX3VU2PC81BEYU262PIHU',
+      );
+      expect(balance, BigInt.zero);
+    });
+    test('Polygon', () async {
+      const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
+      final balance = await GetBalance.ethereumRPC(
+        address: address,
+        apiEndpoint: 'https://polygon-rpc.com/',
+      );
+      expect(balance, BigInt.zero);
+    });
+    test('Polygon ERC20 Token', () async {
+      const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
+      const contractAddress = '0x5918Fa85f0a3DdC00Ce145CBA21D5540d25c5cc7';
+      final balance = await GetBalance.ethereumERC20Scan(
+        address: address,
+        contractAddress: contractAddress,
+        apiEndpoint:
+            'https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=S65W8WW62U3FAN14WBISHI3CTHFW8HBCFX',
       );
       expect(balance, BigInt.zero);
     });
