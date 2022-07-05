@@ -27,6 +27,99 @@ class _Transaction {
 
 /// Class that builds transactions and return OutputTx ready for broadcasting.
 class BuildTransaction {
+  /// Avalanche C-Chain (AVAX) native transactions.
+  ///
+  /// * `amount` value in gwei.
+  /// * `maxInclusionFeePerGas`, `maxFeePerGas`  and `gasLimit` values in wei.
+  /// * `maxInclusionFeePerGas` = `Max Priority Fee Per Gas`
+  /// * `maxFeePerGas` = `Base Fee Per Gas` + `Max Priority Fee Per Gas`
+  static _Transaction avalanche({
+    required HDWallet wallet,
+    // value in gwei (10^9 wei)
+    required String amount,
+    required String toAddress,
+    required String nonce,
+    // value in wei = 10^(-18) AVAX (or 10^(-9) gwei)
+    String maxInclusionFeePerGas = '2500000000',
+    String maxFeePerGas = '27500000000',
+    // price in wei = 10^(-18) AVAX (or 10^(-9) gwei)
+    String gasLimit = '200000',
+    int chainId = 43114,
+  }) {
+    final secretPrivateKey =
+        wallet.getKeyForCoin(TWCoinType.TWCoinTypeAvalancheCChain);
+    final tx = ethereum_pb.Transaction_Transfer(
+      amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
+    );
+    final signingInput = ethereum_pb.SigningInput(
+      chainId: [chainId],
+      txMode: ethereum_pb.TransactionMode.Enveloped,
+      maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
+      maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
+      gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
+      toAddress: toAddress,
+      transaction: ethereum_pb.Transaction(transfer: tx),
+      privateKey: secretPrivateKey.data(),
+      nonce: bigIntToBytes(BigInt.parse(nonce)),
+    );
+    final sign = AnySigner.sign(
+        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeAvalancheCChain);
+    final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
+    final transaction = _Transaction(
+      rawTx: hex.encode(signingOutput.encoded),
+      networkFee: BigInt.parse(maxFeePerGas) * BigInt.parse(gasLimit),
+    );
+    return transaction;
+  }
+
+  /// Avalanche C-Chain (AVAX) token transactions.
+  ///
+  /// * `maxInclusionFeePerGas`, `maxFeePerGas`  and `gasLimit` values in wei.
+  /// * `maxInclusionFeePerGas` = `Max Priority Fee Per Gas`
+  /// * `maxFeePerGas` = `Base Fee Per Gas` + `Max Priority Fee Per Gas`
+  static _Transaction avalancheERC20Token({
+    required HDWallet wallet,
+    // value in smallest denomination
+    required String amount,
+    required String tokenContract,
+    required String toAddress,
+    required String nonce,
+    // value in wei = 10^(-18) AVAX (or 10^(-9) gwei)
+    String maxInclusionFeePerGas = '2500000000',
+    String maxFeePerGas = '27500000000',
+    // price in wei = 10^(-18) AVAX (or 10^(-9) gwei)
+    String gasLimit = '200000',
+    int chainId = 43114,
+  }) {
+    final secretPrivateKey =
+        wallet.getKeyForCoin(TWCoinType.TWCoinTypeAvalancheCChain);
+
+    final tx = ethereum_pb.Transaction_ERC20Transfer(
+      amount: bigIntToBytes(BigInt.parse(amount)),
+      to: toAddress,
+    );
+
+    final signingInput = ethereum_pb.SigningInput(
+      chainId: [chainId],
+      txMode: ethereum_pb.TransactionMode.Enveloped,
+      maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
+      maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
+      gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
+      toAddress: tokenContract, // yes here must be tokenContract (crazy right?)
+      transaction: ethereum_pb.Transaction(erc20Transfer: tx),
+      privateKey: secretPrivateKey.data(),
+      nonce: bigIntToBytes(BigInt.parse(nonce)),
+    );
+    final sign = AnySigner.sign(
+        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeAvalancheCChain);
+    final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
+    final transaction = _Transaction(
+      rawTx: hex.encode(signingOutput.encoded),
+      networkFee: BigInt.parse(maxFeePerGas) * BigInt.parse(gasLimit),
+    );
+    return transaction;
+  }
+
   /// BNB Smart Chain native transactions.
   ///
   /// * `amount` value in gwei.
@@ -360,10 +453,10 @@ class BuildTransaction {
     required String tokenContract,
     required String toAddress,
     required String nonce,
-    // value in wei = 10^(-18) BNB (or 10^(-9) gwei)
+    // value in wei = 10^(-18) MATIC (or 10^(-9) gwei)
     String maxInclusionFeePerGas = '30000000000',
     String maxFeePerGas = '40000000000',
-    // price in wei = 10^(-18) BNB (or 10^(-9) gwei)
+    // price in wei = 10^(-18) MATIC (or 10^(-9) gwei)
     String gasLimit = '21000',
     int chainId = 137,
   }) {

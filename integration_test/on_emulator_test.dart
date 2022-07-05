@@ -172,6 +172,35 @@ void main() {
         'networkFee': '840000000000000'
       });
     });
+    test('Avalanche native transaction', () {
+      final signedEthTx = BuildTransaction.avalanche(
+        wallet: wallet,
+        amount: amount,
+        toAddress: toAddress,
+        nonce: '0',
+      );
+      expect(hex.decode(signedEthTx.rawTx as String).length, 118);
+      expect(signedEthTx.toJson(), {
+        'txid':
+            '02f8736a80849502f90085066720b30083030d40943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a1600080c001a03014b986040d0352147580519c0b671bade51655908de03eca574990dd570c03a0035168bb9b6527c5bb1655ce3e96783795f4b3e4d6907aef194f3d9fb2e7c857',
+        'networkFee': '5500000000000000'
+      });
+    });
+    test('Avalanche ERC20 token transaction', () {
+      final signedEthTx = BuildTransaction.avalancheERC20Token(
+        wallet: wallet,
+        amount: amount,
+        tokenContract: tokenContract,
+        toAddress: toAddress,
+        nonce: '0',
+      );
+      expect(hex.decode(signedEthTx.rawTx as String).length, 180);
+      expect(signedEthTx.toJson(), {
+        'txid':
+            '02f8b16a80849502f90085066720b30083030d409426fc591fecc4948c4288d95b6aadab00eba4e72a80b844a9059cbb0000000000000000000000003e26e7f73a80444e67b7be654a38ab85ccb6ea4700000000000000000000000000000000000000000000000000000000000e1af0c001a0fcab33eaaa16aa3fc6271a5becce1f2b61513690e54fe8cf1a0d69bc7fe37cffa06fa66619068be4411f353e24293e48bd341879276c4d0ccd6affa2ce9d9b9101',
+        'networkFee': '5500000000000000'
+      });
+    });
   });
 
   group('Solana transactions tests - ', () {
