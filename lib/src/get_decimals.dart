@@ -47,7 +47,8 @@ class GetDecimals {
     return jsonDecode(request.body)['tokens'][0]['decimals'];
   }
 
-  /// Get BEP-20 or ERC-20 Token decimals on mainnet.
+  /// Get BEP-20, ERC-20, SPL Token decimals on mainnet.
+  /// Chains supported: AVAX, MATIC, ETH, BSC, SOL
   /// Works with http://decimals.amitabha.xyz/.
   static Future<int> ethereumERC20Ami({
     required String ticker,
