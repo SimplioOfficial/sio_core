@@ -43,7 +43,7 @@ class BuildTransaction {
     String maxInclusionFeePerGas = '2500000000',
     String maxFeePerGas = '27500000000',
     // price in wei = 10^(-18) AVAX (or 10^(-9) gwei)
-    String gasLimit = '200000',
+    String gasLimit = '21000',
     int chainId = 43114,
   }) {
     final secretPrivateKey =
@@ -88,7 +88,7 @@ class BuildTransaction {
     String maxInclusionFeePerGas = '2500000000',
     String maxFeePerGas = '27500000000',
     // price in wei = 10^(-18) AVAX (or 10^(-9) gwei)
-    String gasLimit = '200000',
+    String gasLimit = '21000',
     int chainId = 43114,
   }) {
     final secretPrivateKey =

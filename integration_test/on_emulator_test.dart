@@ -179,11 +179,11 @@ void main() {
         toAddress: toAddress,
         nonce: '0',
       );
-      expect(hex.decode(signedEthTx.rawTx as String).length, 118);
+      expect(hex.decode(signedEthTx.rawTx as String).length, 117);
       expect(signedEthTx.toJson(), {
         'txid':
-            '02f8736a80849502f90085066720b30083030d40943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a1600080c001a03014b986040d0352147580519c0b671bade51655908de03eca574990dd570c03a0035168bb9b6527c5bb1655ce3e96783795f4b3e4d6907aef194f3d9fb2e7c857',
-        'networkFee': '5500000000000000'
+            '02f8726a80849502f90085066720b300825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a1600080c001a00f9bf7ca33a117028e19e41cae2e1d2633b875dba2cb8b5836fff27f3cea2549a07700fda9208217a32c59307f8b3fdb6564f919930f687148b20731b6660a82e0',
+        'networkFee': '577500000000000'
       });
     });
     test('Avalanche ERC20 token transaction', () {
@@ -194,11 +194,11 @@ void main() {
         toAddress: toAddress,
         nonce: '0',
       );
-      expect(hex.decode(signedEthTx.rawTx as String).length, 180);
+      expect(hex.decode(signedEthTx.rawTx as String).length, 179);
       expect(signedEthTx.toJson(), {
         'txid':
-            '02f8b16a80849502f90085066720b30083030d409426fc591fecc4948c4288d95b6aadab00eba4e72a80b844a9059cbb0000000000000000000000003e26e7f73a80444e67b7be654a38ab85ccb6ea4700000000000000000000000000000000000000000000000000000000000e1af0c001a0fcab33eaaa16aa3fc6271a5becce1f2b61513690e54fe8cf1a0d69bc7fe37cffa06fa66619068be4411f353e24293e48bd341879276c4d0ccd6affa2ce9d9b9101',
-        'networkFee': '5500000000000000'
+            '02f8b06a80849502f90085066720b3008252089426fc591fecc4948c4288d95b6aadab00eba4e72a80b844a9059cbb0000000000000000000000003e26e7f73a80444e67b7be654a38ab85ccb6ea4700000000000000000000000000000000000000000000000000000000000e1af0c080a002f743363c2b246f3a7ed9ce4f3ae1da6db94f70a6a1caa7bb9c8b2f33b0036aa02143b05da6fdb1019ab5b02c793f2541dd2279a71345def4d1b6ed0df2bb5dba',
+        'networkFee': '577500000000000'
       });
     });
   });
