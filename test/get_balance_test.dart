@@ -157,6 +157,25 @@ void main() {
       );
       expect(balance, BigInt.zero);
     });
+    test('Avalanche', () async {
+      const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
+      final balance = await GetBalance.ethereumRPC(
+        address: address,
+        apiEndpoint: 'https://api.avax.network/ext/bc/C/rpc',
+      );
+      expect(balance, BigInt.zero);
+    });
+    test('Avalanche ERC20 Token', () async {
+      const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
+      const contractAddress = '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E';
+      final balance = await GetBalance.ethereumERC20Scan(
+        address: address,
+        contractAddress: contractAddress,
+        apiEndpoint:
+            'https://api.snowtrace.io/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=6ZS6YEZI7J4WNDK9CJIHRGUK28CI8BCA9Z',
+      );
+      expect(balance, BigInt.zero);
+    });
     test('Ethereum Classic', () async {
       const address = '0x9C35cd0398E9c8f61258cCdC822233da2D8228a2';
       final balance = await GetBalance.ethereumBlockbook(

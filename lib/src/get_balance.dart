@@ -106,9 +106,10 @@ class GetBalance {
   }
 
   /// Get BEP-20 or ERC-20 Token balance from mainnet.
-  /// Works with https://api.bscscan.com/, https://api.etherscan.com/ or https://polygonscan.com/.
+  /// Works with https://api.snowtrace.io/, https://api.bscscan.com/, https://api.etherscan.com/ or https://polygonscan.com/.
   ///
   /// Use apiEndpoint like:
+  /// * "https://api.snowtrace.io/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=YourApiKeyToken"
   /// * "https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=YourApiKeyToken"
   /// * "https://api.etherscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=YourApiKeyToken"
   /// * "https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=YourApiKeyToken"
