@@ -264,81 +264,96 @@ void main() {
             expect(exception, isA<Exception>());
           }
         });
-        group('ERC20 Tokens - ', () {
-          test('Token transactions - receive', () async {
-            const address = '0x6813ad11cca98e15ff181a257a3c2855d1eee69e';
-            const contractAddress =
-                '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
-            final transactions = await GetTransactions.ethereumERC20Scan(
+        test('Normal transactions - receive', () async {
+          const address = '0x5C5Ac16E3A591FAFde543cbC51CF0C9256852255';
+          final transactions = await GetTransactions.ethereumScan(
+              apiEndpoint:
+                  'https://api.snowtrace.io/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=S65W8WW62U3FAN14WBISHI3CTHFW8HBCFX',
+              address: address,
+              transactions: '4');
+          var transactionsJson = transactions[transactions.length - 1].toJson();
+          expect(transactionsJson, {
+            'txType': 'receive',
+            'address': '0x3e26e7f73a80444e67b7be654a38ab85ccb6ea47',
+            'amount': '10000000000000000',
+            'txid':
+                '0xc2f639f0bf82731e43ce05e3f3788e0f738e44b3a281ae77634390e1b8cf5bf3',
+            'networkFee': '577500000000000',
+            'unixTime': 1657108396,
+            'confirmed': true
+          });
+        });
+      });
+      group('ERC20 Tokens - ', () {
+        test('Token transactions - receive', () async {
+          const address = '0x6813ad11cca98e15ff181a257a3c2855d1eee69e';
+          const contractAddress = '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
+          final transactions = await GetTransactions.ethereumERC20Scan(
+            address: address,
+            contractAddress: contractAddress,
+            apiEndpoint:
+                'https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=XZ7N66N43I4FS29G7J3Z4ZPR56GP98U8MT',
+            transactions: '4',
+          );
+          var transactionsJson = transactions[1].toJson();
+          expect(transactionsJson, {
+            'txType': 'receive',
+            'address': '0x2bb25175d9b0f8965780209eb558cc3b56ca6d32',
+            'amount': '10949780364609273272',
+            'txid':
+                '0x636b3dcf495774e3f84ab243ef119fb0cc31f5f1442d57b59f2e67725858d6cc',
+            'networkFee': '328285707307276',
+            'unixTime': 1643889382,
+            'confirmed': true
+          });
+        });
+        test('Token transactions - send', () async {
+          const address = '0x6813ad11cca98e15ff181a257a3c2855d1eee69e';
+          const contractAddress = '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
+          final transactions = await GetTransactions.ethereumERC20Scan(
+            address: address,
+            contractAddress: contractAddress,
+            apiEndpoint:
+                'https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=XZ7N66N43I4FS29G7J3Z4ZPR56GP98U8MT',
+            transactions: '4',
+          );
+          var transactionsJson = transactions[2].toJson();
+          expect(transactionsJson, {
+            'txType': 'send',
+            'address': '0xdb6f1920a889355780af7570773609bd8cb1f498',
+            'amount': '48115167258267691199',
+            'txid':
+                '0xf6074101a2759533652e0d857de0fd3bcbe8a8b589a0506159479568745dd628',
+            'networkFee': '112617450000000000',
+            'unixTime': 1641640298,
+            'confirmed': true
+          });
+        });
+        test('No transactions', () async {
+          const address = '0x5C5Ac16E3A591FAFde543cbC51CF0C9256852255';
+          const contractAddress = '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
+          final transactions = await GetTransactions.ethereumERC20Scan(
+            address: address,
+            contractAddress: contractAddress,
+            apiEndpoint:
+                'https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=XZ7N66N43I4FS29G7J3Z4ZPR56GP98U8MT',
+            transactions: '1',
+          );
+          expect(transactions, []);
+        });
+        test('Error', () async {
+          const address = '5C5Ac16E3A591FAFde543cbC51CF0C9256852255';
+          const contractAddress = '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
+          try {
+            await GetTransactions.ethereumERC20Scan(
               address: address,
               contractAddress: contractAddress,
               apiEndpoint:
                   'https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=XZ7N66N43I4FS29G7J3Z4ZPR56GP98U8MT',
-              transactions: '4',
             );
-            var transactionsJson = transactions[1].toJson();
-            expect(transactionsJson, {
-              'txType': 'receive',
-              'address': '0x2bb25175d9b0f8965780209eb558cc3b56ca6d32',
-              'amount': '10949780364609273272',
-              'txid':
-                  '0x636b3dcf495774e3f84ab243ef119fb0cc31f5f1442d57b59f2e67725858d6cc',
-              'networkFee': '328285707307276',
-              'unixTime': 1643889382,
-              'confirmed': true
-            });
-          });
-          test('Token transactions - send', () async {
-            const address = '0x6813ad11cca98e15ff181a257a3c2855d1eee69e';
-            const contractAddress =
-                '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
-            final transactions = await GetTransactions.ethereumERC20Scan(
-              address: address,
-              contractAddress: contractAddress,
-              apiEndpoint:
-                  'https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=XZ7N66N43I4FS29G7J3Z4ZPR56GP98U8MT',
-              transactions: '4',
-            );
-            var transactionsJson = transactions[2].toJson();
-            expect(transactionsJson, {
-              'txType': 'send',
-              'address': '0xdb6f1920a889355780af7570773609bd8cb1f498',
-              'amount': '48115167258267691199',
-              'txid':
-                  '0xf6074101a2759533652e0d857de0fd3bcbe8a8b589a0506159479568745dd628',
-              'networkFee': '112617450000000000',
-              'unixTime': 1641640298,
-              'confirmed': true
-            });
-          });
-          test('No transactions', () async {
-            const address = '0x5C5Ac16E3A591FAFde543cbC51CF0C9256852255';
-            const contractAddress =
-                '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
-            final transactions = await GetTransactions.ethereumERC20Scan(
-              address: address,
-              contractAddress: contractAddress,
-              apiEndpoint:
-                  'https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=XZ7N66N43I4FS29G7J3Z4ZPR56GP98U8MT',
-              transactions: '1',
-            );
-            expect(transactions, []);
-          });
-          test('Error', () async {
-            const address = '5C5Ac16E3A591FAFde543cbC51CF0C9256852255';
-            const contractAddress =
-                '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270';
-            try {
-              await GetTransactions.ethereumERC20Scan(
-                address: address,
-                contractAddress: contractAddress,
-                apiEndpoint:
-                    'https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=XZ7N66N43I4FS29G7J3Z4ZPR56GP98U8MT',
-              );
-            } catch (exception) {
-              expect(exception, isA<Exception>());
-            }
-          });
+          } catch (exception) {
+            expect(exception, isA<Exception>());
+          }
         });
       });
     });

@@ -55,10 +55,11 @@ class GetBalance {
     return BigInt.parse(jsonDecode(request.body)['balance']);
   }
 
-  /// Get BNB (Smart Chain), ETC, ETH, MATIC balance from mainnet, testnet.
+  /// Get AVAX (C-Chain), BNB (Smart Chain), ETC, ETH, MATIC balance from mainnet, testnet.
   ///
   /// Works with any rpc endpoints from:
-  /// * https://docs.bnbchain.org/docs/rpc/
+  /// * https://api.avax.network/ext/bc/C/rpc
+  /// * https://bsc-dataseed.binance.org/
   /// * https://www.ethercluster.com/etc
   /// * https://infura.io/
   /// * https://polygon-rpc.com/
