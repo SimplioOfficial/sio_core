@@ -42,9 +42,10 @@ class Broadcast {
     return jsonDecode(broadcast.body)['result'];
   }
 
-  /// Broadcast BNB (Smart Chain), ETC, ETH, MATIC transactions on mainnet, testnet.
+  /// Broadcast AVAX, BNB (Smart Chain), ETC, ETH, MATIC transactions on mainnet, testnet.
   ///
   /// Works with any rpc endpoints from:
+  /// * https://api.avax.network/ext/bc/C/rpc
   /// * https://docs.bnbchain.org/docs/rpc/
   /// * https://www.ethercluster.com/etc
   /// * https://infura.io/
