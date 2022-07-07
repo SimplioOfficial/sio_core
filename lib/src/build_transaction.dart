@@ -229,7 +229,7 @@ class BuildTransaction {
     final messageSend = cosmos_pb.Message_Send(
       amounts: [
         cosmos_pb.Amount(
-          amount: $fixnum.Int64.parseInt(amount),
+          amount: amount,
           denom: denomination,
         )
       ],
@@ -243,7 +243,7 @@ class BuildTransaction {
       fee: cosmos_pb.Fee(
         amounts: [
           cosmos_pb.Amount(
-            amount: $fixnum.Int64.parseInt(fee),
+            amount: fee,
             denom: denomination,
           )
         ],
