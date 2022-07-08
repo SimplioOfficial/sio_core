@@ -139,7 +139,22 @@ void main() {
       expect(hex.decode(signedEtcTx.rawTx as String).length, 110);
       expect(signedEtcTx.toJson(), {
         'txid':
-            'f86c8085012a05f200825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a1600080819da0347b36cf8a1d2b31370fb882f6ec6b38362bc38d484776f2aea54cd712a7a5a2a00f62d9c81987979f70395c594d0214a04bd7db8850970f1511a48d132f70e244',
+            'f86c8085012a05f200825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a1600080819da06cc1da930c54fa65df8347a22e4e20e9bda26fb15f71966afbd6c372c3a9e51ba073d79cf8da3a6a624bbcb0170acffccb1dd51f21769d0a4a79341c438052f2b4',
+        'networkFee': '105000000000000'
+      });
+    });
+    test('Ethereum Classic ETC20 token transaction', () {
+      final signedBscTx = BuildTransaction.ethereumClassicETC20Token(
+        wallet: wallet,
+        amount: amount,
+        tokenContract: tokenContract,
+        toAddress: toAddress,
+        nonce: '0',
+      );
+      expect(hex.decode(signedBscTx.rawTx as String).length, 172);
+      expect(signedBscTx.toJson(), {
+        'txid':
+            'f8aa8085012a05f2008252089426fc591fecc4948c4288d95b6aadab00eba4e72a80b844a9059cbb0000000000000000000000003e26e7f73a80444e67b7be654a38ab85ccb6ea4700000000000000000000000000000000000000000000000000000000000e1af0819da0f70a466dd155e27fe815c1782cf8425161aabbdbe0c3019fa502b25558624ccfa077f19ea31dee23f491d9b21ee540ab113e4cafd85aa40f8fda013fa733121acf',
         'networkFee': '105000000000000'
       });
     });

@@ -374,7 +374,7 @@ class BuildTransaction {
     int chainId = 61,
   }) {
     final secretPrivateKey =
-        wallet.getKeyForCoin(TWCoinType.TWCoinTypeSmartChain);
+        wallet.getKeyForCoin(TWCoinType.TWCoinTypeEthereumClassic);
     final tx = ethereum_pb.Transaction_Transfer(
       amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
     );
@@ -388,7 +388,52 @@ class BuildTransaction {
       nonce: bigIntToBytes(BigInt.parse(nonce)),
     );
     final sign = AnySigner.sign(
-        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);
+        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeEthereumClassic);
+    final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
+    final transaction = _Transaction(
+      rawTx: hex.encode(signingOutput.encoded),
+      networkFee: BigInt.parse(gasPrice) * BigInt.parse(gasLimit),
+    );
+    return transaction;
+  }
+
+  /// Ethereum Classic ETC20 token transactions.
+  ///
+  /// * `amount` value in gwei.
+  /// * `gasPrice` and `gasLimit` values in wei.
+  static _Transaction ethereumClassicETC20Token({
+    required HDWallet wallet,
+    // value in smallest denomination
+    required String amount,
+    required String tokenContract,
+    required String toAddress,
+    required String nonce,
+    // value in wei = 10^(-18) BNB (or 10^(-9) gwei)
+    String gasPrice = '5000000000',
+    // price in wei = 10^(-18) BNB (or 10^(-9) gwei)
+    String gasLimit = '21000',
+    // change chainId to 97 for testnet chain
+    int chainId = 61,
+  }) {
+    final secretPrivateKey =
+        wallet.getKeyForCoin(TWCoinType.TWCoinTypeEthereumClassic);
+
+    final tx = ethereum_pb.Transaction_ERC20Transfer(
+      amount: bigIntToBytes(BigInt.parse(amount)),
+      to: toAddress,
+    );
+
+    final signingInput = ethereum_pb.SigningInput(
+      chainId: [chainId],
+      gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
+      gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
+      toAddress: tokenContract, // yes here must be tokenContract (crazy right?)
+      transaction: ethereum_pb.Transaction(erc20Transfer: tx),
+      privateKey: secretPrivateKey.data(),
+      nonce: bigIntToBytes(BigInt.parse(nonce)),
+    );
+    final sign = AnySigner.sign(
+        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeEthereumClassic);
     final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
     final transaction = _Transaction(
       rawTx: hex.encode(signingOutput.encoded),
