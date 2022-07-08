@@ -52,10 +52,11 @@ class BuildTransaction {
       amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
     );
     final signingInput = ethereum_pb.SigningInput(
-      chainId: [chainId],
+      chainId: bigIntToBytes(BigInt.from(chainId)),
       txMode: ethereum_pb.TransactionMode.Enveloped,
       maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
       maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
+      // gasPrice: bigIntToBytes(BigInt.parse(maxFeePerGas)),
       gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
       toAddress: toAddress,
       transaction: ethereum_pb.Transaction(transfer: tx),
@@ -100,7 +101,7 @@ class BuildTransaction {
     );
 
     final signingInput = ethereum_pb.SigningInput(
-      chainId: [chainId],
+      chainId: bigIntToBytes(BigInt.from(chainId)),
       txMode: ethereum_pb.TransactionMode.Enveloped,
       maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
       maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
@@ -143,7 +144,7 @@ class BuildTransaction {
       amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
     );
     final signingInput = ethereum_pb.SigningInput(
-      chainId: [chainId],
+      chainId: bigIntToBytes(BigInt.from(chainId)),
       gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
       gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
       toAddress: toAddress,
@@ -188,7 +189,7 @@ class BuildTransaction {
     );
 
     final signingInput = ethereum_pb.SigningInput(
-      chainId: [chainId],
+      chainId: bigIntToBytes(BigInt.from(chainId)),
       gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
       gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
       toAddress: tokenContract, // yes here must be tokenContract (crazy right?)
@@ -289,7 +290,7 @@ class BuildTransaction {
       amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
     );
     final signingInput = ethereum_pb.SigningInput(
-      chainId: [chainId],
+      chainId: bigIntToBytes(BigInt.from(chainId)),
       txMode: ethereum_pb.TransactionMode.Enveloped,
       maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
       maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
@@ -337,7 +338,7 @@ class BuildTransaction {
     );
 
     final signingInput = ethereum_pb.SigningInput(
-      chainId: [chainId],
+      chainId: bigIntToBytes(BigInt.from(chainId)),
       txMode: ethereum_pb.TransactionMode.Enveloped,
       maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
       maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
@@ -379,7 +380,7 @@ class BuildTransaction {
       amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
     );
     final signingInput = ethereum_pb.SigningInput(
-      chainId: [chainId],
+      chainId: bigIntToBytes(BigInt.from(chainId)),
       gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
       gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
       toAddress: toAddress,
@@ -424,7 +425,7 @@ class BuildTransaction {
     );
 
     final signingInput = ethereum_pb.SigningInput(
-      chainId: [chainId],
+      chainId: bigIntToBytes(BigInt.from(chainId)),
       gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
       gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
       toAddress: tokenContract, // yes here must be tokenContract (crazy right?)
@@ -466,7 +467,7 @@ class BuildTransaction {
       amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
     );
     final signingInput = ethereum_pb.SigningInput(
-      chainId: [chainId],
+      chainId: bigIntToBytes(BigInt.from(chainId)),
       txMode: ethereum_pb.TransactionMode.Enveloped,
       maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
       maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
@@ -513,7 +514,7 @@ class BuildTransaction {
     );
 
     final signingInput = ethereum_pb.SigningInput(
-      chainId: [chainId],
+      chainId: bigIntToBytes(BigInt.from(chainId)),
       txMode: ethereum_pb.TransactionMode.Enveloped,
       maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
       maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
