@@ -72,7 +72,7 @@ void main() {
     const amount = '924400';
     const tokenContract = '0x26Fc591feCC4948c4288d95B6AAdAB00eBa4e72A';
     test('BSC native transaction', () {
-      final signedBscTx = BuildTransaction.bnbSmartChain(
+      final signedBscTx = BuildTransaction.ethereumLegacy(
         wallet: wallet,
         amount: amount,
         toAddress: toAddress,
@@ -86,7 +86,7 @@ void main() {
       });
     });
     test('BSC token transaction', () {
-      final signedBscTx = BuildTransaction.bnbSmartChainBEP20Token(
+      final signedBscTx = BuildTransaction.ethereumERC20TokenLegacy(
         wallet: wallet,
         amount: amount,
         tokenContract: tokenContract,
@@ -101,7 +101,7 @@ void main() {
       });
     });
     test('Ethereum native transaction', () {
-      final signedEthTx = BuildTransaction.ethereum(
+      final signedEthTx = BuildTransaction.ethereumEIP1559(
         wallet: wallet,
         amount: amount,
         toAddress: toAddress,
@@ -115,7 +115,7 @@ void main() {
       });
     });
     test('Ethereum ERC20 token transaction', () {
-      final signedEthTx = BuildTransaction.ethereumERC20Token(
+      final signedEthTx = BuildTransaction.ethereumERC20TokenEIP1559(
         wallet: wallet,
         amount: amount,
         tokenContract: tokenContract,
@@ -130,11 +130,14 @@ void main() {
       });
     });
     test('Ethereum Classic native transaction', () {
-      final signedEtcTx = BuildTransaction.ethereumClassic(
+      final signedEtcTx = BuildTransaction.ethereumLegacy(
         wallet: wallet,
         amount: amount,
         toAddress: toAddress,
         nonce: '0',
+        gasPrice: '5000000000',
+        chainId: 61,
+        coinType: TWCoinType.TWCoinTypeEthereumClassic,
       );
       expect(hex.decode(signedEtcTx.rawTx as String).length, 110);
       expect(signedEtcTx.toJson(), {
@@ -144,12 +147,15 @@ void main() {
       });
     });
     test('Ethereum Classic ETC20 token transaction', () {
-      final signedBscTx = BuildTransaction.ethereumClassicETC20Token(
+      final signedBscTx = BuildTransaction.ethereumERC20TokenLegacy(
         wallet: wallet,
         amount: amount,
         tokenContract: tokenContract,
         toAddress: toAddress,
         nonce: '0',
+        gasPrice: '5000000000',
+        chainId: 61,
+        coinType: TWCoinType.TWCoinTypeEthereumClassic,
       );
       expect(hex.decode(signedBscTx.rawTx as String).length, 172);
       expect(signedBscTx.toJson(), {
@@ -159,11 +165,15 @@ void main() {
       });
     });
     test('Polygon native transaction', () {
-      final signedEthTx = BuildTransaction.polygon(
+      final signedEthTx = BuildTransaction.ethereumEIP1559(
         wallet: wallet,
         amount: amount,
         toAddress: toAddress,
         nonce: '0',
+        maxInclusionFeePerGas: '30000000000',
+        maxFeePerGas: '40000000000',
+        chainId: 137,
+        coinType: TWCoinType.TWCoinTypePolygon,
       );
       expect(hex.decode(signedEthTx.rawTx as String).length, 119);
       expect(signedEthTx.toJson(), {
@@ -173,12 +183,16 @@ void main() {
       });
     });
     test('Polygon ERC20 token transaction', () {
-      final signedEthTx = BuildTransaction.polygonERC20Token(
+      final signedEthTx = BuildTransaction.ethereumERC20TokenEIP1559(
         wallet: wallet,
         amount: amount,
         tokenContract: tokenContract,
         toAddress: toAddress,
         nonce: '0',
+        maxInclusionFeePerGas: '30000000000',
+        maxFeePerGas: '40000000000',
+        chainId: 137,
+        coinType: TWCoinType.TWCoinTypePolygon,
       );
       expect(hex.decode(signedEthTx.rawTx as String).length, 181);
       expect(signedEthTx.toJson(), {
@@ -188,11 +202,15 @@ void main() {
       });
     });
     test('Avalanche native transaction', () {
-      final signedEthTx = BuildTransaction.avalanche(
+      final signedEthTx = BuildTransaction.ethereumEIP1559(
         wallet: wallet,
         amount: amount,
         toAddress: toAddress,
         nonce: '0',
+        maxInclusionFeePerGas: '2500000000',
+        maxFeePerGas: '27500000000',
+        chainId: 43114,
+        coinType: TWCoinType.TWCoinTypeAvalancheCChain,
       );
       expect(hex.decode(signedEthTx.rawTx as String).length, 119);
       expect(signedEthTx.toJson(), {
@@ -202,12 +220,16 @@ void main() {
       });
     });
     test('Avalanche ERC20 token transaction', () {
-      final signedEthTx = BuildTransaction.avalancheERC20Token(
+      final signedEthTx = BuildTransaction.ethereumERC20TokenEIP1559(
         wallet: wallet,
         amount: amount,
         tokenContract: tokenContract,
         toAddress: toAddress,
         nonce: '0',
+        maxInclusionFeePerGas: '2500000000',
+        maxFeePerGas: '27500000000',
+        chainId: 43114,
+        coinType: TWCoinType.TWCoinTypeAvalancheCChain,
       );
       expect(hex.decode(signedEthTx.rawTx as String).length, 181);
       expect(signedEthTx.toJson(), {

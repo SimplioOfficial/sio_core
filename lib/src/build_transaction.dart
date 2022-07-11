@@ -27,186 +27,6 @@ class _Transaction {
 
 /// Class that builds transactions and return OutputTx ready for broadcasting.
 class BuildTransaction {
-  /// Avalanche C-Chain (AVAX) native transactions.
-  ///
-  /// * `amount` value in gwei.
-  /// * `maxInclusionFeePerGas`, `maxFeePerGas`  and `gasLimit` values in wei.
-  /// * `maxInclusionFeePerGas` = `Max Priority Fee Per Gas`
-  /// * `maxFeePerGas` = `Base Fee Per Gas` + `Max Priority Fee Per Gas`
-  static _Transaction avalanche({
-    required HDWallet wallet,
-    // value in gwei (10^9 wei)
-    required String amount,
-    required String toAddress,
-    required String nonce,
-    // value in wei = 10^(-18) AVAX (or 10^(-9) gwei)
-    String maxInclusionFeePerGas = '2500000000',
-    String maxFeePerGas = '27500000000',
-    // price in wei = 10^(-18) AVAX (or 10^(-9) gwei)
-    String gasLimit = '21000',
-    int chainId = 43114,
-  }) {
-    final secretPrivateKey =
-        wallet.getKeyForCoin(TWCoinType.TWCoinTypeAvalancheCChain);
-    final tx = ethereum_pb.Transaction_Transfer(
-      amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
-    );
-    final signingInput = ethereum_pb.SigningInput(
-      chainId: bigIntToBytes(BigInt.from(chainId)),
-      txMode: ethereum_pb.TransactionMode.Enveloped,
-      maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
-      maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
-      // gasPrice: bigIntToBytes(BigInt.parse(maxFeePerGas)),
-      gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
-      toAddress: toAddress,
-      transaction: ethereum_pb.Transaction(transfer: tx),
-      privateKey: secretPrivateKey.data(),
-      nonce: bigIntToBytes(BigInt.parse(nonce)),
-    );
-    final sign = AnySigner.sign(
-        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeAvalancheCChain);
-    final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
-    final transaction = _Transaction(
-      rawTx: hex.encode(signingOutput.encoded),
-      networkFee: BigInt.parse(maxFeePerGas) * BigInt.parse(gasLimit),
-    );
-    return transaction;
-  }
-
-  /// Avalanche C-Chain (AVAX) token transactions.
-  ///
-  /// * `maxInclusionFeePerGas`, `maxFeePerGas`  and `gasLimit` values in wei.
-  /// * `maxInclusionFeePerGas` = `Max Priority Fee Per Gas`
-  /// * `maxFeePerGas` = `Base Fee Per Gas` + `Max Priority Fee Per Gas`
-  static _Transaction avalancheERC20Token({
-    required HDWallet wallet,
-    // value in smallest denomination
-    required String amount,
-    required String tokenContract,
-    required String toAddress,
-    required String nonce,
-    // value in wei = 10^(-18) AVAX (or 10^(-9) gwei)
-    String maxInclusionFeePerGas = '2500000000',
-    String maxFeePerGas = '27500000000',
-    // price in wei = 10^(-18) AVAX (or 10^(-9) gwei)
-    String gasLimit = '21000',
-    int chainId = 43114,
-  }) {
-    final secretPrivateKey =
-        wallet.getKeyForCoin(TWCoinType.TWCoinTypeAvalancheCChain);
-
-    final tx = ethereum_pb.Transaction_ERC20Transfer(
-      amount: bigIntToBytes(BigInt.parse(amount)),
-      to: toAddress,
-    );
-
-    final signingInput = ethereum_pb.SigningInput(
-      chainId: bigIntToBytes(BigInt.from(chainId)),
-      txMode: ethereum_pb.TransactionMode.Enveloped,
-      maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
-      maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
-      gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
-      toAddress: tokenContract, // yes here must be tokenContract (crazy right?)
-      transaction: ethereum_pb.Transaction(erc20Transfer: tx),
-      privateKey: secretPrivateKey.data(),
-      nonce: bigIntToBytes(BigInt.parse(nonce)),
-    );
-    final sign = AnySigner.sign(
-        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeAvalancheCChain);
-    final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
-    final transaction = _Transaction(
-      rawTx: hex.encode(signingOutput.encoded),
-      networkFee: BigInt.parse(maxFeePerGas) * BigInt.parse(gasLimit),
-    );
-    return transaction;
-  }
-
-  /// BNB Smart Chain native transactions.
-  ///
-  /// * `amount` value in gwei.
-  /// * `gasPrice` and `gasLimit` values in wei.
-  static _Transaction bnbSmartChain({
-    required HDWallet wallet,
-    // value in gwei (10^9 wei)
-    required String amount,
-    required String toAddress,
-    required String nonce,
-    // value in wei = 10^(-18) BNB (or 10^(-9) gwei)
-    String gasPrice = '13600000000',
-    // price in wei = 10^(-18) BNB (or 10^(-9) gwei)
-    String gasLimit = '21000',
-    // change chainId to 97 for testnet chain
-    int chainId = 56,
-  }) {
-    final secretPrivateKey =
-        wallet.getKeyForCoin(TWCoinType.TWCoinTypeSmartChain);
-    final tx = ethereum_pb.Transaction_Transfer(
-      amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
-    );
-    final signingInput = ethereum_pb.SigningInput(
-      chainId: bigIntToBytes(BigInt.from(chainId)),
-      gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
-      gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
-      toAddress: toAddress,
-      transaction: ethereum_pb.Transaction(transfer: tx),
-      privateKey: secretPrivateKey.data(),
-      nonce: bigIntToBytes(BigInt.parse(nonce)),
-    );
-    final sign = AnySigner.sign(
-        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);
-    final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
-    final transaction = _Transaction(
-      rawTx: hex.encode(signingOutput.encoded),
-      networkFee: BigInt.parse(gasPrice) * BigInt.parse(gasLimit),
-    );
-    return transaction;
-  }
-
-  /// BNB Smart Chain token transactions.
-  ///
-  /// * `amount` value in gwei.
-  /// * `gasPrice` and `gasLimit` values in wei.
-  static _Transaction bnbSmartChainBEP20Token({
-    required HDWallet wallet,
-    // value in smallest denomination
-    required String amount,
-    required String tokenContract,
-    required String toAddress,
-    required String nonce,
-    // value in wei = 10^(-18) BNB (or 10^(-9) gwei)
-    String gasPrice = '3600000000',
-    // price in wei = 10^(-18) BNB (or 10^(-9) gwei)
-    String gasLimit = '21000',
-    // change chainId to 97 for testnet chain
-    int chainId = 56,
-  }) {
-    final secretPrivateKey =
-        wallet.getKeyForCoin(TWCoinType.TWCoinTypeSmartChain);
-
-    final tx = ethereum_pb.Transaction_ERC20Transfer(
-      amount: bigIntToBytes(BigInt.parse(amount)),
-      to: toAddress,
-    );
-
-    final signingInput = ethereum_pb.SigningInput(
-      chainId: bigIntToBytes(BigInt.from(chainId)),
-      gasPrice: bigIntToBytes(BigInt.parse(gasPrice)),
-      gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
-      toAddress: tokenContract, // yes here must be tokenContract (crazy right?)
-      transaction: ethereum_pb.Transaction(erc20Transfer: tx),
-      privateKey: secretPrivateKey.data(),
-      nonce: bigIntToBytes(BigInt.parse(nonce)),
-    );
-    final sign = AnySigner.sign(
-        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);
-    final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
-    final transaction = _Transaction(
-      rawTx: hex.encode(signingOutput.encoded),
-      networkFee: BigInt.parse(gasPrice) * BigInt.parse(gasLimit),
-    );
-    return transaction;
-  }
-
   /// Cosmos native transactions.
   ///
   /// Denomination of OSMO: `uosmo`, `mosmo`, `osmo`.
@@ -266,12 +86,20 @@ class BuildTransaction {
   }
 
   /// Ethereum native transactions.
+  /// EIP-1559 type transaction.
+  ///
+  /// Works with AVAX, ETH, MATIC
   ///
   /// * `amount` value in gwei.
   /// * `maxInclusionFeePerGas`, `maxFeePerGas`  and `gasLimit` values in wei.
   /// * `maxInclusionFeePerGas` = `Max Priority Fee Per Gas`
   /// * `maxFeePerGas` = `Base Fee Per Gas` + `Max Priority Fee Per Gas`
-  static _Transaction ethereum({
+  ///
+  /// ChainIds for mainnet:
+  /// * AVAX = 43114
+  /// * ETH = 1
+  /// * MATIC = 137
+  static _Transaction ethereumEIP1559({
     required HDWallet wallet,
     // value in gwei (10^9 wei)
     required String amount,
@@ -283,9 +111,9 @@ class BuildTransaction {
     // price in wei = 10^(-18) ETH (or 10^(-9) gwei)
     String gasLimit = '21000',
     int chainId = 1,
+    int coinType = TWCoinType.TWCoinTypeEthereum,
   }) {
-    final secretPrivateKey =
-        wallet.getKeyForCoin(TWCoinType.TWCoinTypeSmartChain);
+    final secretPrivateKey = wallet.getKeyForCoin(coinType);
     final tx = ethereum_pb.Transaction_Transfer(
       amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
     );
@@ -300,8 +128,7 @@ class BuildTransaction {
       privateKey: secretPrivateKey.data(),
       nonce: bigIntToBytes(BigInt.parse(nonce)),
     );
-    final sign = AnySigner.sign(
-        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);
+    final sign = AnySigner.sign(signingInput.writeToBuffer(), coinType);
     final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
     final transaction = _Transaction(
       rawTx: hex.encode(signingOutput.encoded),
@@ -311,11 +138,20 @@ class BuildTransaction {
   }
 
   /// Ethereum ERC20 token transactions.
+  /// EIP-1559 type transaction.
   ///
+  /// Works with AVAX, ETH, MATIC
+  ///
+  /// * `amount` value in gwei.
   /// * `maxInclusionFeePerGas`, `maxFeePerGas`  and `gasLimit` values in wei.
   /// * `maxInclusionFeePerGas` = `Max Priority Fee Per Gas`
   /// * `maxFeePerGas` = `Base Fee Per Gas` + `Max Priority Fee Per Gas`
-  static _Transaction ethereumERC20Token({
+  ///
+  /// ChainIds for mainnet:
+  /// * AVAX = 43114
+  /// * ETH = 1
+  /// * MATIC = 137
+  static _Transaction ethereumERC20TokenEIP1559({
     required HDWallet wallet,
     // value in smallest denomination
     required String amount,
@@ -328,9 +164,9 @@ class BuildTransaction {
     // price in wei = 10^(-18) ETH (or 10^(-9) gwei)
     String gasLimit = '21000',
     int chainId = 1,
+    int coinType = TWCoinType.TWCoinTypeEthereum,
   }) {
-    final secretPrivateKey =
-        wallet.getKeyForCoin(TWCoinType.TWCoinTypeSmartChain);
+    final secretPrivateKey = wallet.getKeyForCoin(coinType);
 
     final tx = ethereum_pb.Transaction_ERC20Transfer(
       amount: bigIntToBytes(BigInt.parse(amount)),
@@ -348,8 +184,7 @@ class BuildTransaction {
       privateKey: secretPrivateKey.data(),
       nonce: bigIntToBytes(BigInt.parse(nonce)),
     );
-    final sign = AnySigner.sign(
-        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeSmartChain);
+    final sign = AnySigner.sign(signingInput.writeToBuffer(), coinType);
     final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
     final transaction = _Transaction(
       rawTx: hex.encode(signingOutput.encoded),
@@ -358,24 +193,31 @@ class BuildTransaction {
     return transaction;
   }
 
-  /// Ethereum Classic native transactions.
+  /// Ethereum native transactions.
+  /// Legacy type transaction.
+  ///
+  /// Works with BSC, ETC
   ///
   /// * `amount` value in gwei.
   /// * `gasPrice` and `gasLimit` values in wei.
-  static _Transaction ethereumClassic({
+  ///
+  /// ChainIds for mainnet:
+  /// * BSC = 56
+  /// * ETC = 61
+  static _Transaction ethereumLegacy({
     required HDWallet wallet,
     // value in gwei (10^9 wei)
     required String amount,
     required String toAddress,
     required String nonce,
-    // value in wei = 10^(-18) ETC (or 10^(-9) gwei)
-    String gasPrice = '5000000000',
-    // price in wei = 10^(-18) ETC (or 10^(-9) gwei)
+    // value in wei = 10^(-18) BNB (or 10^(-9) gwei)
+    String gasPrice = '13600000000',
+    // price in wei = 10^(-18) BNB (or 10^(-9) gwei)
     String gasLimit = '21000',
-    int chainId = 61,
+    int chainId = 56,
+    int coinType = TWCoinType.TWCoinTypeSmartChain,
   }) {
-    final secretPrivateKey =
-        wallet.getKeyForCoin(TWCoinType.TWCoinTypeEthereumClassic);
+    final secretPrivateKey = wallet.getKeyForCoin(coinType);
     final tx = ethereum_pb.Transaction_Transfer(
       amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
     );
@@ -388,8 +230,7 @@ class BuildTransaction {
       privateKey: secretPrivateKey.data(),
       nonce: bigIntToBytes(BigInt.parse(nonce)),
     );
-    final sign = AnySigner.sign(
-        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeEthereumClassic);
+    final sign = AnySigner.sign(signingInput.writeToBuffer(), coinType);
     final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
     final transaction = _Transaction(
       rawTx: hex.encode(signingOutput.encoded),
@@ -398,11 +239,18 @@ class BuildTransaction {
     return transaction;
   }
 
-  /// Ethereum Classic ETC20 token transactions.
+  /// Ethereum ERC20 token transactions.
+  /// Legacy type transaction.
+  ///
+  /// Works with BSC, ETC
   ///
   /// * `amount` value in gwei.
   /// * `gasPrice` and `gasLimit` values in wei.
-  static _Transaction ethereumClassicETC20Token({
+  ///
+  /// ChainIds for mainnet:
+  /// * BSC = 56
+  /// * ETC = 61
+  static _Transaction ethereumERC20TokenLegacy({
     required HDWallet wallet,
     // value in smallest denomination
     required String amount,
@@ -410,14 +258,13 @@ class BuildTransaction {
     required String toAddress,
     required String nonce,
     // value in wei = 10^(-18) BNB (or 10^(-9) gwei)
-    String gasPrice = '5000000000',
+    String gasPrice = '3600000000',
     // price in wei = 10^(-18) BNB (or 10^(-9) gwei)
     String gasLimit = '21000',
-    // change chainId to 97 for testnet chain
-    int chainId = 61,
+    int chainId = 56,
+    int coinType = TWCoinType.TWCoinTypeSmartChain,
   }) {
-    final secretPrivateKey =
-        wallet.getKeyForCoin(TWCoinType.TWCoinTypeEthereumClassic);
+    final secretPrivateKey = wallet.getKeyForCoin(coinType);
 
     final tx = ethereum_pb.Transaction_ERC20Transfer(
       amount: bigIntToBytes(BigInt.parse(amount)),
@@ -433,103 +280,11 @@ class BuildTransaction {
       privateKey: secretPrivateKey.data(),
       nonce: bigIntToBytes(BigInt.parse(nonce)),
     );
-    final sign = AnySigner.sign(
-        signingInput.writeToBuffer(), TWCoinType.TWCoinTypeEthereumClassic);
+    final sign = AnySigner.sign(signingInput.writeToBuffer(), coinType);
     final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
     final transaction = _Transaction(
       rawTx: hex.encode(signingOutput.encoded),
       networkFee: BigInt.parse(gasPrice) * BigInt.parse(gasLimit),
-    );
-    return transaction;
-  }
-
-  /// Polygon (MATIC) native transactions.
-  ///
-  /// * `amount` value in gwei.
-  /// * `maxInclusionFeePerGas`, `maxFeePerGas`  and `gasLimit` values in wei.
-  /// * `maxInclusionFeePerGas` = `Max Priority Fee Per Gas`
-  /// * `maxFeePerGas` = `Base Fee Per Gas` + `Max Priority Fee Per Gas`
-  static _Transaction polygon({
-    required HDWallet wallet,
-    // value in gwei (10^9 wei)
-    required String amount,
-    required String toAddress,
-    required String nonce,
-    // value in wei = 10^(-18) MATIC (or 10^(-9) gwei)
-    String maxInclusionFeePerGas = '30000000000',
-    String maxFeePerGas = '40000000000',
-    // price in wei = 10^(-18) MATIC (or 10^(-9) gwei)
-    String gasLimit = '21000',
-    int chainId = 137,
-  }) {
-    final secretPrivateKey = wallet.getKeyForCoin(TWCoinType.TWCoinTypePolygon);
-    final tx = ethereum_pb.Transaction_Transfer(
-      amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
-    );
-    final signingInput = ethereum_pb.SigningInput(
-      chainId: bigIntToBytes(BigInt.from(chainId)),
-      txMode: ethereum_pb.TransactionMode.Enveloped,
-      maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
-      maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
-      gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
-      toAddress: toAddress,
-      transaction: ethereum_pb.Transaction(transfer: tx),
-      privateKey: secretPrivateKey.data(),
-      nonce: bigIntToBytes(BigInt.parse(nonce)),
-    );
-    final sign = AnySigner.sign(
-        signingInput.writeToBuffer(), TWCoinType.TWCoinTypePolygon);
-    final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
-    final transaction = _Transaction(
-      rawTx: hex.encode(signingOutput.encoded),
-      networkFee: BigInt.parse(maxFeePerGas) * BigInt.parse(gasLimit),
-    );
-    return transaction;
-  }
-
-  /// Polygon (MATIC) token transactions.
-  ///
-  /// * `maxInclusionFeePerGas`, `maxFeePerGas`  and `gasLimit` values in wei.
-  /// * `maxInclusionFeePerGas` = `Max Priority Fee Per Gas`
-  /// * `maxFeePerGas` = `Base Fee Per Gas` + `Max Priority Fee Per Gas`
-  static _Transaction polygonERC20Token({
-    required HDWallet wallet,
-    // value in smallest denomination
-    required String amount,
-    required String tokenContract,
-    required String toAddress,
-    required String nonce,
-    // value in wei = 10^(-18) MATIC (or 10^(-9) gwei)
-    String maxInclusionFeePerGas = '30000000000',
-    String maxFeePerGas = '40000000000',
-    // price in wei = 10^(-18) MATIC (or 10^(-9) gwei)
-    String gasLimit = '21000',
-    int chainId = 137,
-  }) {
-    final secretPrivateKey = wallet.getKeyForCoin(TWCoinType.TWCoinTypePolygon);
-
-    final tx = ethereum_pb.Transaction_ERC20Transfer(
-      amount: bigIntToBytes(BigInt.parse(amount)),
-      to: toAddress,
-    );
-
-    final signingInput = ethereum_pb.SigningInput(
-      chainId: bigIntToBytes(BigInt.from(chainId)),
-      txMode: ethereum_pb.TransactionMode.Enveloped,
-      maxInclusionFeePerGas: bigIntToBytes(BigInt.parse(maxInclusionFeePerGas)),
-      maxFeePerGas: bigIntToBytes(BigInt.parse(maxFeePerGas)),
-      gasLimit: bigIntToBytes(BigInt.parse(gasLimit)),
-      toAddress: tokenContract, // yes here must be tokenContract (crazy right?)
-      transaction: ethereum_pb.Transaction(erc20Transfer: tx),
-      privateKey: secretPrivateKey.data(),
-      nonce: bigIntToBytes(BigInt.parse(nonce)),
-    );
-    final sign = AnySigner.sign(
-        signingInput.writeToBuffer(), TWCoinType.TWCoinTypePolygon);
-    final signingOutput = ethereum_pb.SigningOutput.fromBuffer(sign);
-    final transaction = _Transaction(
-      rawTx: hex.encode(signingOutput.encoded),
-      networkFee: BigInt.parse(maxFeePerGas) * BigInt.parse(gasLimit),
     );
     return transaction;
   }
