@@ -1,3 +1,6 @@
+## 0.0.13
+* Implement AVAX native transactions and AVAX token transactions.
+* Various bugfixes and refactoring in the code.
 ## 0.0.12
 * Implement MATIC native transactions and MATIC token transactions.
 * Now supports EIP-1559 Transaction Type as well as Legacy Transactions.
