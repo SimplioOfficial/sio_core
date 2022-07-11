@@ -96,8 +96,10 @@ void main() {
         final ethereumFeeDetails =
             await UtilsEthereum.getEthereumFeeDetailsLegacy(
                 apiEndpoint: 'http://fees.amitabha.xyz/', ticker: 'etc');
-        expect(ethereumFeeDetails.gasLimit, '21000');
-        expect(ethereumFeeDetails.toJson()['gasLimit'], '21000');
+        expect(
+            int.parse(ethereumFeeDetails.gasLimit as String), greaterThan(-1));
+        expect(int.parse(ethereumFeeDetails.toJson()['gasLimit'] as String),
+            greaterThan(-1));
         try {
           await UtilsEthereum.getEthereumFeeDetailsLegacy(
             apiEndpoint: 'http://fees.amitabha.xyz/',
@@ -111,8 +113,10 @@ void main() {
         final ethereumFeeDetails =
             await UtilsEthereum.getEthereumFeeDetailsEIP1559(
                 apiEndpoint: 'http://fees.amitabha.xyz/', ticker: 'eth');
-        expect(ethereumFeeDetails.gasLimit, '21000');
-        expect(ethereumFeeDetails.toJson()['gasLimit'], '21000');
+        expect(
+            int.parse(ethereumFeeDetails.gasLimit as String), greaterThan(-1));
+        expect(int.parse(ethereumFeeDetails.toJson()['gasLimit']),
+            greaterThan(-1));
         try {
           await UtilsEthereum.getEthereumFeeDetailsEIP1559(
             apiEndpoint: 'http://fees.amitabha.xyz/',

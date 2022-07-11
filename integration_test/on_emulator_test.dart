@@ -72,7 +72,7 @@ void main() {
     const amount = '924400';
     const tokenContract = '0x26Fc591feCC4948c4288d95B6AAdAB00eBa4e72A';
     test('BSC native transaction', () {
-      final signedBscTx = BuildTransaction.bnbSmartChain(
+      final signedBscTx = BuildTransaction.ethereumLegacy(
         wallet: wallet,
         amount: amount,
         toAddress: toAddress,
@@ -86,7 +86,7 @@ void main() {
       });
     });
     test('BSC token transaction', () {
-      final signedBscTx = BuildTransaction.bnbSmartChainBEP20Token(
+      final signedBscTx = BuildTransaction.ethereumERC20TokenLegacy(
         wallet: wallet,
         amount: amount,
         tokenContract: tokenContract,
@@ -101,7 +101,7 @@ void main() {
       });
     });
     test('Ethereum native transaction', () {
-      final signedEthTx = BuildTransaction.ethereum(
+      final signedEthTx = BuildTransaction.ethereumEIP1559(
         wallet: wallet,
         amount: amount,
         toAddress: toAddress,
@@ -115,7 +115,7 @@ void main() {
       });
     });
     test('Ethereum ERC20 token transaction', () {
-      final signedEthTx = BuildTransaction.ethereumERC20Token(
+      final signedEthTx = BuildTransaction.ethereumERC20TokenEIP1559(
         wallet: wallet,
         amount: amount,
         tokenContract: tokenContract,
@@ -130,25 +130,50 @@ void main() {
       });
     });
     test('Ethereum Classic native transaction', () {
-      final signedEtcTx = BuildTransaction.ethereumClassic(
+      final signedEtcTx = BuildTransaction.ethereumLegacy(
         wallet: wallet,
         amount: amount,
         toAddress: toAddress,
         nonce: '0',
+        gasPrice: '5000000000',
+        chainId: 61,
+        coinType: TWCoinType.TWCoinTypeEthereumClassic,
       );
       expect(hex.decode(signedEtcTx.rawTx as String).length, 110);
       expect(signedEtcTx.toJson(), {
         'txid':
-            'f86c8085012a05f200825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a1600080819da0347b36cf8a1d2b31370fb882f6ec6b38362bc38d484776f2aea54cd712a7a5a2a00f62d9c81987979f70395c594d0214a04bd7db8850970f1511a48d132f70e244',
+            'f86c8085012a05f200825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a1600080819da06cc1da930c54fa65df8347a22e4e20e9bda26fb15f71966afbd6c372c3a9e51ba073d79cf8da3a6a624bbcb0170acffccb1dd51f21769d0a4a79341c438052f2b4',
+        'networkFee': '105000000000000'
+      });
+    });
+    test('Ethereum Classic ETC20 token transaction', () {
+      final signedBscTx = BuildTransaction.ethereumERC20TokenLegacy(
+        wallet: wallet,
+        amount: amount,
+        tokenContract: tokenContract,
+        toAddress: toAddress,
+        nonce: '0',
+        gasPrice: '5000000000',
+        chainId: 61,
+        coinType: TWCoinType.TWCoinTypeEthereumClassic,
+      );
+      expect(hex.decode(signedBscTx.rawTx as String).length, 172);
+      expect(signedBscTx.toJson(), {
+        'txid':
+            'f8aa8085012a05f2008252089426fc591fecc4948c4288d95b6aadab00eba4e72a80b844a9059cbb0000000000000000000000003e26e7f73a80444e67b7be654a38ab85ccb6ea4700000000000000000000000000000000000000000000000000000000000e1af0819da0f70a466dd155e27fe815c1782cf8425161aabbdbe0c3019fa502b25558624ccfa077f19ea31dee23f491d9b21ee540ab113e4cafd85aa40f8fda013fa733121acf',
         'networkFee': '105000000000000'
       });
     });
     test('Polygon native transaction', () {
-      final signedEthTx = BuildTransaction.polygon(
+      final signedEthTx = BuildTransaction.ethereumEIP1559(
         wallet: wallet,
         amount: amount,
         toAddress: toAddress,
         nonce: '0',
+        maxInclusionFeePerGas: '30000000000',
+        maxFeePerGas: '40000000000',
+        chainId: 137,
+        coinType: TWCoinType.TWCoinTypePolygon,
       );
       expect(hex.decode(signedEthTx.rawTx as String).length, 119);
       expect(signedEthTx.toJson(), {
@@ -158,18 +183,59 @@ void main() {
       });
     });
     test('Polygon ERC20 token transaction', () {
-      final signedEthTx = BuildTransaction.polygonERC20Token(
+      final signedEthTx = BuildTransaction.ethereumERC20TokenEIP1559(
         wallet: wallet,
         amount: amount,
         tokenContract: tokenContract,
         toAddress: toAddress,
         nonce: '0',
+        maxInclusionFeePerGas: '30000000000',
+        maxFeePerGas: '40000000000',
+        chainId: 137,
+        coinType: TWCoinType.TWCoinTypePolygon,
       );
       expect(hex.decode(signedEthTx.rawTx as String).length, 181);
       expect(signedEthTx.toJson(), {
         'txid':
             '02f8b28189808506fc23ac008509502f90008252089426fc591fecc4948c4288d95b6aadab00eba4e72a80b844a9059cbb0000000000000000000000003e26e7f73a80444e67b7be654a38ab85ccb6ea4700000000000000000000000000000000000000000000000000000000000e1af0c001a0472ab70dffd909bbbbafa44d3a4667007e1d31f05c7fa9db3e01420a910a3e66a01aee0ed1f99a0196fc3cad6076a41b0cc8bea07eac7ac937d75af2f0049fd17f',
         'networkFee': '840000000000000'
+      });
+    });
+    test('Avalanche native transaction', () {
+      final signedEthTx = BuildTransaction.ethereumEIP1559(
+        wallet: wallet,
+        amount: amount,
+        toAddress: toAddress,
+        nonce: '0',
+        maxInclusionFeePerGas: '2500000000',
+        maxFeePerGas: '27500000000',
+        chainId: 43114,
+        coinType: TWCoinType.TWCoinTypeAvalancheCChain,
+      );
+      expect(hex.decode(signedEthTx.rawTx as String).length, 119);
+      expect(signedEthTx.toJson(), {
+        'txid':
+            '02f87482a86a80849502f90085066720b300825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a1600080c001a096fccc82697f0afd60579141a070d0ad5c5707bd949dac124f6e1e5adeb87c50a066aac094bf2c1264c79d5ef70a92350553f94fac8230cd89befd6e5eae7eee75',
+        'networkFee': '577500000000000'
+      });
+    });
+    test('Avalanche ERC20 token transaction', () {
+      final signedEthTx = BuildTransaction.ethereumERC20TokenEIP1559(
+        wallet: wallet,
+        amount: amount,
+        tokenContract: tokenContract,
+        toAddress: toAddress,
+        nonce: '0',
+        maxInclusionFeePerGas: '2500000000',
+        maxFeePerGas: '27500000000',
+        chainId: 43114,
+        coinType: TWCoinType.TWCoinTypeAvalancheCChain,
+      );
+      expect(hex.decode(signedEthTx.rawTx as String).length, 181);
+      expect(signedEthTx.toJson(), {
+        'txid':
+            '02f8b282a86a80849502f90085066720b3008252089426fc591fecc4948c4288d95b6aadab00eba4e72a80b844a9059cbb0000000000000000000000003e26e7f73a80444e67b7be654a38ab85ccb6ea4700000000000000000000000000000000000000000000000000000000000e1af0c001a0f21de0b51c54e36cb6c29159dc1b4739bfa9021f44da94ecb70b38dee96b5f6ba02cca47c558692f087fb3469b78c5c9dcbdc97746e37062c8686d95739002a859',
+        'networkFee': '577500000000000'
       });
     });
   });

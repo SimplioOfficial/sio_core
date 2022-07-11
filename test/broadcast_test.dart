@@ -91,6 +91,18 @@ void main() {
         expect(exception, isA<Exception>());
       }
     });
+    test('Avalanche', () async {
+      const signedTxEncoded =
+          'f86b8085032a9f8800825208943e26e7f73a80444e67b7be654a38ab85ccb6ea47870348bca5a160008026a002280d6ed62e1157127ef9a90dfb4b377697d36759e10a3015e33aa7e870ebd5a0483f537fb6c687dc29f60a0b9e861af09ce5d223d339c06c8b7af408277f487f';
+      try {
+        await Broadcast.ethereumRPC(
+          signedTxEncoded: signedTxEncoded,
+          apiEndpoint: 'https://api.avax.network/ext/bc/C/rpc',
+        );
+      } catch (exception) {
+        expect(exception, isA<Exception>());
+      }
+    });
   });
 
   test('Broadcast solana', () async {

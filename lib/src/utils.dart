@@ -221,7 +221,7 @@ class UtilsEthereum {
   /// `safeMaxFeePerGas`, `proposeMaxFeePerGas`, `fastMaxFeePerGas`
   /// and `gasLimit`.
   ///
-  /// EIP-1559 chains supported: ETH, MATIC
+  /// EIP-1559 chains supported: AVAX, ETH, MATIC
   ///
   /// Example:
   /// * http://fees.amitabha.xyz/ethereum
