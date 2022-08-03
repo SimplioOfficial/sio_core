@@ -309,7 +309,7 @@ void main() {
     test('Bitcoin Cash', () async {
       const address = 'bitcoincash:qphjd0f4jeg9naf29u6tkakv800wgksyhvsamcpdd2';
       final balance = await GetBalance.utxoCoinBlockbook(
-        apiEndpoint: 'https://bch1.simplio.io/',
+        apiEndpoint: 'https://bch1.trezor.io/',
         address: address,
       );
       expect(balance, BigInt.zero);
