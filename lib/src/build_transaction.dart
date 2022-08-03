@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:convert/convert.dart';
 import 'package:sio_core/sio_core.dart';
 import 'package:trust_wallet_core_lib/trust_wallet_core_lib.dart';
