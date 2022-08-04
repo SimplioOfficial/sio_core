@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 # Based on article by Kevin Gamboa:
 # https://medium.com/@kevin.gamboa/how-to-configure-a-pre-commit-for-a-flutter-application-29dfbb853366
 
@@ -44,13 +44,23 @@ printf '%s\n' "${avar}"
 
 # Off emulator unit tests
 printf "\e[33;1m%s\e[0m\n" '=== Running Off Emulator Unit Tests ==='
-flutter test
+if [ -z "${API_FUNCTION_KEY}" ]; then
+  echo "Missing API_FUNCTION_KEY environment variable"
+  exit 1
+fi
+
+if [ -z "${API_TOKEN_ISSUE_BODY}" ]; then
+  echo "Missing API_TOKEN_ISSUE_BODY environment variable"
+  exit 1
+fi
+
+flutter test --dart-define=FUNCTION_KEY="${API_FUNCTION_KEY}" --dart-define=TOKEN_ISSUE_BODY="${API_TOKEN_ISSUE_BODY}"
 if [ $? -ne 0 ]; then
   printf "\e[31;1m%s\e[0m\n" '=== Off Emulator Unit Tests error ==='
   pop_stash_files
   exit 1
 fi
-printf "\e[33;1m%s\e[0m\n" 'Finished running Unit Tests'
+printf "\e[33;1m%s\e[0m\n" 'Finished running Off Emulator Unit Tests'
 printf '%s\n' "${avar}"
 
 # On emulator unit tests
@@ -61,7 +71,7 @@ if [ $? -ne 0 ]; then
   pop_stash_files
   exit 1
 fi
-printf "\e[33;1m%s\e[0m\n" 'Finished running Unit Tests'
+printf "\e[33;1m%s\e[0m\n" 'Finished running On Emulator Unit Tests'
 printf '%s\n' "${avar}"
 
 pop_stash_files
