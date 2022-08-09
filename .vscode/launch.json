@@ -8,7 +8,11 @@
       "name": "sio_core",
       "request": "launch",
       "type": "dart",
-      "program": "example/sio_core_example.dart"
+      "program": "example/sio_core_example.dart",
+      "args": [
+        "--dart-define=SIO_FRONT_DOOR=$SIO_FRONT_DOOR",
+        "--dart-define=TOKEN_ISSUE_BODY=$API_TOKEN_ISSUE_BODY"
+      ]
     },
     {
       "name": "sio_core (profile mode)",

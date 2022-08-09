@@ -89,7 +89,7 @@ class GetDecimals {
     return jsonDecode(request.body)['result']['value']['decimals'];
   }
 
-  /// Get BTC, BCH, DASH, DGB, DOGE, FLUX, LTC, ZEC balance from mainnet.
+  /// Get BTC, BCH, DASH, DGB, DOGE, FLUX, LTC, ZEC decimals from mainnet.
   static int utxoCoin({
     required String ticker,
   }) {

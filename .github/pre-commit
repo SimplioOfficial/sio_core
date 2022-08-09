@@ -44,17 +44,12 @@ printf '%s\n' "${avar}"
 
 # Off emulator unit tests
 printf "\e[33;1m%s\e[0m\n" '=== Running Off Emulator Unit Tests ==='
-if [ -z "${API_FUNCTION_KEY}" ]; then
-  echo "Missing API_FUNCTION_KEY environment variable"
+if [ -z "${INFURA_TOKEN}" ]; then
+  echo "Missing INFURA_TOKEN environment variable"
   exit 1
 fi
 
-if [ -z "${API_TOKEN_ISSUE_BODY}" ]; then
-  echo "Missing API_TOKEN_ISSUE_BODY environment variable"
-  exit 1
-fi
-
-flutter test --dart-define=FUNCTION_KEY="${API_FUNCTION_KEY}" --dart-define=TOKEN_ISSUE_BODY="${API_TOKEN_ISSUE_BODY}"
+flutter test --dart-define=INFURA_TOKEN="${INFURA_TOKEN}" --dart-define=BSCSCAN_TOKEN="${BSCSCAN_TOKEN}" --dart-define=ETHERSCAN_TOKEN="${ETHERSCAN_TOKEN}" --dart-define=POLYGONSCAN_TOKEN_1="${POLYGONSCAN_TOKEN_1}" --dart-define=POLYGONSCAN_TOKEN_2="${POLYGONSCAN_TOKEN_2}" --dart-define=SNOWTRACE_TOKEN="${SNOWTRACE_TOKEN}"
 if [ $? -ne 0 ]; then
   printf "\e[31;1m%s\e[0m\n" '=== Off Emulator Unit Tests error ==='
   pop_stash_files
@@ -65,7 +60,7 @@ printf '%s\n' "${avar}"
 
 # On emulator unit tests
 printf "\e[33;1m%s\e[0m\n" '=== Running On Emulator Unit Tests ==='
-flutter test integration_test/on_emulator_test.dart
+flutter test integration_test
 if [ $? -ne 0 ]; then
   printf "\e[31;1m%s\e[0m\n" '=== On Emulator Unit Tests error ==='
   pop_stash_files

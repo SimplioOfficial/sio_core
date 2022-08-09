@@ -60,8 +60,7 @@ void main() {
       try {
         await Broadcast.ethereumRPC(
           signedTxEncoded: signedTxEncoded,
-          apiEndpoint:
-              'https://mainnet.infura.io/v3/d0b366367e6d4a1b97b2d844397ca182',
+          apiEndpoint: 'https://mainnet.infura.io/v3/$infuraToken',
         );
       } catch (exception) {
         expect(exception, isA<Exception>());

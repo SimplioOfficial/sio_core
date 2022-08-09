@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:sio_core/src/get_transactions.dart';
+import 'package:sio_core/sio_core.dart';
 import 'package:sio_core/src/utils_internal.dart';
 import 'package:test/test.dart';
 
@@ -208,7 +208,7 @@ void main() {
           const address = '0x5C5Ac16E3A591FAFde543cbC51CF0C9256852255';
           final transactions = await GetTransactions.ethereumScan(
               apiEndpoint:
-                  'https://api.polygonscan.com/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=S65W8WW62U3FAN14WBISHI3CTHFW8HBCFX',
+                  'https://api.polygonscan.com/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=$polygonScanToken1',
               address: address,
               transactions: '4');
           var transactionsJson = transactions[1].toJson();
@@ -227,7 +227,7 @@ void main() {
           const address = '0x5C5Ac16E3A591FAFde543cbC51CF0C9256852255';
           final transactions = await GetTransactions.ethereumScan(
               apiEndpoint:
-                  'https://api.polygonscan.com/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=S65W8WW62U3FAN14WBISHI3CTHFW8HBCFX',
+                  'https://api.polygonscan.com/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=$polygonScanToken1',
               address: address,
               transactions: '4');
           var transactionsJson = transactions[0].toJson();
@@ -246,7 +246,7 @@ void main() {
           const address = '0xcA9A1f26cb5F6DDdf7e03d3e66962299655096bB';
           final transactions = await GetTransactions.ethereumScan(
             apiEndpoint:
-                'https://api.polygonscan.com/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=S65W8WW62U3FAN14WBISHI3CTHFW8HBCFX',
+                'https://api.polygonscan.com/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=$polygonScanToken1',
             address: address,
             transactions: '1',
           );
@@ -257,7 +257,7 @@ void main() {
           try {
             await GetTransactions.ethereumScan(
               apiEndpoint:
-                  'https://api.polygonscan.com/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=S65W8WW62U3FAN14WBISHI3CTHFW8HBCFX',
+                  'https://api.polygonscan.com/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=$polygonScanToken1',
               address: address,
             );
           } catch (exception) {
@@ -268,7 +268,7 @@ void main() {
           const address = '0x5C5Ac16E3A591FAFde543cbC51CF0C9256852255';
           final transactions = await GetTransactions.ethereumScan(
               apiEndpoint:
-                  'https://api.snowtrace.io/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=S65W8WW62U3FAN14WBISHI3CTHFW8HBCFX',
+                  'https://api.snowtrace.io/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=$snowTraceToken',
               address: address,
               transactions: '4');
           var transactionsJson = transactions[transactions.length - 1].toJson();
@@ -292,7 +292,7 @@ void main() {
             address: address,
             contractAddress: contractAddress,
             apiEndpoint:
-                'https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=XZ7N66N43I4FS29G7J3Z4ZPR56GP98U8MT',
+                'https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=$polygonScanToken2',
             transactions: '4',
           );
           var transactionsJson = transactions[1].toJson();
@@ -314,7 +314,7 @@ void main() {
             address: address,
             contractAddress: contractAddress,
             apiEndpoint:
-                'https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=XZ7N66N43I4FS29G7J3Z4ZPR56GP98U8MT',
+                'https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=$polygonScanToken2',
             transactions: '4',
           );
           var transactionsJson = transactions[2].toJson();
@@ -336,7 +336,7 @@ void main() {
             address: address,
             contractAddress: contractAddress,
             apiEndpoint:
-                'https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=XZ7N66N43I4FS29G7J3Z4ZPR56GP98U8MT',
+                'https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=$polygonScanToken2',
             transactions: '1',
           );
           expect(transactions, []);
@@ -349,7 +349,7 @@ void main() {
               address: address,
               contractAddress: contractAddress,
               apiEndpoint:
-                  'https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=XZ7N66N43I4FS29G7J3Z4ZPR56GP98U8MT',
+                  'https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=$polygonScanToken2',
             );
           } catch (exception) {
             expect(exception, isA<Exception>());

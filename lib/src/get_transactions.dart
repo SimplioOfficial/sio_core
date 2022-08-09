@@ -240,12 +240,12 @@ class GetTransactions {
   }
 
   /// Get AVAX (C-Chain), BNB (Smart Chain), ETH or MATIC transactions from mainnet.
-  /// Works with https://api.snowtrace.io/, https://api.bscscan.com/, https://api.etherscan.com/ or https://polygonscan.com/.
+  /// Works with https://api.snowtrace.io/, https://api.bscscan.com/, https://api.etherscan.io/ or https://polygonscan.com/.
   ///
   /// Use apiEndpoint like:
   /// * "https://api.snowtrace.io/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
   /// * "https://api.bscscan.com/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
-  /// * "https://api.etherscan.com/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
+  /// * "https://api.etherscan.io/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
   /// * "https://api.polygonscan.com/api?module=account&action=txlist&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
   static Future<List<_Tx>> ethereumScan({
     required String address,
@@ -303,12 +303,12 @@ class GetTransactions {
   }
 
   /// Get BEP-20 or ERC-20 Token transactions from mainnet.
-  /// Works with https://api.snowtrace.io/, https://api.bscscan.com/, https://api.etherscan.com/ or https://polygonscan.com/.
+  /// Works with https://api.snowtrace.io/, https://api.bscscan.com/, https://api.etherscan.io/ or https://polygonscan.com/.
   ///
   /// Use apiEndpoint like:
   /// * "https://api.snowtrace.io/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
   /// * "https://api.bscscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
-  /// * "https://api.etherscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
+  /// * "https://api.etherscan.io/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
   /// * "https://api.polygonscan.com/api?module=account&action=tokentx&contractaddress=<contractAddress>&address=<address>&startblock=<startblock>&endblock=<endblock>&page=<page>&offset=<transactions>&sort=desc&apikey=YourApiKeyToken"
   static Future<List<_Tx>> ethereumERC20Scan({
     required String address,

@@ -1,4 +1,4 @@
-import 'package:sio_core/src/get_decimals.dart';
+import 'package:sio_core/sio_core.dart';
 import 'package:test/test.dart';
 
 void main() {

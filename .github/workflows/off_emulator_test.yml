@@ -25,7 +25,7 @@ jobs:
         run: flutter format --output=none --set-exit-if-changed .
 
       - name: Run unit tests directly with flutter test
-        run: flutter test test --dart-define=FUNCTION_KEY=${{ secrets.API_FUNCTION_KEY }} --dart-define=TOKEN_ISSUE_BODY=${{ secrets.API_TOKEN_ISSUE_BODY }} --coverage
+        run: flutter test test --dart-define=INFURA_TOKEN=${{ secrets.INFURA_TOKEN }} --dart-define=BSCSCAN_TOKEN=${{ secrets.BSCSCAN_TOKEN }} --dart-define=ETHERSCAN_TOKEN=${{ secrets.ETHERSCAN_TOKEN }} --dart-define=POLYGONSCAN_TOKEN_1=${{ secrets.POLYGONSCAN_TOKEN_1 }} --dart-define=POLYGONSCAN_TOKEN_2=${{ secrets.POLYGONSCAN_TOKEN_2 }} --dart-define=SNOWTRACE_TOKEN=${{ secrets.SNOWTRACE_TOKEN }} --coverage
 
       - name: Upload unit tests coverage to Codecov
         uses: codecov/codecov-action@v1
