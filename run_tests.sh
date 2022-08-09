@@ -1,0 +1,17 @@
+#!/bin/sh
+
+flutter pub get
+
+# developer needs to specify runtime variables in ~/.bashrc or similar file
+# export INFURA_TOKEN="INFURA_TOKEN_PLACEHOLDER"
+# export BSCSCAN_TOKEN="BSCSCAN_TOKEN_PLACEHOLDER"
+# export ETHERSCAN_TOKEN="ETHERSCAN_TOKEN_PLACEHOLDER"
+# export POLYGONSCAN_TOKEN_1="POLYGONSCAN_TOKEN_1_PLACEHOLDER"
+# export POLYGONSCAN_TOKEN_2="POLYGONSCAN_TOKEN_2_PLACEHOLDER"
+# export SNOWTRACE_TOKEN="SNOWTRACE_TOKEN_PLACEHOLDER"
+
+# Off emulator tests
+flutter test --dart-define=INFURA_TOKEN=$INFURA_TOKEN --dart-define=BSCSCAN_TOKEN=$BSCSCAN_TOKEN --dart-define=ETHERSCAN_TOKEN=$ETHERSCAN_TOKEN --dart-define=POLYGONSCAN_TOKEN_1=$POLYGONSCAN_TOKEN_1 --dart-define=POLYGONSCAN_TOKEN_2=$POLYGONSCAN_TOKEN_2 --dart-define=SNOWTRACE_TOKEN=$SNOWTRACE_TOKEN
+
+# On emulator tests
+flutter test integration_test

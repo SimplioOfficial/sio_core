@@ -115,7 +115,7 @@ class BuildTransaction {
   }) {
     final secretPrivateKey = wallet.getKeyForCoin(coinType);
     final tx = ethereum_pb.Transaction_Transfer(
-      amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
+      amount: bigIntToBytes(BigInt.parse(amount) * BigInt.from(10).pow(9)),
     );
     final signingInput = ethereum_pb.SigningInput(
       chainId: bigIntToBytes(BigInt.from(chainId)),
@@ -219,7 +219,7 @@ class BuildTransaction {
   }) {
     final secretPrivateKey = wallet.getKeyForCoin(coinType);
     final tx = ethereum_pb.Transaction_Transfer(
-      amount: bigIntToBytes(BigInt.parse(amount + '000000000')),
+      amount: bigIntToBytes(BigInt.parse(amount) * BigInt.from(10).pow(9)),
     );
     final signingInput = ethereum_pb.SigningInput(
       chainId: bigIntToBytes(BigInt.from(chainId)),

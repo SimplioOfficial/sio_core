@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:sio_core/sio_core.dart';
 import 'package:test/test.dart';
-import 'package:sio_core/src/get_balance.dart';
 
 void main() {
   group('Get balance for Cosmos coin - ', () {
@@ -100,7 +100,7 @@ void main() {
         address: address,
         contractAddress: contractAddress,
         apiEndpoint:
-            'https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=PED3MB4V1CD3XAIGTQNAVCD8AHG1KSWAPN',
+            'https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=$bscScanToken',
       );
       expect(balance, BigInt.zero);
     });
@@ -112,7 +112,7 @@ void main() {
           address: address,
           contractAddress: contractAddress,
           apiEndpoint:
-              'https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=PED3MB4V1CD3XAIGTQNAVCD8AHG1KSWAPN',
+              'https://api.bscscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=$bscScanToken',
         );
       } catch (exception) {
         expect(exception, isA<Exception>());
@@ -122,8 +122,7 @@ void main() {
       const address = '0x6A86087Ee103DCC2494cA2804e4934b913df84E8';
       final balance = await GetBalance.ethereumRPC(
         address: address,
-        apiEndpoint:
-            'https://mainnet.infura.io/v3/d0b366367e6d4a1b97b2d844397ca182',
+        apiEndpoint: 'https://mainnet.infura.io/v3/$infuraToken',
       );
       expect(balance, BigInt.zero);
     });
@@ -134,7 +133,7 @@ void main() {
         address: address,
         contractAddress: contractAddress,
         apiEndpoint:
-            'https://api.etherscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=J6CAMARJ1QMXIIX3VU2PC81BEYU262PIHU',
+            'https://api.etherscan.io/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=$etherScanToken',
       );
       expect(balance, BigInt.zero);
     });
@@ -153,7 +152,7 @@ void main() {
         address: address,
         contractAddress: contractAddress,
         apiEndpoint:
-            'https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=S65W8WW62U3FAN14WBISHI3CTHFW8HBCFX',
+            'https://api.polygonscan.com/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=$polygonScanToken1',
       );
       expect(balance, BigInt.zero);
     });
@@ -172,7 +171,7 @@ void main() {
         address: address,
         contractAddress: contractAddress,
         apiEndpoint:
-            'https://api.snowtrace.io/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=6ZS6YEZI7J4WNDK9CJIHRGUK28CI8BCA9Z',
+            'https://api.snowtrace.io/api?module=account&action=tokenbalance&contractaddress=<contractAddress>&address=<address>&tag=latest&apikey=$snowTraceToken',
       );
       expect(balance, BigInt.zero);
     });
@@ -309,7 +308,7 @@ void main() {
     test('Bitcoin Cash', () async {
       const address = 'bitcoincash:qphjd0f4jeg9naf29u6tkakv800wgksyhvsamcpdd2';
       final balance = await GetBalance.utxoCoinBlockbook(
-        apiEndpoint: 'https://bch1.simplio.io/',
+        apiEndpoint: 'https://bch1.trezor.io/',
         address: address,
       );
       expect(balance, BigInt.zero);

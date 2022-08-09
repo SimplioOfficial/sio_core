@@ -1,3 +1,6 @@
+## 0.1.0
+* Setup env variables.
+* Various bugfixes and refactoring in the code.
 ## 0.0.13
 * Implement AVAX native transactions and AVAX token transactions.
 * Various bugfixes and refactoring in the code.

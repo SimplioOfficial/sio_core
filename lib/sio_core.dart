@@ -6,3 +6,4 @@ export 'src/get_decimals.dart';
 export 'src/get_transactions.dart';
 export 'src/mnemonic.dart';
 export 'src/utils.dart';
+export 'src/constants.dart';
