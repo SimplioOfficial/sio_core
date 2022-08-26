@@ -1,6 +1,6 @@
 name: Unit tests - off emulator
 env:
-  FLUTTER_VERSION: "3.0.4"
+  FLUTTER_VERSION: '3.0.4'
 
 on: push
 
@@ -15,7 +15,7 @@ jobs:
       - name: Install Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: $FLUTTER_VERSION
+          flutter-version: ${{ env.FLUTTER_VERSION }}
 
       - name: Install app dependencies
         run: flutter pub get
